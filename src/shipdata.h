@@ -15,7 +15,6 @@
 #ifndef SHIPDATA_H
 #define SHIPDATA_H
 
-#include "vector.h"
 
 #define NO_OF_SHIPS		33
 

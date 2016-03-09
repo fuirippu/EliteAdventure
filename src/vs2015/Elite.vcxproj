@@ -146,7 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\alg_data.h" />
-    <ClInclude Include="..\alg_main.h" />
     <ClInclude Include="..\config.h" />
     <ClInclude Include="..\docked.h" />
     <ClInclude Include="..\elite.h" />
@@ -155,7 +154,6 @@
     <ClInclude Include="..\intro.h" />
     <ClInclude Include="..\keyboard.h" />
     <ClInclude Include="..\main.h" />
-    <ClInclude Include="..\menu.h" />
     <ClInclude Include="..\missions.h" />
     <ClInclude Include="..\options.h" />
     <ClInclude Include="..\pilot.h" />

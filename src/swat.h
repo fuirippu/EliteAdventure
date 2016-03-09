@@ -24,11 +24,14 @@ extern int ecm_active;
 extern int missile_target;
 extern int in_battle;
 
+void clear_universe(void);
+int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int rotx, int rotz);
+void add_new_station(double sx, double sy, double sz, Matrix rotmat);
+void remove_ship(int un);
+
 void reset_weapons (void);
 void tactics (int un);
-//int in_target (int type, double x, double y, double z);
 void check_target (int un, struct univ_object *flip);
-//void check_missiles (int un);
 void draw_laser_lines (void);
 int fire_laser (void);
 void cool_laser (void);
@@ -41,7 +44,6 @@ void random_encounter (void);
 void explode_object (int un);
 void abandon_ship (void);
 void create_thargoid (void);
-void dock_it (struct univ_object *ship);
 
 
 

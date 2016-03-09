@@ -33,8 +33,6 @@ struct stock_item
 
 
 #define NO_OF_STOCK_ITEMS	17
-#define ALIEN_ITEMS_IDX		16
-
 extern struct stock_item stock_market[NO_OF_STOCK_ITEMS];
 
 void generate_stock_market (void);

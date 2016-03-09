@@ -33,6 +33,7 @@
 #include "threed.h"
 #include "space.h"
 #include "stars.h"
+#include "swat.h"
 
 static int ship_no;
 static int show_time;

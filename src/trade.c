@@ -33,6 +33,7 @@
 #define SLAVES		3
 #define NARCOTICS	6
 #define FIREARMS	10
+#define ALIEN_ITEMS_IDX		16
 
 /*
  * The following holds the Elite Planet Stock Market.

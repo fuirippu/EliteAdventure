@@ -49,7 +49,6 @@ int find_planet_number (struct galaxy_seed planet);
 void waggle_galaxy (struct galaxy_seed *glx_ptr);
 void describe_inhabitants (char *str, struct galaxy_seed planet);
 void generate_planet_data (struct planet_data *pl, struct galaxy_seed planet_seed);
-void set_current_planet (struct galaxy_seed new_planet);
 
 #endif
 

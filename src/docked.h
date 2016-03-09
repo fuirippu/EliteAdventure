@@ -24,7 +24,6 @@ void find_planet_by_name (char *find_name);
 void display_market_prices (void);
 void display_commander_status (void);
 int calc_distance_to_planet (struct galaxy_seed from_planet, struct galaxy_seed to_planet);
-void highlight_stock (int i);
 void select_previous_stock (void);
 void select_next_stock (void);
 void buy_stock (void);

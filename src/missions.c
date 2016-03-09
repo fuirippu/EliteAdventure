@@ -26,6 +26,7 @@
 #include "gfx.h"
 #include "vector.h"
 #include "space.h"
+#include "swat.h"
 #include "planet.h"
 #include "main.h"
 #include "missions.h" 
