@@ -36,20 +36,17 @@ struct random_seed
 	int b;
 	int c;
 	int d;
-};
+} rnd_seed;
 
+static const char *digrams="ABOUSEITILETSTONLONUTHNOALLEXEGEZACEBISOUSESARMAINDIREA?ERATENBERALAVETIEDORQUANTEISRION";
 
-static struct random_seed rnd_seed;
+static const char *inhabitant_desc1[] = {"Large ", "Fierce ", "Small "};
 
-static char *digrams="ABOUSEITILETSTONLONUTHNOALLEXEGEZACEBISOUSESARMAINDIREA?ERATENBERALAVETIEDORQUANTEISRION";
+static const char *inhabitant_desc2[] = {"Green ", "Red ", "Yellow ", "Blue ", "Black ", "Harmless "};
 
-static char *inhabitant_desc1[] = {"Large ", "Fierce ", "Small "};
+static const char *inhabitant_desc3[] = {"Slimy ", "Bug-Eyed ", "Horned ", "Bony ", "Fat ", "Furry "};
 
-static char *inhabitant_desc2[] = {"Green ", "Red ", "Yellow ", "Blue ", "Black ", "Harmless "};
-
-static char *inhabitant_desc3[] = {"Slimy ", "Bug-Eyed ", "Horned ", "Bony ", "Fat ", "Furry "};
-
-static char *inhabitant_desc4[] = {"Rodent", "Frog", "Lizard", "Lobster", "Bird", "Humanoid", "Feline", "Insect"};
+static const char *inhabitant_desc4[] = {"Rodent", "Frog", "Lizard", "Lobster", "Bird", "Humanoid", "Feline", "Insect"};
 
 
 static char planet_description[300];
@@ -58,7 +55,7 @@ static char *desc_ptr;
 
 
 
-static char *desc_list[36][5] =
+static const char *desc_list[36][5] =
 {
 /*  0	*/	{"fabled", "notable", "well known", "famous", "noted"},
 /*  1	*/	{"very", "mildly", "most", "reasonably", ""},
@@ -110,7 +107,7 @@ static char *desc_list[36][5] =
  * This is the version used in the 6502 Elites.
  */
 
-int gen_rnd_number (void)
+static int gen_rnd_number (void)
 {
 	int a,x;
 
@@ -136,7 +133,7 @@ int gen_rnd_number (void)
  */
 
 
-int gen_msx_rnd_number (void)
+static int gen_msx_rnd_number (void)
 {
     int a,b;
 
@@ -356,7 +353,7 @@ void describe_inhabitants (char *str, struct galaxy_seed planet)
 
 
 
-void expand_description (char *source)
+static void expand_description (const char *source)
 {
 	char str[32];
 	char *ptr;

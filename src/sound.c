@@ -27,15 +27,13 @@ extern DATAFILE *datafile;
 
 static int sound_on;
 
-struct sound_sample
+static struct sound_sample
 {
  	SAMPLE *sample;
 	char filename[256];
 	int runtime;
 	int timeleft;
-};
-
-struct sound_sample sample_list[NUM_SAMPLES] =
+} sample_list[NUM_SAMPLES] =
 {
 	{NULL, "assets\\launch.wav",	32, 0},
 	{NULL, "assets\\crash.wav",		 7, 0},

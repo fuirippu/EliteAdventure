@@ -34,7 +34,7 @@
 
 
 
-struct ship_face missile_face[] = 
+static struct ship_face missile_face[] = 
 {
 	//fins
 	{GFX_COL_RED,  0x20, 0x00, 0x00, 3,  5, 9, 15, 0, 0, 0, 0, 0},
@@ -66,7 +66,7 @@ struct ship_face missile_face[] =
 };
 
 
-struct ship_face coriolis_face[] = 
+static struct ship_face coriolis_face[] = 
 {
 	{GFX_COL_GREY_3,  0x6B,-0x6B, 0x6B, 3,  4,  0,  3,  0,  0,  0, 0, 0},
 	{GFX_COL_GREY_3,  0x6B, 0x6B, 0x6B, 3,  0,  5,  1,  0,  0,  0, 0, 0},
@@ -90,7 +90,7 @@ struct ship_face coriolis_face[] =
 };
 
 
-struct ship_face escape_face[] = 
+static struct ship_face escape_face[] = 
 {
 	{GFX_COL_RED,		 0x34, 0x00,-0x7A, 3, 3, 1, 2,  0, 0, 0, 0, 0},
 	{GFX_COL_DARK_RED,	 0x27, 0x67, 0x1E, 3, 0, 3, 2,  0, 0, 0, 0, 0},
@@ -99,13 +99,13 @@ struct ship_face escape_face[] =
 };
 
 
-struct ship_face alloy_face[] =
+static struct ship_face alloy_face[] =
 {
 	{GFX_COL_GREY_1, 0x00, 0x00, 0x00, 4, 0, 1, 2, 3, 0, 0, 0, 0},
 	{GFX_COL_GREY_3, 0x00, 0x00, 0x00, 4, 3, 2, 1, 0, 0, 0, 0, 0},
 };
 
-struct ship_face cargo_face[] =
+static struct ship_face cargo_face[] =
 {
 	{GFX_COL_GREY_4,  0x60, 0x00, 0x00, 5, 4, 0, 1, 2, 3, 0, 0, 0},
 
@@ -119,7 +119,7 @@ struct ship_face cargo_face[] =
 };
 
 
-struct ship_face boulder_face[] =
+static struct ship_face boulder_face[] =
 {
 	{GFX_COL_GREY_3, -0x0F,-0x03, 0x08, 3, 0, 4, 5,  0, 0, 0, 0, 0},
 	{GFX_COL_GREY_1, -0x07, 0x0C, 0x1E, 3, 0, 5, 1,  0, 0, 0, 0, 0},
@@ -135,7 +135,7 @@ struct ship_face boulder_face[] =
 };
 
 
-struct ship_face asteroid_face[] = 
+static struct ship_face asteroid_face[] = 
 {
 	{GFX_COL_GREY_3,  0x09, 0x42, 0x51, 3, 5, 0, 6,  0, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,  0x09,-0x42, 0x51, 3, 2, 5, 6,  0, 0, 0, 0, 0},
@@ -157,7 +157,7 @@ struct ship_face asteroid_face[] =
 };
 
 
-struct ship_face rock_face[] =
+static struct ship_face rock_face[] =
 {
 	{GFX_COL_GREY_1, 0x00, 0x00, 0x00, 3, 3, 2, 1, 0, 0, 0, 0, 0},
 	{GFX_COL_GREY_2, 0x00, 0x00, 0x00, 3, 0, 2, 3, 0, 0, 0, 0, 0},
@@ -167,7 +167,7 @@ struct ship_face rock_face[] =
 
 
 
-struct ship_face shuttle_face[] =
+static struct ship_face shuttle_face[] =
 {
 	{GFX_COL_GREY_1,  0x00,-0x4A, 0x04, 3,  0,  4,  7,  0, 0, 0, 0, 0},
 	{GFX_COL_GREY_2, -0x33,-0x33, 0x17, 3,  1,  4,  0,  0, 0, 0, 0, 0},
@@ -194,7 +194,7 @@ struct ship_face shuttle_face[] =
 
 /* Two lines on base & detail of IB DB initials added back in :-) */
 
-struct ship_face transporter_face[] =
+static struct ship_face transporter_face[] =
 {
 	{GFX_COL_GREY_3,  0x00, 0x00,-0x67, 7,  5,  4,  3, 2,  1 ,0, 6, 0},
 
@@ -236,7 +236,7 @@ struct ship_face transporter_face[] =
 };
 
 
-struct ship_face cobra3_face[] = 
+static struct ship_face cobra3_face[] = 
 {
 	{GFX_COL_GREY_2,	0x00, 0x3E, 0x1F, 3,  1,  0,  2,  0, 0, 0, 0, 0},
 	{GFX_COL_BLUE_1,   -0x12, 0x37, 0x10, 3,  5,  1,  2,  0, 0, 0, 0, 0},
@@ -266,7 +266,7 @@ struct ship_face cobra3_face[] =
 };
 
 
-struct ship_face python_face[] =
+static struct ship_face python_face[] =
 {
 	{GFX_COL_GREY_2, -0x1B, 0x28, 0x0B, 3, 0,  1,  3, 0, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,  0x1B, 0x28, 0x0B, 3, 2,  1,  0, 0, 0, 0, 0, 0},
@@ -287,7 +287,7 @@ struct ship_face python_face[] =
 };
 
 
-struct ship_face boa_face[] =
+static struct ship_face boa_face[] =
 {
 	{GFX_COL_BLUE_4,  0x2B, 0x25,-0x3C, 6, 11, 10,  1, 5, 6, 2, 0, 0},
 	{GFX_COL_BLUE_2,  0x00,-0x2D,-0x59, 6, 12, 11,  2, 7, 8, 3, 0, 0},
@@ -308,7 +308,7 @@ struct ship_face boa_face[] =
 };
 
 
-struct ship_face anaconda_face[] =
+static struct ship_face anaconda_face[] =
 {
 	{GFX_COL_GREEN_1,  0x00,-0x33,-0x31, 5,  3,  2,  1,  0, 4, 0, 0, 0},
 	{GFX_COL_GREEN_2, -0x33, 0x12,-0x57, 5,  6, 10,  5,  0, 1, 0, 0, 0},
@@ -328,7 +328,7 @@ struct ship_face anaconda_face[] =
 };
 
 
-struct ship_face hermit_face[] = 
+static struct ship_face hermit_face[] = 
 {
 	{GFX_COL_PINK_1,  0x09, 0x42, 0x51, 3, 5, 0, 6,  0, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,  0x09,-0x42, 0x51, 3, 2, 5, 6,  0, 0, 0, 0, 0},
@@ -347,7 +347,7 @@ struct ship_face hermit_face[] =
 };
 
 
-struct ship_face viper_face[] = 
+static struct ship_face viper_face[] = 
 {
 	{GFX_COL_GREY_2,  0x00, 0x20, 0x00, 3,  7,  8,  1, 0, 0, 0, 0, 0},
         
@@ -365,7 +365,7 @@ struct ship_face viper_face[] =
 
 
 
-struct ship_face sidewinder_face[] =
+static struct ship_face sidewinder_face[] =
 {
 	{GFX_COL_YELLOW_1,  0x00, 0x20, 0x08, 3, 4, 0, 1, 0, 0, 0, 0, 0},
 	{GFX_COL_YELLOW_2, -0x0C, 0x2F, 0x06, 3, 4, 3, 0, 0, 0, 0, 0, 0},
@@ -380,7 +380,7 @@ struct ship_face sidewinder_face[] =
 };
 
 
-struct ship_face mamba_face[] =
+static struct ship_face mamba_face[] =
 {
 	{GFX_COL_GREEN_1,  0x00,-0x18, 0x02, 3,  1,  4,  0,  0, 0, 0, 0, 0},
 	{GFX_COL_GREEN_3,  0x00, 0x18, 0x02, 3,  2,  0,  3,  0, 0, 0, 0, 0},
@@ -397,7 +397,7 @@ struct ship_face mamba_face[] =
 };
 
 
-struct ship_face krait_face[] = 
+static struct ship_face krait_face[] = 
 {
 	{GFX_COL_BLUE_3,  0x03, 0x18, 0x03, 3,  0,  3,  1, 0, 0, 0, 0, 0},
 	{GFX_COL_BLUE_2,  0x03,-0x18, 0x03, 3,  2,  3,  0, 0, 0, 0, 0, 0},
@@ -420,7 +420,7 @@ struct ship_face krait_face[] =
 };
 
 
-struct ship_face adder_face[] =
+static struct ship_face adder_face[] =
 {
 	{GFX_COL_GREY_1,	0x00, 0x27, 0x0A, 4, 0, 1,  11,  10, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,	0x00,-0x27, 0x0A, 4, 1, 0,  12,  13, 0, 0, 0, 0},
@@ -442,7 +442,7 @@ struct ship_face adder_face[] =
 };
 
 
-struct ship_face gecko_face[] =
+static struct ship_face gecko_face[] =
 {
 	{GFX_COL_GREY_2,  0x00, 0x1F, 0x05, 4,  3,  2, 0, 1, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,  0x04, 0x2D, 0x08, 3,  3,  1, 5, 0, 0, 0, 0, 0},
@@ -462,7 +462,7 @@ struct ship_face gecko_face[] =
 
 
 
-struct ship_face cobra1_face[] =
+static struct ship_face cobra1_face[] =
 {
 	{GFX_COL_BLUE_2,  0x00, 0x29, 0x0A, 3,  0, 1, 8, 0, 0, 0, 0, 0},
 	{GFX_COL_BLUE_2,  0x00,-0x1B, 0x03, 4,  6, 7, 1, 0, 0, 0, 0, 0},
@@ -483,7 +483,7 @@ struct ship_face cobra1_face[] =
 };
 
 
-struct ship_face worm_face[] = 
+static struct ship_face worm_face[] = 
 {
 	{GFX_COL_GREY_4,  0x00, 0x58, 0x46, 4, 1, 0, 2, 3, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,  0x46, 0x42, 0x23, 3, 0, 4, 2, 0, 0, 0, 0, 0},
@@ -498,7 +498,7 @@ struct ship_face worm_face[] =
 };
 
 
-struct ship_face asp2_face[] = 
+static struct ship_face asp2_face[] = 
 {
 	{GFX_COL_GREY_4,  0x00,-0x23, 0x05, 5,  8,  9,  7,  0, 4, 0, 0, 0},
 	{GFX_COL_GREY_2,  0x08,-0x26,-0x07, 5,  3,  4,  0,  1, 2, 0, 0, 0},
@@ -521,7 +521,7 @@ struct ship_face asp2_face[] =
 };
 
 
-struct ship_face fer_de_lance_face[] = 
+static struct ship_face fer_de_lance_face[] = 
 {
 	{GFX_COL_GREY_1,  0x00, 0x18, 0x06, 4,  5,  0,  8, 9, 0, 0, 0, 0},
 	{GFX_COL_GREY_2, -0x44, 0x00, 0x18, 3,  0,  5,  1, 0, 0, 0, 0, 0},
@@ -544,7 +544,7 @@ struct ship_face fer_de_lance_face[] =
 };
 
 
-struct ship_face moray_face[] = 
+static struct ship_face moray_face[] = 
 {
 	{GFX_COL_BLUE_4,  0x00, 0x2B, 0x07, 3,  0,  2, 1, 0, 0, 0, 0, 0},
 	{GFX_COL_BLUE_3, -0x0A, 0x31, 0x07, 3,  1,  2, 3, 0, 0, 0, 0, 0},
@@ -565,7 +565,7 @@ struct ship_face moray_face[] =
 };
 
 
-struct ship_face thargoid_face[] = 
+static struct ship_face thargoid_face[] = 
 {
 	{GFX_COL_DARK_RED,	 0x67,-0x3C, 0x19, 4,  1,  0,  8,  9,  0,  0, 0, 0},
 	{GFX_COL_GREY_2,	 0x67,-0x3C,-0x19, 4,  2,  1,  9, 10,  0,  0, 0, 0},
@@ -594,7 +594,7 @@ struct ship_face thargoid_face[] =
 };
 
 
-struct ship_face thargon_face[] = 
+static struct ship_face thargon_face[] = 
 {
 	{GFX_COL_DARK_RED, -0x24, 0x00, 0x00, 5, 3, 2, 1, 0, 4, 0, 0, 0},
 
@@ -608,7 +608,7 @@ struct ship_face thargon_face[] =
 };
 
 
-struct ship_face constrictor_face[]= 
+static struct ship_face constrictor_face[]= 
 {
 	{GFX_COL_GREY_4,    0x00,  0x37,  0x0F, 4,  1,  0,  8, 9, 0, 0, 0, 0},
 	{GFX_COL_GREY_1,   -0x18,  0x4B,  0x14, 3,  1,  9,  2, 0, 0, 0, 0, 0},
@@ -627,7 +627,7 @@ struct ship_face constrictor_face[]=
 	{GFX_COL_DARK_RED,    0x00, -0x1B,  0x00, 3, 15, 11, 13, 0, 0, 0, 0, 0},
 };
 
-struct ship_face cougar_face[]= 
+static struct ship_face cougar_face[]= 
 {
 	{GFX_COL_GREY_1,	-0x10,  0x2E,  0x04, 4,  2,  1,  0, 3, 0, 0, 0, 0},
 	{GFX_COL_GREY_2,	-0x10, -0x2E,  0x04, 3,  4,  1,  2, 0, 0, 0, 0, 0},
@@ -649,7 +649,7 @@ struct ship_face cougar_face[]=
 */
 };
 
-struct ship_face dodec_face[]= 
+static struct ship_face dodec_face[]= 
 {
 	{GFX_COL_GREY_4,	 0x00,  0x00,  0xC4, 5,  3,  2,  1,  0,  4, 0, 0, 0},
 	{GFX_COL_GREY_1,	 0x67,  0x8E,  0x58, 5,  6, 10,  5,  0,  1, 0, 0, 0},

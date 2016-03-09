@@ -48,19 +48,19 @@ extern int flight_climb;
 extern int flight_roll;
 extern int flight_speed;
 
-struct galaxy_seed destination_planet;
+static struct galaxy_seed destination_planet;
 int hyper_ready;
-int hyper_countdown;
-char hyper_name[16];
-int hyper_distance;
-int hyper_galactic;
+static int hyper_countdown;
+static char hyper_name[16];
+static int hyper_distance;
+static int hyper_galactic;
 
 
 
 
 
 
-void rotate_x_first (double *a, double *b, int direction)
+static void rotate_x_first (double *a, double *b, int direction)
 {
 	double fx,ux;
 
@@ -80,7 +80,7 @@ void rotate_x_first (double *a, double *b, int direction)
 }
 
 
-void rotate_vec (struct vector *vec, double alpha, double beta)
+static void rotate_vec (struct vector *vec, double alpha, double beta)
 {
 	double x,y,z;
 	
@@ -103,7 +103,7 @@ void rotate_vec (struct vector *vec, double alpha, double beta)
  * Update an objects location in the universe.
  */
 
-void move_univ_object (struct univ_object *obj)
+static void move_univ_object (struct univ_object *obj)
 {
 	double x,y,z;
 	double k2;
@@ -225,7 +225,7 @@ void dock_player (void)
  * Check if we are correctly aligned to dock.
  */
 
-int is_docking (int sn)
+static int is_docking (int sn)
 {
 	struct vector vec;
 	double fz;
@@ -259,7 +259,7 @@ int is_docking (int sn)
  * Game Over...
  */
 
-void do_game_over (void)
+static void do_game_over (void)
 {
 	snd_play_sample (SND_GAMEOVER);
 	game_over = 1;
@@ -430,7 +430,7 @@ void damage_ship (int damage, int front)
 
 
 
-void make_station_appear (void)
+static void make_station_appear (void)
 {
 	double px,py,pz;
 	double sx,sy,sz;
@@ -472,7 +472,7 @@ void make_station_appear (void)
 
 
 
-void check_docking (int i)
+static void check_docking (int i)
 {
 	if (is_docking(i))
 	{
@@ -494,7 +494,7 @@ void check_docking (int i)
 }
 
 
-void switch_to_view (struct univ_object *flip)
+static void switch_to_view (struct univ_object *flip)
 {
 	double tmp;
 	
@@ -687,7 +687,7 @@ void update_universe (void)
  * Update the scanner and draw all the lollipops.
  */
 
-void update_scanner (void)
+static void update_scanner (void)
 {
 	int i;
 	int x,y,z;
@@ -752,7 +752,7 @@ void update_scanner (void)
  * Update the compass which tracks the space station / planet.
  */
 
-void update_compass (void)
+static void update_compass (void)
 {
 	struct vector dest;
 	int compass_x;
@@ -786,7 +786,7 @@ void update_compass (void)
  * Display the speed bar.
  */
 
-void display_speed (void)
+static void display_speed (void)
 {
 	int sx,sy;
 	int i;
@@ -812,7 +812,7 @@ void display_speed (void)
  * Used for shields and energy banks.
  */
 
-void display_dial_bar (int len, int x, int y)
+static void display_dial_bar (int len, int x, int y)
 {
 	int i = 0;
 
@@ -831,7 +831,7 @@ void display_dial_bar (int len, int x, int y)
  * Display the current shield strengths.
  */
 
-void display_shields (void)
+static void display_shields (void)
 {
 	if (front_shield > 3)
 		display_dial_bar (front_shield / 4, 31, 7);
@@ -841,20 +841,20 @@ void display_shields (void)
 }
 
 
-void display_altitude (void)
+static void display_altitude (void)
 {
 	if (myship.altitude > 3)
 		display_dial_bar (myship.altitude / 4, 31, 92);
 }
 
-void display_cabin_temp (void)
+static void display_cabin_temp (void)
 {
 	if (myship.cabtemp > 3)
 		display_dial_bar (myship.cabtemp / 4, 31, 60);
 }
 
 
-void display_laser_temp (void)
+static void display_laser_temp (void)
 {
 	if (laser_temp > 0)
 		display_dial_bar (laser_temp / 4, 31, 76);
@@ -865,7 +865,7 @@ void display_laser_temp (void)
  * Display the energy banks.
  */
 
-void display_energy (void)
+static void display_energy (void)
 {
 	int e1,e2,e3,e4;
 
@@ -889,7 +889,7 @@ void display_energy (void)
 
 
 
-void display_flight_roll (void)
+static void display_flight_roll (void)
 {
 	int sx,sy;
 	int i;
@@ -907,7 +907,7 @@ void display_flight_roll (void)
 	}
 }
 
-void display_flight_climb (void)
+static void display_flight_climb (void)
 {
 	int sx,sy;
 	int i;
@@ -926,14 +926,14 @@ void display_flight_climb (void)
 }
 
 
-void display_fuel (void)
+static void display_fuel (void)
 {
 	if (cmdr.fuel > 0)
 		display_dial_bar ((cmdr.fuel * 64) / myship.max_fuel, 31, 44);
 }
 
 
-void display_missiles (void)
+static void display_missiles (void)
 {
 	int nomiss;
 	int x,y;
@@ -1083,12 +1083,12 @@ void display_hyper_status (void)
 }
 
 
-int rotate_byte_left (int x)
+static int rotate_byte_left (int x)
 {
 	return ((x << 1) | (x >> 7)) & 255;
 }
 
-void enter_next_galaxy (void)
+static void enter_next_galaxy (void)
 {
 	cmdr.galaxy_number++;
 	cmdr.galaxy_number &= 7;
@@ -1108,7 +1108,7 @@ void enter_next_galaxy (void)
 
 
 
-void enter_witchspace (void)
+static void enter_witchspace (void)
 {
 	int i;
 	int nthg;
@@ -1133,7 +1133,7 @@ void enter_witchspace (void)
 }
 
 
-void complete_hyperspace (void)
+static void complete_hyperspace (void)
 {
 	Matrix rotmat;
 	int px,py,pz;

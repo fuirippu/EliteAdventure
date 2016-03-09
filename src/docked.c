@@ -30,7 +30,7 @@
 
 
 
-char *economy_type[] = {"Rich Industrial",
+static const char *economy_type[] = {"Rich Industrial",
 						"Average Industrial",
 						"Poor Industrial",
 						"Mainly Industrial",
@@ -39,7 +39,7 @@ char *economy_type[] = {"Rich Industrial",
 						"Average Agricultural",
 						"Poor Agricultural"};
 
-char *government_type[] = {	"Anarchy",
+static const char *government_type[] = {	"Anarchy",
 							"Feudal",
 							"Multi-Government",
 							"Dictatorship",
@@ -62,7 +62,7 @@ int cross_y = 0;
 
 
 
-void draw_fuel_limit_circle (int cx, int cy)
+static void draw_fuel_limit_circle (int cx, int cy)
 {
 	int radius;
 	int cross_size;
@@ -107,7 +107,7 @@ int calc_distance_to_planet (struct galaxy_seed from_planet, struct galaxy_seed 
 }
 
 
-void show_distance (int ypos, struct galaxy_seed from_planet, struct galaxy_seed to_planet)
+static void show_distance (int ypos, struct galaxy_seed from_planet, struct galaxy_seed to_planet)
 {
 	char str[100];
 	int light_years;
@@ -439,15 +439,12 @@ void display_data_on_planet (void)
 
 
 
-struct rank
+#define NO_OF_RANKS	9
+static struct rank
 {
 	int score;
-	char *title;
-};
-
-#define NO_OF_RANKS	9
-
-struct rank rating[NO_OF_RANKS] =
+	const char *title;
+} rating[NO_OF_RANKS] =
 {
 	{0x0000, "Harmless"},
 	{0x0008, "Mostly Harmless"},
@@ -460,11 +457,11 @@ struct rank rating[NO_OF_RANKS] =
 	{0x1900, "---- E L I T E ---"}
 };
 
-char *laser_name[5] = {"Pulse", "Beam", "Military", "Mining", "Custom"};
+static const char *laser_name[5] = {"Pulse", "Beam", "Military", "Mining", "Custom"};
 
 
 
-char *laser_type (int strength)
+static const char *laser_type (int strength)
 {
 	switch (strength)
 	{
@@ -741,7 +738,7 @@ void display_stock_price (int i)
 }
 
 
-void highlight_stock (int i)
+static void highlight_stock (int i)
 {
 	int y;
 	char str[30];
@@ -917,7 +914,7 @@ enum equip_types
 
 #define NO_OF_EQUIP_ITEMS	34
 
-struct equip_item
+static struct equip_item
 {
 	int canbuy;
 	int y;
@@ -926,9 +923,7 @@ struct equip_item
 	int price;
 	char *name;
 	int type;
-};
-
-struct equip_item equip_stock[NO_OF_EQUIP_ITEMS] =
+} equip_stock[NO_OF_EQUIP_ITEMS] =
 {
 	{0, 0, 1, 1,     2, " Fuel",					EQ_FUEL},
 	{0, 0, 1, 1,   300, " Missile",					EQ_MISSILE},
@@ -967,7 +962,7 @@ struct equip_item equip_stock[NO_OF_EQUIP_ITEMS] =
 };
 
 
-int equip_present (int type)
+static int equip_present (int type)
 {
 	switch (type)
 	{
@@ -1054,7 +1049,7 @@ int equip_present (int type)
 }
 
 
-void display_equip_price (int i)
+static void display_equip_price (int i)
 {
 	int x, y;
 	int col;
@@ -1078,7 +1073,7 @@ void display_equip_price (int i)
 }
 
 
-void highlight_equip (int i)
+static void highlight_equip (int i)
 {
 	int y;
 	char str[30];
@@ -1148,7 +1143,7 @@ void select_previous_equip (void)
 }
 
 
-void list_equip_prices (void)
+static void list_equip_prices (void)
 {
 	int i;
 	int y;
@@ -1183,7 +1178,7 @@ void list_equip_prices (void)
 }
 
 
-void collapse_equip_list (void)
+static void collapse_equip_list (void)
 {
 	int i;
 	int ch;
@@ -1196,7 +1191,7 @@ void collapse_equip_list (void)
 }
 
 
-int laser_refund (int laser_type)
+static int laser_refund (int laser_type)
 {
 	switch (laser_type)
 	{

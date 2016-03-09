@@ -24,14 +24,12 @@
 
 int warp_stars;
 
-struct star
+static struct star
 {
 	double x;
 	double y;
 	double z;
-};
-
-struct star stars[20];
+} stars[20];
 
 
 void create_new_stars (void)
@@ -52,7 +50,7 @@ void create_new_stars (void)
 }
 
 
-void front_starfield (void)
+static void front_starfield (void)
 {
 	int i;
 	double Q;
@@ -148,7 +146,7 @@ void front_starfield (void)
 
 
 
-void rear_starfield (void)
+static void rear_starfield (void)
 {
 	int i;
 	double Q;
@@ -257,7 +255,7 @@ void rear_starfield (void)
 }
 
 
-void side_starfield (void)
+static void side_starfield (void)
 {
 	int i;
 	double delta;

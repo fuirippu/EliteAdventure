@@ -47,7 +47,7 @@ static struct point point_list[100];
  *
  */
 
-void draw_wireframe_ship (struct univ_object *univ)
+static void draw_wireframe_ship (struct univ_object *univ)
 {
 	Matrix trans_mat;
 	int i;
@@ -166,7 +166,7 @@ void draw_wireframe_ship (struct univ_object *univ)
  * Check for hidden surface supplied by T.Harte.
  */
 
-void draw_solid_ship (struct univ_object *univ)
+static void draw_solid_ship (struct univ_object *univ)
 {
 	int i;
 	int sx,sy;
@@ -342,7 +342,7 @@ void draw_solid_ship (struct univ_object *univ)
  * This is a quick hack and needs tidying up.
  */
 
-int snes_planet_colour[] =
+static int snes_planet_colour[] =
 {
 	102, 102,
 	134, 134, 134, 134,
@@ -371,7 +371,7 @@ int snes_planet_colour[] =
  * Generate a landscape map for a SNES Elite style planet.
  */
 
-void generate_snes_landscape (void)
+static void generate_snes_landscape (void)
 {
 	int x,y;
 	int colour;
@@ -394,7 +394,7 @@ void generate_snes_landscape (void)
  * Returns a number between -7 and +8 with Gaussian distribution.
  */
 
-int grand (void)
+static int grand (void)
 {
 	int i;
 	int r;
@@ -414,7 +414,7 @@ int grand (void)
  * Calculate the midpoint between two given points.
  */
 
-int calc_midpoint (int sx, int sy, int ex, int ey)
+static int calc_midpoint (int sx, int sy, int ex, int ey)
 {
 	int a,b,n;
 
@@ -435,7 +435,7 @@ int calc_midpoint (int sx, int sy, int ex, int ey)
  * Calculate a square on the midpoint map.
  */
 
-void midpoint_square (int tx, int ty, int w)
+static void midpoint_square (int tx, int ty, int w)
 {
 	int mx,my;
 	int bx,by;
@@ -468,7 +468,7 @@ void midpoint_square (int tx, int ty, int w)
  * Uses midpoint displacement method.
  */
 
-void generate_fractal_landscape (int rnd_seed)
+static void generate_fractal_landscape (int rnd_seed)
 {
 	int x,y,d,h;
 	double dist;
@@ -535,7 +535,7 @@ void generate_landscape (int rnd_seed)
  */
 
 
-void render_planet_line (int xo, int yo, int x, int y, int radius, int vx, int vy)
+static void render_planet_line (int xo, int yo, int x, int y, int radius, int vx, int vy)
 {
 	int lx, ly;
 	int rx, ry;
@@ -580,7 +580,7 @@ void render_planet_line (int xo, int yo, int x, int y, int radius, int vx, int v
  * Draw a solid planet.  Based on Doros circle drawing alogorithm.
  */
 
-void render_planet (int xo, int yo, int radius, struct vector *vec)
+static void render_planet (int xo, int yo, int radius, struct vector *vec)
 {
 	int x,y;
 	int s;
@@ -621,7 +621,7 @@ void render_planet (int xo, int yo, int radius, struct vector *vec)
  * Need to add in the two arcs that the original Elite had.
  */
 
-void draw_wireframe_planet (int xo, int yo, int radius, struct vector *vec)
+static void draw_wireframe_planet (int xo, int yo, int radius, struct vector *vec)
 {
 	gfx_draw_circle (xo, yo, radius, GFX_COL_WHITE);
 }
@@ -635,7 +635,7 @@ void draw_wireframe_planet (int xo, int yo, int radius, struct vector *vec)
  * - SNES Elite style.
  */
 
-void draw_planet (struct univ_object *planet)
+static void draw_planet (struct univ_object *planet)
 {
 	int x,y;
 	int radius;
@@ -680,7 +680,7 @@ void draw_planet (struct univ_object *planet)
 }
 
 
-void render_sun_line (int xo, int yo, int x, int y, int radius)
+static void render_sun_line (int xo, int yo, int x, int y, int radius)
 {
 	int sy = yo + y;
 	int sx,ex;
@@ -742,7 +742,7 @@ void render_sun_line (int xo, int yo, int x, int y, int radius)
 }
 
 
-void render_sun (int xo, int yo, int radius)
+static void render_sun (int xo, int yo, int radius)
 {
 	int x,y;
 	int s;
@@ -774,7 +774,7 @@ void render_sun (int xo, int yo, int radius)
 
 
 
-void draw_sun (struct univ_object *planet)
+static void draw_sun (struct univ_object *planet)
 {
 	int x,y;
 	int radius;
@@ -805,7 +805,7 @@ void draw_sun (struct univ_object *planet)
 
 
 
-void draw_explosion (struct univ_object *univ)
+static void draw_explosion (struct univ_object *univ)
 {
 	int i;
 	int z;

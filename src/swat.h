@@ -26,9 +26,9 @@ extern int in_battle;
 
 void reset_weapons (void);
 void tactics (int un);
-int in_target (int type, double x, double y, double z);
+//int in_target (int type, double x, double y, double z);
 void check_target (int un, struct univ_object *flip);
-void check_missiles (int un);
+//void check_missiles (int un);
 void draw_laser_lines (void);
 int fire_laser (void);
 void cool_laser (void);

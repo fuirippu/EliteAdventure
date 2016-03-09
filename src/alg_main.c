@@ -52,20 +52,20 @@
 
 
 
-int old_cross_x, old_cross_y;
-int cross_timer;
+static int old_cross_x, old_cross_y;
+static int cross_timer;
 
-int draw_lasers;
+static int draw_lasers;
 int mcount;
-int message_count;
-char message_string[80];
-int rolling;
-int climbing;
-int game_paused;
-int have_joystick;
+static int message_count;
+static char message_string[80];
+static int rolling;
+static int climbing;
+static int game_paused;
+static int have_joystick;
 
-int find_input;
-char find_name[20];
+static int find_input;
+static char find_name[20];
 
 
 
@@ -73,7 +73,7 @@ char find_name[20];
  * Initialise the game parameters.
  */
 
-void initialise_game(void)
+static void initialise_game(void)
 {
 	set_rand_seed (time(NULL));
 	current_screen = SCR_INTRO_ONE;
@@ -111,7 +111,7 @@ void initialise_game(void)
 }
 
 
-void finish_game (void)
+static void finish_game (void)
 {
 	finish = 1;
 	game_over = 1;
@@ -128,7 +128,7 @@ void finish_game (void)
  */
 
 
-void move_cross (int dx, int dy)
+static void move_cross (int dx, int dy)
 {
 	cross_timer = 5;
 
@@ -163,7 +163,7 @@ void move_cross (int dx, int dy)
  * Draw the cross hairs at the specified position.
  */
 
-void draw_cross (int cx, int cy)
+static void draw_cross (int cx, int cy)
 {
 	if (current_screen == SCR_SHORT_RANGE)
 	{
@@ -189,7 +189,7 @@ void draw_cross (int cx, int cy)
 
 
 
-void draw_laser_sights(void)
+static void draw_laser_sights(void)
 {
 	int laser = 0;
 	int x1,y1,x2,y2;
@@ -253,7 +253,7 @@ void draw_laser_sights(void)
 }
 
 
-void arrow_right (void)
+static void arrow_right (void)
 {
 	switch (current_screen)
 	{
@@ -287,7 +287,7 @@ void arrow_right (void)
 }
 
 
-void arrow_left (void)
+static void arrow_left (void)
 {
 	switch (current_screen)
 	{
@@ -321,7 +321,7 @@ void arrow_left (void)
 }
 
 
-void arrow_up (void)
+static void arrow_up (void)
 {
 	switch (current_screen)
 	{
@@ -363,7 +363,7 @@ void arrow_up (void)
 
 
 
-void arrow_down (void)
+static void arrow_down (void)
 {
 	switch (current_screen)
 	{
@@ -405,7 +405,7 @@ void arrow_down (void)
 }
 
 
-void return_pressed (void)
+static void return_pressed (void)
 {
 	switch (current_screen)
 	{
@@ -424,7 +424,7 @@ void return_pressed (void)
 }
 
 
-void y_pressed (void)
+static void y_pressed (void)
 {
 	switch (current_screen)
 	{
@@ -435,7 +435,7 @@ void y_pressed (void)
 }
 
 
-void n_pressed (void)
+static void n_pressed (void)
 {
 	switch (current_screen)
 	{
@@ -449,7 +449,7 @@ void n_pressed (void)
 }
 
 
-void d_pressed (void)
+static void d_pressed (void)
 {
 	switch (current_screen)
 	{
@@ -469,7 +469,7 @@ void d_pressed (void)
 }
 
 
-void f_pressed (void)
+static void f_pressed (void)
 {
 	if ((current_screen == SCR_GALACTIC_CHART) ||
 		(current_screen == SCR_SHORT_RANGE))
@@ -482,7 +482,7 @@ void f_pressed (void)
 }
 
 
-void add_find_char (int letter)
+static void add_find_char (int letter)
 {
 	char str[40];
 	
@@ -499,7 +499,7 @@ void add_find_char (int letter)
 }
 
 
-void delete_find_char (void)
+static void delete_find_char (void)
 {
 	char str[40];
 	int len;
@@ -515,7 +515,7 @@ void delete_find_char (void)
 	gfx_display_text(16, 340, str);
 }
 
-void o_pressed()
+static void o_pressed()
 {
 	switch (current_screen)
 	{
@@ -527,7 +527,7 @@ void o_pressed()
 }
 
 
-void auto_dock (void)
+static void auto_dock (void)
 {
 	struct univ_object ship;
 
@@ -611,7 +611,7 @@ void auto_dock (void)
 }
 
 
-void run_escape_sequence (void)
+static void run_escape_sequence (void)
 {
 	int i;
 	int newship;
@@ -682,7 +682,7 @@ void run_escape_sequence (void)
 }
 
 
-void handle_flight_keys (void)
+static void handle_flight_keys (void)
 {
     int keyasc;
 	
@@ -981,7 +981,7 @@ void handle_flight_keys (void)
 
 
 
-void set_commander_name (char *path)
+static void set_commander_name (char *path)
 {
 	char *fname, *cname;
 	int i;
@@ -1080,7 +1080,7 @@ void load_commander_screen (void)
 
 
 
-void run_first_intro_screen (void)
+static void run_first_intro_screen (void)
 {
 	current_screen = SCR_INTRO_ONE;
 
@@ -1114,7 +1114,7 @@ void run_first_intro_screen (void)
 
 
 
-void run_second_intro_screen (void)
+static void run_second_intro_screen (void)
 {
 	current_screen = SCR_INTRO_TWO;
 	
@@ -1147,7 +1147,7 @@ void run_second_intro_screen (void)
  * Draw the game over sequence. 
  */
 
-void run_game_over_screen()
+static void run_game_over_screen()
 {
 	int i;
 	int newship;
@@ -1196,7 +1196,7 @@ void run_game_over_screen()
  * Just draw a very simple one for the moment.
  */
 
-void display_break_pattern (void)
+static void display_break_pattern (void)
 {
 	int i;
 
@@ -1233,7 +1233,7 @@ void info_message (char *message)
 
 
 
-void initialise_allegro (void)
+static void initialise_allegro (void)
 {
 	allegro_init();
 	install_keyboard(); 

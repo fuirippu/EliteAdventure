@@ -25,26 +25,24 @@
 #include "alg_data.h"
 #include "elite.h"
 
-BITMAP *gfx_screen;
-volatile int frame_count;
+static BITMAP *gfx_screen;
+static volatile int frame_count;
 DATAFILE *datafile;
-BITMAP *scanner_image;
+static BITMAP *scanner_image;
 
 #define MAX_POLYS	100
 
 static int start_poly;
 static int total_polys;
 
-struct poly_data
+static struct poly_data
 {
 	int z;
 	int no_points;
 	int face_colour;
 	int point_list[16];
 	int next;
-};
-
-static struct poly_data poly_chain[MAX_POLYS];
+} poly_chain[MAX_POLYS];
 
 
 
@@ -201,7 +199,7 @@ void gfx_draw_filled_circle (int cx, int cy, int radius, int circle_colour)
  * By T.Harte.
  */
 
-void gfx_draw_aa_circle(int cx, int cy, int radius)
+static void gfx_draw_aa_circle(int cx, int cy, int radius)
 {
 	int x,y;
 	int s;
@@ -277,7 +275,7 @@ void gfx_draw_aa_circle(int cx, int cy, int radius)
  * By T.Harte.
  */
  
-void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
+static void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
 {
 	fixed grad, xd, yd;
 	fixed xgap, ygap, xend, yend, xf, yf;
@@ -659,6 +657,25 @@ void gfx_render_line (int x1, int y1, int x2, int y2, int dist, int col)
 }
 
 
+static void gfx_polygon(int num_points, int *poly_list, int face_colour)
+{
+	int i;
+	int x, y;
+
+	x = 0;
+	y = 1;
+	for (i = 0; i < num_points; i++)
+	{
+		poly_list[x] += GFX_X_OFFSET;
+		poly_list[y] += GFX_Y_OFFSET;
+		x += 2;
+		y += 2;
+	}
+
+	polygon(gfx_screen, num_points, poly_list, face_colour);
+}
+
+
 void gfx_finish_render (void)
 {
 	int num_points;
@@ -683,25 +700,6 @@ void gfx_finish_render (void)
 		
 		gfx_polygon (num_points, pl, col); 
 	};
-}
-
-
-void gfx_polygon (int num_points, int *poly_list, int face_colour)
-{
-	int i;
-	int x,y;
-	
-	x = 0;
-	y = 1;
-	for (i = 0; i < num_points; i++)
-	{
-		poly_list[x] += GFX_X_OFFSET;
-		poly_list[y] += GFX_Y_OFFSET;
-		x += 2;
-		y += 2;
-	}
-	
-	polygon (gfx_screen, num_points, poly_list, face_colour);
 }
 
 

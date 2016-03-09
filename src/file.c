@@ -56,7 +56,7 @@ void write_config_file (void)
  * Ignore blanks, comments and strip white space.
  */
 
-void read_cfg_line (char *str, int max_size, FILE *fp)
+static void read_cfg_line (char *str, int max_size, FILE *fp)
 {
 	char *s;
 
@@ -93,7 +93,7 @@ void read_cfg_line (char *str, int max_size, FILE *fp)
  * Read in the scanner .cfg file.
  */
 
-void read_scanner_config_file (char *filename)
+static void read_scanner_config_file (char *filename)
 {
 	FILE *fp;
 	char str[128];
@@ -156,7 +156,7 @@ void read_config_file (void)
 	fclose (fp);
 }
 
-int checksum (unsigned char *block)
+static int checksum (unsigned char *block)
 {
 	int acc,carry;
 	int i;

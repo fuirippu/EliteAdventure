@@ -27,8 +27,8 @@ struct galaxy_seed hyperspace_planet;
 
 struct planet_data current_planet_data;
 
-int curr_galaxy_num = 1;
-int curr_fuel = 70;
+static int curr_galaxy_num = 1;
+static int curr_fuel = 70;
 int carry_flag = 0;
 int current_screen = 0;
 int witchspace;

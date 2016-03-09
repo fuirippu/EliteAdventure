@@ -67,10 +67,10 @@ int kbd_keyboard_startup (void)
 	return 0;
 }
 
-int kbd_keyboard_shutdown (void)
-{
-	return 0;
-}
+//int kbd_keyboard_shutdown (void)
+//{
+//	return 0;
+//}
 
 void kbd_poll_keyboard (void)
 {
@@ -158,9 +158,9 @@ int kbd_read_key (void)
 }
 
 
-void kbd_clear_key_buffer (void)
-{
-	while (keypressed())
-		readkey();
-}
+//void kbd_clear_key_buffer (void)
+//{
+//	while (keypressed())
+//		readkey();
+//}
  

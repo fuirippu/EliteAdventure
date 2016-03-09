@@ -35,13 +35,11 @@ static int hilite_item;
 #define OPTION_BAR_WIDTH	(400)
 #define OPTION_BAR_HEIGHT	(15)
 
-struct option
+static struct option
 {
 	char *text;
 	int docked_only;
-};
-
-static struct option option_list[NUM_OPTIONS] =
+} option_list[NUM_OPTIONS] =
 {
 	{"Save Commander",	1},
 	{"Load Commander",	1},
@@ -49,13 +47,11 @@ static struct option option_list[NUM_OPTIONS] =
 	{"Quit",			0}	
 };
 
-struct setting
+static struct setting
 {
 	char *name;
 	char *value[5];
-};
-
-static struct setting setting_list[NUM_SETTINGS] =
+} setting_list[NUM_SETTINGS] =
 {
 	{"Graphics:",		{"Solid", "Wireframe", "", "", ""}},
 	{"Anti Alias:",		{"Off", "On", "", "", ""}},		
@@ -66,7 +62,7 @@ static struct setting setting_list[NUM_SETTINGS] =
 };
 
 
-void quit_screen (void)
+static void quit_screen (void)
 {
 	current_screen = SCR_QUIT;
 
@@ -81,7 +77,7 @@ void quit_screen (void)
 
 
 
-void display_setting_item (int item)
+static void display_setting_item (int item)
 {
 	int x,y;
 	int v;
@@ -128,7 +124,7 @@ void display_setting_item (int item)
 }
 
 
-void highlight_setting (int item)
+static void highlight_setting (int item)
 {
 	int x,y;
 	int width;
@@ -246,7 +242,7 @@ void toggle_setting (void)
 }
 
 
-void game_settings_screen (void)
+static void game_settings_screen (void)
 {
 	int i;
 
@@ -266,7 +262,7 @@ void game_settings_screen (void)
 }
 
 
-void display_option_item (int i)
+static void display_option_item (int i)
 {
 	int y;
 	int col;
@@ -279,7 +275,7 @@ void display_option_item (int i)
 }
 
 
-void highlight_option (int i)
+static void highlight_option (int i)
 {
 	int y;
 	int x;

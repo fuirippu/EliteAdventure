@@ -2,7 +2,7 @@
 
 
 
-struct ship_point missile_point[17] =
+static struct ship_point missile_point[17] =
 {
 	{   0,    0,   68, 31,  1,  0,  3,  2},
 	{   8,   -8,   36, 31,  2,  1,  5,  4},
@@ -23,7 +23,7 @@ struct ship_point missile_point[17] =
 	{   8,   -8,  -12,  8,  5,  4,  5,  5},
 };
 
-struct ship_line missile_line[24] =
+static struct ship_line missile_line[24] =
 {
 	{31,  2,  1,  0,  1},
 	{31,  3,  2,  0,  2},
@@ -51,7 +51,7 @@ struct ship_line missile_line[24] =
 	{ 8,  6,  5, 11, 14},
 };
 
-struct ship_face_normal missile_face_normal[9] =
+static struct ship_face_normal missile_face_normal[9] =
 {
 	{31,  -64,    0,   16},
 	{31,    0,  -64,   16},
@@ -85,7 +85,7 @@ struct ship_data missile_data =
 
 
 
-struct ship_point coriolis_point[16] =
+static struct ship_point coriolis_point[16] =
 {
 	{ 160,    0,  160, 31,  1,  0,  6,  2},
 	{   0,  160,  160, 31,  2,  0,  8,  3},
@@ -105,7 +105,7 @@ struct ship_point coriolis_point[16] =
 	{ -10,  -30,  160, 30,  0,  0,  0,  0},
 };
 
-struct ship_line coriolis_line[28] =
+static struct ship_line coriolis_line[28] =
 {
 	{31,  1,  0,  0,  3},
 	{31,  2,  0,  0,  1},
@@ -137,7 +137,7 @@ struct ship_line coriolis_line[28] =
 	{30,  0,  0, 15, 12},
 };
 
-struct ship_face_normal coriolis_face_normal[14] =
+static struct ship_face_normal coriolis_face_normal[14] =
 {
 	{31,    0,    0,  160},
 	{31,  107, -107,  107},
@@ -176,7 +176,7 @@ struct ship_data coriolis_data =
 
 
 
-struct ship_point esccaps_point[4] =
+static struct ship_point esccaps_point[4] =
 {
 	{  -7,    0,   36, 31,  1,  2,  3,  3},
 	{  -7,  -14,  -12, 31,  0,  2,  3,  3},
@@ -184,7 +184,7 @@ struct ship_point esccaps_point[4] =
 	{  21,    0,    0, 31,  0,  1,  2,  2},
 };
 
-struct ship_line esccaps_line[6] =
+static struct ship_line esccaps_line[6] =
 {
 	{31,  2,  3,  0,  1},
 	{31,  0,  3,  1,  2},
@@ -194,7 +194,7 @@ struct ship_line esccaps_line[6] =
 	{31,  0,  2,  3,  1},
 };
 
-struct ship_face_normal esccaps_face_normal[4] =
+static struct ship_face_normal esccaps_face_normal[4] =
 {
 	{31,   52,    0, -122},
 	{31,   39,  103,   30},
@@ -223,7 +223,7 @@ struct ship_data esccaps_data =
 
 
 
-struct ship_point alloy_point[4] =
+static struct ship_point alloy_point[4] =
 {
 	{ -15,  -22,   -9, 31, 15, 15, 15, 15},
 	{ -15,   38,   -9, 31, 15, 15, 15, 15},
@@ -231,7 +231,7 @@ struct ship_point alloy_point[4] =
 	{  10,  -46,    6, 20, 15, 15, 15, 15},
 };
 
-struct ship_line alloy_line[4] =
+static struct ship_line alloy_line[4] =
 {
 	{31, 15, 15,  0,  1},
 	{16, 15, 15,  1,  2},
@@ -239,7 +239,7 @@ struct ship_line alloy_line[4] =
 	{16, 15, 15,  3,  0},
 };
 
-struct ship_face_normal alloy_face_normal[1] =
+static struct ship_face_normal alloy_face_normal[1] =
 {
 	{ 0,    0,    0,    0},
 };
@@ -265,7 +265,7 @@ struct ship_data alloy_data =
 
 
 
-struct ship_point cargo_point[10] =
+static struct ship_point cargo_point[10] =
 {
 	{  24,   16,    0, 31,  1,  0,  5,  5},
 	{  24,    5,   15, 31,  1,  0,  2,  2},
@@ -279,7 +279,7 @@ struct ship_point cargo_point[10] =
 	{ -24,    5,  -15, 31,  5,  4,  6,  6},
 };
 
-struct ship_line cargo_line[15] =
+static struct ship_line cargo_line[15] =
 {
 	{31,  1,  0,  0,  1},
 	{31,  2,  0,  1,  2},
@@ -298,7 +298,7 @@ struct ship_line cargo_line[15] =
 	{31,  6,  5,  9,  5},
 };
 
-struct ship_face_normal cargo_face_normal[7] =
+static struct ship_face_normal cargo_face_normal[7] =
 {
 	{31,   96,    0,    0},
 	{31,    0,   41,   30},
@@ -330,7 +330,7 @@ struct ship_data cargo_data =
 
 
 
-struct ship_point boulder_point[7] =
+static struct ship_point boulder_point[7] =
 {
 	{ -18,   37,  -11, 31,  0,  1,  5,  9},
 	{  30,    7,   12, 31,  1,  2,  5,  6},
@@ -341,7 +341,7 @@ struct ship_point boulder_point[7] =
 	{  20,   17,  -30, 31, 15, 15, 15, 15},
 };
 
-struct ship_line boulder_line[15] =
+static struct ship_line boulder_line[15] =
 {
 	{31,  1,  5,  0,  1},
 	{31,  2,  6,  1,  2},
@@ -360,7 +360,7 @@ struct ship_line boulder_line[15] =
 	{31,  8,  9,  4,  6},
 };
 
-struct ship_face_normal boulder_face_normal[10] =
+static struct ship_face_normal boulder_face_normal[10] =
 {
 	{31,  -15,   -3,    8},
 	{31,   -7,   12,   30},
@@ -395,7 +395,7 @@ struct ship_data boulder_data =
 
 
 
-struct ship_point asteroid_point[9] =
+static struct ship_point asteroid_point[9] =
 {
 	{   0,   80,    0, 31, 15, 15, 15, 15},
 	{ -80,  -10,    0, 31, 15, 15, 15, 15},
@@ -408,7 +408,7 @@ struct ship_point asteroid_point[9] =
 	{   0,  -50,  -60, 31,  9,  8, 11, 10},
 };
 
-struct ship_line asteroid_line[21] =
+static struct ship_line asteroid_line[21] =
 {
 	{31,  7,  2,  0,  1},
 	{31, 13,  6,  0,  4},
@@ -433,7 +433,7 @@ struct ship_line asteroid_line[21] =
 	{31,  9,  8,  7,  8},
 };
 
-struct ship_face_normal asteroid_face_normal[14] =
+static struct ship_face_normal asteroid_face_normal[14] =
 {
 	{31,    9,   66,   81},
 	{31,    9,  -66,   81},
@@ -472,7 +472,7 @@ struct ship_data asteroid_data =
 
 
 
-struct ship_point rock_point[4] =
+static struct ship_point rock_point[4] =
 {
 	{ -24,  -25,   16, 31,  1,  2,  3,  3},
 	{   0,   12,  -10, 31,  0,  2,  3,  3},
@@ -480,7 +480,7 @@ struct ship_point rock_point[4] =
 	{  12,   42,    7, 31,  0,  1,  2,  2},
 };
 
-struct ship_line rock_line[6] =
+static struct ship_line rock_line[6] =
 {
 	{31,  2,  3,  0,  1},
 	{31,  0,  3,  1,  2},
@@ -490,7 +490,7 @@ struct ship_line rock_line[6] =
 	{31,  0,  2,  3,  1},
 };
 
-struct ship_face_normal rock_face_normal[4] =
+static struct ship_face_normal rock_face_normal[4] =
 {
 	{18,   30,    0,    0},
 	{20,   22,   32,   -8},
@@ -519,7 +519,7 @@ struct ship_data rock_data =
 
 
 
-struct ship_point orbit_point[19] =
+static struct ship_point orbit_point[19] =
 {
 	{   0,  -17,   23, 31, 15, 15, 15, 15},
 	{ -17,    0,   23, 31, 15, 15, 15, 15},
@@ -542,7 +542,7 @@ struct ship_point orbit_point[19] =
 	{ -10,    4,   25,  8,  4, 15,  1,  8},
 };
 
-struct ship_line orbit_line[30] =
+static struct ship_line orbit_line[30] =
 {
 	{31,  0,  2,  0,  1},
 	{31,  4, 10,  1,  2},
@@ -576,7 +576,7 @@ struct ship_line orbit_line[30] =
 	{ 7, 10, 10, 16, 18},
 };
 
-struct ship_face_normal orbit_face_normal[13] =
+static struct ship_face_normal orbit_face_normal[13] =
 {
 	{31,  -55,  -55,   40},
 	{31,    0,  -74,    4},
@@ -614,7 +614,7 @@ struct ship_data orbit_data =
 
 
 
-struct ship_point transp_point[37] =
+static struct ship_point transp_point[37] =
 {
 	{   0,   10,  -26, 31,  0,  6,  7,  7},
 	{ -25,    4,  -26, 31,  0,  1,  7,  7},
@@ -655,7 +655,7 @@ struct ship_point transp_point[37] =
 	{  -8,    3,  -26,  5,  0,  0,  0,  0},
 };
 
-struct ship_line transp_line[46] =
+static struct ship_line transp_line[46] =
 {
 	{31,  0,  7,  0,  1},
 	{31,  0,  1,  1,  2},
@@ -705,7 +705,7 @@ struct ship_line transp_line[46] =
 	{ 5,  0,  0, 36, 33},
 };
 
-struct ship_face_normal transp_face_normal[14] =
+static struct ship_face_normal transp_face_normal[14] =
 {
 	{31,    0,    0, -103},
 	{31, -111,   48,   -7},
@@ -744,7 +744,7 @@ struct ship_data transp_data =
 
 
 
-struct ship_point cobra3a_point[28] =
+static struct ship_point cobra3a_point[28] =
 {
 	{  32,    0,   76, 31, 15, 15, 15, 15},
 	{ -32,    0,   76, 31, 15, 15, 15, 15},
@@ -776,7 +776,7 @@ struct ship_point cobra3a_point[28] =
 	{  80,   -6,  -40,  8,  9,  9,  9,  9},
 };
 
-struct ship_line cobra3a_line[38] =
+static struct ship_line cobra3a_line[38] =
 {
 	{31, 11,  0,  0,  1},
 	{31, 12,  4,  0,  4},
@@ -818,7 +818,7 @@ struct ship_line cobra3a_line[38] =
 	{ 8,  9,  9, 25, 27},
 };
 
-struct ship_face_normal cobra3a_face_normal[13] =
+static struct ship_face_normal cobra3a_face_normal[13] =
 {
 	{31,    0,   62,   31},
 	{31,  -18,   55,   16},
@@ -856,7 +856,7 @@ struct ship_data cobra3a_data =
 
 
 
-struct ship_point pythona_point[11] =
+static struct ship_point pythona_point[11] =
 {
 	{   0,    0,  224, 31,  1,  0,  3,  2},
 	{   0,   48,   48, 31,  1,  0,  5,  4},
@@ -871,7 +871,7 @@ struct ship_point pythona_point[11] =
 	{   0,  -24, -112, 31, 11, 10, 12, 12},
 };
 
-struct ship_line pythona_line[26] =
+static struct ship_line pythona_line[26] =
 {
 	{31,  3,  2,  0,  8},
 	{31,  2,  0,  0,  3},
@@ -901,7 +901,7 @@ struct ship_line pythona_line[26] =
 	{31,  7,  6,  8,  9},
 };
 
-struct ship_face_normal pythona_face_normal[13] =
+static struct ship_face_normal pythona_face_normal[13] =
 {
 	{31,  -27,   40,   11},
 	{31,   27,   40,   11},
@@ -939,7 +939,7 @@ struct ship_data pythona_data =
 
 
 
-struct ship_point boa_point[13] =
+static struct ship_point boa_point[13] =
 {
 	{   0,    0,   93, 31, 15, 15, 15, 15},
 	{   0,   40,  -87, 24,  0,  2,  3,  3},
@@ -956,7 +956,7 @@ struct ship_point boa_point[13] =
 	{ -13,   -9, -107, 22,  1,  2, 12, 12},
 };
 
-struct ship_line boa_line[24] =
+static struct ship_line boa_line[24] =
 {
 	{31,  6, 11,  0,  5},
 	{31,  8, 10,  0,  7},
@@ -984,7 +984,7 @@ struct ship_line boa_line[24] =
 	{14,  2, 12, 12, 10},
 };
 
-struct ship_face_normal boa_face_normal[13] =
+static struct ship_face_normal boa_face_normal[13] =
 {
 	{31,   43,   37,  -60},
 	{31,    0,  -45,  -89},
@@ -1022,7 +1022,7 @@ struct ship_data boa_data =
 
 
 
-struct ship_point anacnda_point[15] =
+static struct ship_point anacnda_point[15] =
 {
 	{   0,    7,  -58, 30,  0,  1,  5,  5},
 	{ -43,  -13,  -37, 30,  0,  1,  2,  2},
@@ -1041,7 +1041,7 @@ struct ship_point anacnda_point[15] =
 	{  43,   53,  -23, 31, 15, 15, 15, 15},
 };
 
-struct ship_line anacnda_line[25] =
+static struct ship_line anacnda_line[25] =
 {
 	{30,  0,  1,  0,  1},
 	{30,  0,  2,  1,  2},
@@ -1070,7 +1070,7 @@ struct ship_line anacnda_line[25] =
 	{31, 10, 11, 12, 14},
 };
 
-struct ship_face_normal anacnda_face_normal[12] =
+static struct ship_face_normal anacnda_face_normal[12] =
 {
 	{30,    0,  -51,  -49},
 	{30,  -51,   18,  -87},
@@ -1107,7 +1107,7 @@ struct ship_data anacnda_data =
 
 
 
-struct ship_point hermit_point[9] =
+static struct ship_point hermit_point[9] =
 {
 	{   0,   80,    0, 31, 15, 15, 15, 15},
 	{ -80,  -10,    0, 31, 15, 15, 15, 15},
@@ -1120,7 +1120,7 @@ struct ship_point hermit_point[9] =
 	{   0,  -50,  -60, 31,  9,  8, 11, 10},
 };
 
-struct ship_line hermit_line[21] =
+static struct ship_line hermit_line[21] =
 {
 	{31,  7,  2,  0,  1},
 	{31, 13,  6,  0,  4},
@@ -1145,7 +1145,7 @@ struct ship_line hermit_line[21] =
 	{31,  9,  8,  7,  8},
 };
 
-struct ship_face_normal hermit_face_normal[14] =
+static struct ship_face_normal hermit_face_normal[14] =
 {
 	{31,    9,   66,   81},
 	{31,    9,  -66,   81},
@@ -1184,7 +1184,7 @@ struct ship_data hermit_data =
 
 
 
-struct ship_point viper_point[15] =
+static struct ship_point viper_point[15] =
 {
 	{   0,    0,   72, 31,  2,  1,  4,  3},
 	{   0,   16,   24, 30,  1,  0,  2,  2},
@@ -1203,7 +1203,7 @@ struct ship_point viper_point[15] =
 	{   8,   -8,  -24, 18,  6,  6,  6,  6},
 };
 
-struct ship_line viper_line[20] =
+static struct ship_line viper_line[20] =
 {
 	{31,  4,  2,  0,  3},
 	{30,  2,  1,  0,  1},
@@ -1227,7 +1227,7 @@ struct ship_line viper_line[20] =
 	{16,  6,  6, 12, 13},
 };
 
-struct ship_face_normal viper_face_normal[7] =
+static struct ship_face_normal viper_face_normal[7] =
 {
 	{31,    0,   32,    0},
 	{31,  -22,   33,   11},
@@ -1259,7 +1259,7 @@ struct ship_data viper_data =
 
 
 
-struct ship_point sidewnd_point[10] =
+static struct ship_point sidewnd_point[10] =
 {
 	{ -32,    0,   36, 31,  1,  0,  5,  4},
 	{  32,    0,   36, 31,  2,  0,  6,  5},
@@ -1273,7 +1273,7 @@ struct ship_point sidewnd_point[10] =
 	{ -12,   -6,  -28, 12,  3,  3,  3,  3},
 };
 
-struct ship_line sidewnd_line[15] =
+static struct ship_line sidewnd_line[15] =
 {
 	{31,  5,  0,  0,  1},
 	{31,  6,  2,  1,  2},
@@ -1292,7 +1292,7 @@ struct ship_line sidewnd_line[15] =
 	{12,  3,  3,  8,  9},
 };
 
-struct ship_face_normal sidewnd_face_normal[7] =
+static struct ship_face_normal sidewnd_face_normal[7] =
 {
 	{31,    0,   32,    8},
 	{31,  -12,   47,    6},
@@ -1324,7 +1324,7 @@ struct ship_data sidewnd_data =
 
 
 
-struct ship_point mamba_point[25] =
+static struct ship_point mamba_point[25] =
 {
 	{   0,    0,   64, 31,  1,  0,  3,  2},
 	{ -64,   -8,  -32, 31,  2,  0,  4,  4},
@@ -1353,7 +1353,7 @@ struct ship_point mamba_point[25] =
 	{  38,    0,  -32,  5,  4,  4,  4,  4},
 };
 
-struct ship_line mamba_line[28] =
+static struct ship_line mamba_line[28] =
 {
 	{31,  2,  0,  0,  1},
 	{31,  3,  0,  0,  4},
@@ -1385,7 +1385,7 @@ struct ship_line mamba_line[28] =
 	{30,  3,  1,  0,  3},
 };
 
-struct ship_face_normal mamba_face_normal[5] =
+static struct ship_face_normal mamba_face_normal[5] =
 {
 	{30,    0,  -24,    2},
 	{30,    0,   24,    2},
@@ -1415,7 +1415,7 @@ struct ship_data mamba_data =
 
 
 
-struct ship_point krait_point[17] =
+static struct ship_point krait_point[17] =
 {
 	{   0,    0,   96, 31,  0,  1,  2,  3},
 	{   0,   18,  -48, 31,  0,  3,  4,  5},
@@ -1436,7 +1436,7 @@ struct ship_point krait_point[17] =
 	{ -36,    0,  -30,  8,  5,  5,  5,  5},
 };
 
-struct ship_line krait_line[21] =
+static struct ship_line krait_line[21] =
 {
 	{31,  0,  3,  0,  1},
 	{31,  1,  2,  0,  2},
@@ -1461,7 +1461,7 @@ struct ship_line krait_line[21] =
 	{ 8,  5,  5, 16, 14},
 };
 
-struct ship_face_normal krait_face_normal[6] =
+static struct ship_face_normal krait_face_normal[6] =
 {
 	{31,    3,   24,    3},
 	{31,    3,  -24,    3},
@@ -1492,7 +1492,7 @@ struct ship_data krait_data =
 
 
 
-struct ship_point adder_point[18] =
+static struct ship_point adder_point[18] =
 {
 	{ -18,    0,   40, 31,  0,  1, 11, 12},
 	{  18,    0,   40, 31,  0,  1,  2,  3},
@@ -1514,7 +1514,7 @@ struct ship_point adder_point[18] =
 	{ -11,    4,   24,  4,  0,  0,  0,  0},
 };
 
-struct ship_line adder_line[29] =
+static struct ship_line adder_line[29] =
 {
 	{31,  0,  1,  0,  1},
 	{ 7,  2,  3,  1,  2},
@@ -1547,7 +1547,7 @@ struct ship_line adder_line[29] =
 	{ 3,  0,  0, 17, 14},
 };
 
-struct ship_face_normal adder_face_normal[15] =
+static struct ship_face_normal adder_face_normal[15] =
 {
 	{31,    0,   39,   10},
 	{31,    0,  -39,   10},
@@ -1587,7 +1587,7 @@ struct ship_data adder_data =
 
 
 
-struct ship_point gecko_point[12] =
+static struct ship_point gecko_point[12] =
 {
 	{ -10,   -4,   47, 31,  0,  3,  4,  5},
 	{  10,   -4,   47, 31,  0,  1,  2,  3},
@@ -1603,7 +1603,7 @@ struct ship_point gecko_point[12] =
 	{   8,  -13,  -16, 17,  3,  3,  3,  3},
 };
 
-struct ship_line gecko_line[17] =
+static struct ship_line gecko_line[17] =
 {
 	{31,  0,  3,  0,  1},
 	{31,  1,  2,  1,  5},
@@ -1624,7 +1624,7 @@ struct ship_line gecko_line[17] =
 	{17,  3,  3,  9, 11},
 };
 
-struct ship_face_normal gecko_face_normal[9] =
+static struct ship_face_normal gecko_face_normal[9] =
 {
 	{31,    0,   31,    5},
 	{31,    4,   45,    8},
@@ -1658,7 +1658,7 @@ struct ship_data gecko_data =
 
 
 
-struct ship_point cobra1_point[11] =
+static struct ship_point cobra1_point[11] =
 {
 	{ -18,   -1,   50, 31,  0,  1,  2,  3},
 	{  18,   -1,   50, 31,  0,  1,  4,  5},
@@ -1673,7 +1673,7 @@ struct ship_point cobra1_point[11] =
 	{   0,   -1,   60, 31,  0,  1,  1,  1},
 };
 
-struct ship_line cobra1_line[18] =
+static struct ship_line cobra1_line[18] =
 {
 	{31,  0,  1,  1,  0},
 	{31,  2,  3,  0,  2},
@@ -1695,7 +1695,7 @@ struct ship_line cobra1_line[18] =
 	{ 2,  0,  1, 10,  9},
 };
 
-struct ship_face_normal cobra1_face_normal[10] =
+static struct ship_face_normal cobra1_face_normal[10] =
 {
 	{31,    0,   41,   10},
 	{31,    0,  -27,    3},
@@ -1730,7 +1730,7 @@ struct ship_data cobra1_data =
 
 
 
-struct ship_point worm_point[10] =
+static struct ship_point worm_point[10] =
 {
 	{  10,  -10,   35, 31,  0,  2,  7,  7},
 	{ -10,  -10,   35, 31,  0,  3,  7,  7},
@@ -1744,7 +1744,7 @@ struct ship_point worm_point[10] =
 	{  -8,   14,  -25, 31,  1,  5,  6,  6},
 };
 
-struct ship_line worm_line[16] =
+static struct ship_line worm_line[16] =
 {
 	{31,  0,  7,  0,  1},
 	{31,  3,  7,  1,  5},
@@ -1764,7 +1764,7 @@ struct ship_line worm_line[16] =
 	{31,  1,  6,  8,  9},
 };
 
-struct ship_face_normal worm_face_normal[8] =
+static struct ship_face_normal worm_face_normal[8] =
 {
 	{31,    0,   88,   70},
 	{31,    0,   69,   14},
@@ -1797,7 +1797,7 @@ struct ship_data worm_data =
 
 
 
-struct ship_point cobra3b_point[28] =
+static struct ship_point cobra3b_point[28] =
 {
 	{  32,    0,   76, 31, 15, 15, 15, 15},
 	{ -32,    0,   76, 31, 15, 15, 15, 15},
@@ -1829,7 +1829,7 @@ struct ship_point cobra3b_point[28] =
 	{  80,   -6,  -40,  8,  9,  9,  9,  9},
 };
 
-struct ship_line cobra3b_line[38] =
+static struct ship_line cobra3b_line[38] =
 {
 	{31, 11,  0,  0,  1},
 	{31, 12,  4,  0,  4},
@@ -1871,7 +1871,7 @@ struct ship_line cobra3b_line[38] =
 	{ 8,  9,  9, 25, 27},
 };
 
-struct ship_face_normal cobra3b_face_normal[13] =
+static struct ship_face_normal cobra3b_face_normal[13] =
 {
 	{31,    0,   62,   31},
 	{31,  -18,   55,   16},
@@ -1909,7 +1909,7 @@ struct ship_data cobra3b_data =
 
 
 
-struct ship_point asp2_point[19] =
+static struct ship_point asp2_point[19] =
 {
 	{   0,  -18,    0, 22,  0,  1,  2,  2},
 	{   0,   -9,  -45, 31,  1,  2, 11, 11},
@@ -1932,7 +1932,7 @@ struct ship_point asp2_point[19] =
 	{   0,   -7,   83, 10,  0,  4,  0,  4},
 };
 
-struct ship_line asp2_line[28] =
+static struct ship_line asp2_line[28] =
 {
 	{22,  1,  2,  0,  1},
 	{22,  0,  1,  0,  4},
@@ -1964,7 +1964,7 @@ struct ship_line asp2_line[28] =
 	{10,  0,  4, 18, 17},
 };
 
-struct ship_face_normal asp2_face_normal[12] =
+static struct ship_face_normal asp2_face_normal[12] =
 {
 	{31,    0,  -35,    5},
 	{31,    8,  -38,   -7},
@@ -2001,7 +2001,7 @@ struct ship_data asp2_data =
 
 
 
-struct ship_point pythonb_point[11] =
+static struct ship_point pythonb_point[11] =
 {
 	{   0,    0,  224, 31,  1,  0,  3,  2},
 	{   0,   48,   48, 31,  1,  0,  5,  4},
@@ -2016,7 +2016,7 @@ struct ship_point pythonb_point[11] =
 	{   0,  -24, -112, 31, 11, 10, 12, 12},
 };
 
-struct ship_line pythonb_line[26] =
+static struct ship_line pythonb_line[26] =
 {
 	{31,  3,  2,  0,  8},
 	{31,  2,  0,  0,  3},
@@ -2046,7 +2046,7 @@ struct ship_line pythonb_line[26] =
 	{31,  7,  6,  8,  9},
 };
 
-struct ship_face_normal pythonb_face_normal[13] =
+static struct ship_face_normal pythonb_face_normal[13] =
 {
 	{31,  -27,   40,   11},
 	{31,   27,   40,   11},
@@ -2084,7 +2084,7 @@ struct ship_data pythonb_data =
 
 
 
-struct ship_point ferdlce_point[19] =
+static struct ship_point ferdlce_point[19] =
 {
 	{   0,  -14,  108, 31,  0,  1,  5,  9},
 	{ -40,  -14,   -4, 31,  1,  2,  9,  9},
@@ -2107,7 +2107,7 @@ struct ship_point ferdlce_point[19] =
 	{  14,  -14,   44, 12,  9,  9,  9,  9},
 };
 
-struct ship_line ferdlce_line[27] =
+static struct ship_line ferdlce_line[27] =
 {
 	{31,  1,  9,  0,  1},
 	{31,  2,  9,  1,  2},
@@ -2138,7 +2138,7 @@ struct ship_line ferdlce_line[27] =
 	{ 8,  9,  9, 17, 18},
 };
 
-struct ship_face_normal ferdlce_face_normal[10] =
+static struct ship_face_normal ferdlce_face_normal[10] =
 {
 	{28,    0,   24,    6},
 	{31,  -68,    0,   24},
@@ -2173,7 +2173,7 @@ struct ship_data ferdlce_data =
 
 
 
-struct ship_point moray_point[14] =
+static struct ship_point moray_point[14] =
 {
 	{  15,    0,   65, 31,  0,  2,  7,  8},
 	{ -15,    0,   65, 31,  0,  1,  6,  7},
@@ -2191,7 +2191,7 @@ struct ship_point moray_point[14] =
 	{  -6,    0,   65,  5,  0,  0,  0,  0},
 };
 
-struct ship_line moray_line[19] =
+static struct ship_line moray_line[19] =
 {
 	{31,  0,  7,  0,  1},
 	{31,  1,  6,  1,  3},
@@ -2214,7 +2214,7 @@ struct ship_line moray_line[19] =
 	{ 5,  0,  0, 12, 13},
 };
 
-struct ship_face_normal moray_face_normal[9] =
+static struct ship_face_normal moray_face_normal[9] =
 {
 	{31,    0,   43,    7},
 	{31,  -10,   49,    7},
@@ -2248,7 +2248,7 @@ struct ship_data moray_data =
 
 
 
-struct ship_point thargoid_point[20] =
+static struct ship_point thargoid_point[20] =
 {
 	{  32,  -48,   48, 31,  4,  0,  8,  8},
 	{  32,  -68,    0, 31,  1,  0,  4,  4},
@@ -2272,7 +2272,7 @@ struct ship_point thargoid_point[20] =
 	{ -24,  -64,   80, 30,  9,  9,  9,  9},
 };
 
-struct ship_line thargoid_line[26] =
+static struct ship_line thargoid_line[26] =
 {
 	{31,  8,  4,  0,  7},
 	{31,  4,  0,  0,  1},
@@ -2302,7 +2302,7 @@ struct ship_line thargoid_line[26] =
 	{30,  9,  9, 18, 19},
 };
 
-struct ship_face_normal thargoid_face_normal[10] =
+static struct ship_face_normal thargoid_face_normal[10] =
 {
 	{31,  103,  -60,   25},
 	{31,  103,  -60,  -25},
@@ -2337,7 +2337,7 @@ struct ship_data thargoid_data =
 
 
 
-struct ship_point thargon_point[10] =
+static struct ship_point thargon_point[10] =
 {
 	{  -9,    0,   40, 31,  0,  1,  5,  5},
 	{  -9,  -38,   12, 31,  0,  1,  2,  2},
@@ -2351,7 +2351,7 @@ struct ship_point thargon_point[10] =
 	{   9,   10,  -15, 31,  4,  5,  6,  6},
 };
 
-struct ship_line thargon_line[15] =
+static struct ship_line thargon_line[15] =
 {
 	{31,  1,  0,  0,  1},
 	{31,  2,  0,  1,  2},
@@ -2370,7 +2370,7 @@ struct ship_line thargon_line[15] =
 	{31,  6,  5,  9,  5},
 };
 
-struct ship_face_normal thargon_face_normal[7] =
+static struct ship_face_normal thargon_face_normal[7] =
 {
 	{31,  -36,    0,    0},
 	{31,   20,   -5,    7},
@@ -2402,7 +2402,7 @@ struct ship_data thargon_data =
 
 
 
-struct ship_point constrct_point[17] =
+static struct ship_point constrct_point[17] =
 {
 	{  20,   -7,   80, 31,  0,  2,  9,  9},
 	{ -20,   -7,   80, 31,  0,  1,  9,  9},
@@ -2423,7 +2423,7 @@ struct ship_point constrct_point[17] =
 	{   0,   -7,    0,  0,  9, 15,  0,  1},
 };
 
-struct ship_line constrct_line[24] =
+static struct ship_line constrct_line[24] =
 {
 	{31,  0,  9,  0,  1},
 	{31,  1,  9,  1,  2},
@@ -2451,7 +2451,7 @@ struct ship_line constrct_line[24] =
 	{18,  9,  9, 11, 13},
 };
 
-struct ship_face_normal constrct_face_normal[10] =
+static struct ship_face_normal constrct_face_normal[10] =
 {
 	{31,    0,   55,   15},
 	{31,  -24,   75,   20},
@@ -2486,7 +2486,7 @@ struct ship_data constrct_data =
 
 
 
-struct ship_point cougar_point[19] =
+static struct ship_point cougar_point[19] =
 {
 	{   0,    5,   67, 31,  0,  2,  4,  4},
 	{ -20,    0,   40, 31,  0,  1,  2,  2},
@@ -2509,7 +2509,7 @@ struct ship_point cougar_point[19] =
 	{  10,    6,  -40, 20,  5,  5,  5,  5},
 };
 
-struct ship_line cougar_line[25] =
+static struct ship_line cougar_line[25] =
 {
 	{31,  0,  2,  0,  1},
 	{31,  0,  1,  1,  7},
@@ -2538,7 +2538,7 @@ struct ship_line cougar_line[25] =
 	{20,  5,  5, 17, 15},
 };
 
-struct ship_face_normal cougar_face_normal[6] =
+static struct ship_face_normal cougar_face_normal[6] =
 {
 	{31,  -16,   46,    4},
 	{31,  -16,  -46,    4},
@@ -2569,7 +2569,7 @@ struct ship_data cougar_data =
 
 
 
-struct ship_point dodec_point[24] =
+static struct ship_point dodec_point[24] =
 {
 	{   0,  150,  196, 31,  0,  1,  5,  5},
 	{ 143,   46,  196, 31,  0,  1,  2,  2},
@@ -2597,7 +2597,7 @@ struct ship_point dodec_point[24] =
 	{  16,  -32,  196, 23,  0,  0,  0,  0},
 };
 
-struct ship_line dodec_line[34] =
+static struct ship_line dodec_line[34] =
 {
 	{31,  0,  1,  0,  1},
 	{31,  0,  2,  1,  2},
@@ -2635,7 +2635,7 @@ struct ship_line dodec_line[34] =
 	{20,  0,  0, 22, 20},
 };
 
-struct ship_face_normal dodec_face_normal[12] =
+static struct ship_face_normal dodec_face_normal[12] =
 {
 	{31,    0,    0,  196},
 	{31,  103,  142,   88},

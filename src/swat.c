@@ -35,22 +35,22 @@
 #include "trade.h"
 #include "pilot.h" 
 
-int laser_counter;
+static int laser_counter;
 int laser;
-int laser2;
-int laser_x;
-int laser_y;
+static int laser2;
+static int laser_x;
+static int laser_y;
 
 int ecm_active;
 int missile_target;
-int ecm_ours;
+static int ecm_ours;
 int in_battle;
 
 struct univ_object universe[MAX_UNIV_OBJECTS];
 int ship_count[NO_OF_SHIPS + 1];  /* many */
 
 
-int initial_flags[NO_OF_SHIPS + 1] =
+static int initial_flags[NO_OF_SHIPS + 1] =
 {
 	0,											// NULL,
 	0,											// missile 
@@ -154,7 +154,7 @@ int add_new_ship (int ship_type, int x, int y, int z, struct vector *rotmat, int
 
 
 
-void check_missiles (int un)
+static void check_missiles (int un)
 {
 	int i;
 	
@@ -227,7 +227,7 @@ void reset_weapons (void)
 }
 
  
-void launch_enemy (int un, int type, int flags, int bravery)
+static void launch_enemy (int un, int type, int flags, int bravery)
 {
 	int newship;
 	struct univ_object *ns;
@@ -268,7 +268,7 @@ void launch_enemy (int un, int type, int flags, int bravery)
 }
 
 
-void launch_loot (int un, int loot)
+static void launch_loot (int un, int loot)
 {
 	int i,cnt;
 
@@ -295,7 +295,7 @@ void launch_loot (int un, int loot)
 
 
 
-int in_target (int type, double x, double y, double z)
+static int in_target (int type, double x, double y, double z)
 {
 	double size;
 	
@@ -309,7 +309,7 @@ int in_target (int type, double x, double y, double z)
 
 
 
-void make_angry (int un)
+static void make_angry (int un)
 {
 	int type;
 	int flags;
@@ -479,7 +479,7 @@ void fire_missile (void)
 
 
 
-void track_object (struct univ_object *ship, double direction, Vector nvec)
+static void track_object (struct univ_object *ship, double direction, Vector nvec)
 {	
 	double dir;
 	int rat;
@@ -522,7 +522,7 @@ void track_object (struct univ_object *ship, double direction, Vector nvec)
 
 
 
-void missile_tactics (int un)
+static void missile_tactics (int un)
 {
 	struct univ_object *missile;
 	struct univ_object *target;
@@ -612,7 +612,7 @@ void missile_tactics (int un)
 
 
 
-void launch_shuttle (void)
+static void launch_shuttle (void)
 {
 	int type;
 
@@ -962,7 +962,7 @@ void cool_laser (void)
 }
 
 
-int create_other_ship (int type)
+static int create_other_ship (int type)
 {
 	Matrix rotmat;
 	int x,y,z;
@@ -1002,7 +1002,7 @@ void create_thargoid (void)
 
 
 
-void create_cougar (void)
+static void create_cougar (void)
 {
 	int newship;
 
@@ -1020,7 +1020,7 @@ void create_cougar (void)
 
 
 
-void create_trader (void)
+static void create_trader (void)
 {
 	int newship;
 	int rnd;
@@ -1048,7 +1048,7 @@ void create_trader (void)
 }
 
 
-void create_lone_hunter (void)
+static void create_lone_hunter (void)
 {
 	int rnd;
 	int type;
@@ -1083,7 +1083,7 @@ void create_lone_hunter (void)
 
 /* Check for a random asteroid encounter... */
 
-void check_for_asteroids (void)
+static void check_for_asteroids (void)
 {
 	int newship;
 	int type;
@@ -1111,7 +1111,7 @@ void check_for_asteroids (void)
 
 /* If we've been a bad boy then send the cops after us... */
 
-void check_for_cops (void)
+static void check_for_cops (void)
 {
 	int newship;
 	int offense;
@@ -1136,7 +1136,7 @@ void check_for_cops (void)
 }
 
 
-void check_for_others (void)
+static void check_for_others (void)
 {
 	int x,y,z;
 	int newship;
