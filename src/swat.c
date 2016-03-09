@@ -132,7 +132,10 @@ int add_new_ship (int ship_type, int x, int y, int z, struct vector *rotmat, int
 			universe[i].bravery = 0;
 			universe[i].target = 0;
 			
-			universe[i].flags = initial_flags[ship_type];
+			if (ship_type < 0)
+				universe[i].flags = initial_flags[0];
+			else
+				universe[i].flags = initial_flags[ship_type];
 
 			if ((ship_type != SHIP_PLANET) && (ship_type != SHIP_SUN))
 			{
