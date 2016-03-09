@@ -19,6 +19,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
+
 #define SND_LAUNCH		0
 #define SND_CRASH		1
 #define SND_DOCK		2
@@ -44,4 +45,5 @@ void snd_play_midi (int midi_no, int repeat);
 void snd_update_sound (void);
 void snd_stop_midi (void);
 
-#endif
+
+#endif		// #ifndef SOUND_H

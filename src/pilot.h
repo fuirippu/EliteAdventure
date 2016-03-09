@@ -19,9 +19,10 @@
 #ifndef PILOT_H
 #define PILOT_H
 
+
 void auto_pilot_ship (struct univ_object *ship);
 void engage_auto_pilot (void);
 void disengage_auto_pilot (void);
 
-#endif
- 
+
+#endif		// #ifndef PILOT_H

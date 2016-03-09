@@ -18,6 +18,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
  
+
 extern int kbd_F1_pressed;
 extern int kbd_F2_pressed;
 extern int kbd_F3_pressed;
@@ -63,5 +64,5 @@ int kbd_keyboard_startup (void);
 void kbd_poll_keyboard (void);
 int kbd_read_key (void);
 
-#endif
- 
+
+#endif		// #ifndef KEYBOARD_H

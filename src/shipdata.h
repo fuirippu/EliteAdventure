@@ -11,13 +11,8 @@
  *
  */
 
-
 #ifndef SHIPDATA_H
 #define SHIPDATA_H
-
-
-#define NO_OF_SHIPS		33
-
 
 
 struct ship_point
@@ -32,7 +27,6 @@ struct ship_point
 	int face4;
 };
 
-
 struct ship_line
 {
 	int dist;
@@ -42,7 +36,6 @@ struct ship_line
 	int end_point;
 };
 
-
 struct ship_face_normal
 {
 	int dist;
@@ -50,8 +43,6 @@ struct ship_face_normal
 	int y;
 	int z;
 };
-
-
 
 struct ship_data
 {
@@ -146,5 +137,4 @@ extern struct ship_data cougar_data;
 extern struct ship_data dodec_data;
 
 
-#endif
-
+#endif		// #ifndef SHIPDATA_H

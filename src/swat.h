@@ -15,6 +15,7 @@
 #ifndef SWAT_H
 #define SWAT_H
 
+
 #include "space.h"
 
 #define MISSILE_UNARMED	-2
@@ -46,5 +47,4 @@ void abandon_ship (void);
 void create_thargoid (void);
 
 
-
-#endif
+#endif		// #ifndef SWAT_H

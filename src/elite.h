@@ -163,5 +163,4 @@ extern int auto_pilot;
 
 void restore_saved_commander (void);
 
-
-#endif
+#endif		// #ifndef ELITE_H

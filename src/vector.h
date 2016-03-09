@@ -15,6 +15,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+
 struct vector
 {
 	double x;
@@ -31,5 +32,5 @@ struct vector unit_vector (struct vector *vec);
 void set_init_matrix (struct vector *mat);
 void tidy_matrix (struct vector *mat);
 
-#endif
 
+#endif		// #ifndef VECTOR_H

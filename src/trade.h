@@ -19,6 +19,7 @@
 #ifndef TRADE_H
 #define TRADE_H
  
+
 struct stock_item
 {
 	char name[16];
@@ -31,7 +32,6 @@ struct stock_item
 	int units;
 };
 
-
 #define NO_OF_STOCK_ITEMS	17
 extern struct stock_item stock_market[NO_OF_STOCK_ITEMS];
 
@@ -41,5 +41,5 @@ int carrying_contraband (void);
 int total_cargo (void);
 void scoop_item (int un);
 
-#endif
 
+#endif		// #ifndef TRADE_H

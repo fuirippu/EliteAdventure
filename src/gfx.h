@@ -12,7 +12,6 @@
  *
  */
 
-
 /**
  *
  * Elite - The New Kind.
@@ -22,9 +21,9 @@
  *
  **/
 
-
 #ifndef GFX_H
 #define GFX_H
+
 
 #ifdef RES_512_512
 
@@ -153,4 +152,5 @@ void gfx_render_line (int x1, int y1, int x2, int y2, int dist, int col);
 void gfx_finish_render (void);
 int gfx_request_file (char *title, char *path, char *ext);
 
-#endif
+
+#endif		// #ifndef GFX_H

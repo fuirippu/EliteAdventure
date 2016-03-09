@@ -26,7 +26,6 @@ struct galaxy_seed
 	unsigned char f;	/* 71 */
 };
 
-
 struct planet_data
 {
 	int government;
@@ -38,9 +37,6 @@ struct planet_data
 };
 
 
-
-
-
 char *describe_planet (struct galaxy_seed);
 void capitalise_name (char *name);
 void name_planet (char *gname, struct galaxy_seed glx);
@@ -50,5 +46,5 @@ void waggle_galaxy (struct galaxy_seed *glx_ptr);
 void describe_inhabitants (char *str, struct galaxy_seed planet);
 void generate_planet_data (struct planet_data *pl, struct galaxy_seed planet_seed);
 
-#endif
 
+#endif		// #ifndef PLANET_H

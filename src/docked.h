@@ -38,5 +38,4 @@ void buy_equip (void);
 extern int cross_x;
 extern int cross_y;
 
-#endif
-
+#endif		// #ifndef DOCKED_H

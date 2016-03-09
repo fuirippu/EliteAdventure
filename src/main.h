@@ -15,9 +15,10 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+
 void info_message (char *message);
 void save_commander_screen (void);
 void load_commander_screen (void);
 
 
-#endif
+#endif		// #ifndef MAIN_H

@@ -17,8 +17,7 @@
  * However some must be done at compile time either because they are
  * platform dependant or for playing speed.
  */
- 
- 
+  
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -48,4 +47,4 @@
  * #define RES_320_240
  */
 
-#endif
+#endif		// #ifndef CONFIG_H

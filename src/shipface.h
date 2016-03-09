@@ -15,6 +15,7 @@
 #ifndef SHIPFACE_H
 #define SHIPFACE_H
 
+
 struct ship_face
 {
 	int colour;
@@ -32,13 +33,14 @@ struct ship_face
 	int p8;
 };
 
-
 struct ship_solid
 {
 	int num_faces;
 	struct ship_face *face_data;
 };
 
+
 extern struct ship_solid ship_solids[];
 
-#endif
+
+#endif		// #ifndef SHIPFACE_H

@@ -18,6 +18,7 @@
 #include "elite.h"
 #include "vector.h"
 #include "planet.h"
+#include "space.h"
 #include "shipdata.h"
 
 

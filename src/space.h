@@ -18,6 +18,7 @@
 #ifndef SPACE_H
 #define SPACE_H
 
+
 #include "vector.h"
 #include "shipdata.h"
 
@@ -49,8 +50,9 @@ struct univ_object
 };
 
 #define MAX_UNIV_OBJECTS	20
-
 extern struct univ_object universe[MAX_UNIV_OBJECTS];
+
+#define NO_OF_SHIPS		33
 extern int ship_count[NO_OF_SHIPS + 1];  /* many */
 
 
@@ -83,5 +85,5 @@ void launch_player (void);
 
 void engage_docking_computer (void);
 
-#endif
 
+#endif		// #ifndef SPACE_H
