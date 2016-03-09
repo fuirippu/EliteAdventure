@@ -96,14 +96,15 @@ void read_cfg_line (char *str, int max_size, FILE *fp)
 void read_scanner_config_file (char *filename)
 {
 	FILE *fp;
-	char str[256];
+	char str[128];
 	
 	fp = fopen (filename, "r");
 	if (fp == NULL)
 		return;
 
 	read_cfg_line (str, sizeof(str), fp);
-	strcpy (scanner_filename, str);
+	sprintf(scanner_filename, "assets\\%s", str);
+	//strcpy (scanner_filename, str);
 
 	read_cfg_line (str, sizeof(str), fp);
 	sscanf (str, "%d,%d", &scanner_cx, &scanner_cy);
@@ -123,9 +124,9 @@ void read_scanner_config_file (char *filename)
 void read_config_file (void)
 {
 	FILE *fp;
-	char str[256];
+	char str[128];
 	
-	fp = fopen ("newkind.cfg", "r");
+	fp = fopen ("config\\newkind.cfg", "r");
 	if (fp == NULL)
 		return;
 
@@ -148,7 +149,9 @@ void read_config_file (void)
 	sscanf (str, "%d", &instant_dock);
 
 	read_cfg_line (str, sizeof(str), fp);
-	read_scanner_config_file (str);
+	char scannerConfigFileName[256];
+	sprintf(scannerConfigFileName, "config\\%s", str);
+	read_scanner_config_file (scannerConfigFileName);
 		
 	fclose (fp);
 }
