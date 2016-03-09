@@ -93,11 +93,11 @@ int gfx_graphics_startup (void)
       	return 1;
 	}
 	
-	datafile = load_datafile("elite.dat");
+	datafile = load_datafile("assets\\elite.dat");
 	if (!datafile)
 	{
 		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-      	allegro_message("Error loading %s!\n", "elite.dat");
+      	allegro_message("Error loading %s!\n", "assets\\elite.dat");
       	return 1;
 	}
 

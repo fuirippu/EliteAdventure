@@ -37,20 +37,20 @@ struct sound_sample
 
 struct sound_sample sample_list[NUM_SAMPLES] =
 {
-	{NULL, "launch.wav",    32, 0},
-	{NULL, "crash.wav",      7, 0},
-	{NULL, "dock.wav",      36, 0},
-	{NULL, "gameover.wav",  24, 0},
-	{NULL, "pulse.wav",      4, 0},
-	{NULL, "hitem.wav",		 4, 0},
-	{NULL, "explode.wav",	23, 0},
-	{NULL, "ecm.wav",		23, 0},
-	{NULL, "missile.wav",	25, 0},
-	{NULL, "hyper.wav",	    37, 0},
-	{NULL, "incom1.wav",	 4, 0},
-	{NULL, "incom2.wav",	 5, 0},
-	{NULL, "beep.wav",		 2, 0},
-	{NULL, "boop.wav",		 7, 0},
+	{NULL, "assets\\launch.wav",	32, 0},
+	{NULL, "assets\\crash.wav",		 7, 0},
+	{NULL, "assets\\dock.wav",		36, 0},
+	{NULL, "assets\\gameover.wav",	24, 0},
+	{NULL, "assets\\pulse.wav",		 4, 0},
+	{NULL, "assets\\hitem.wav",		 4, 0},
+	{NULL, "assets\\explode.wav",	23, 0},
+	{NULL, "assets\\ecm.wav",		23, 0},
+	{NULL, "assets\\missile.wav",	25, 0},
+	{NULL, "assets\\hyper.wav",		37, 0},
+	{NULL, "assets\\incom1.wav",	 4, 0},
+	{NULL, "assets\\incom2.wav",	 5, 0},
+	{NULL, "assets\\beep.wav",		 2, 0},
+	{NULL, "assets\\boop.wav",		 7, 0},
 };
  
  
