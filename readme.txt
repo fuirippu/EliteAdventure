@@ -1,3 +1,30 @@
+
+
+    Elite Adventurous - game in development
+    =======================================
+
+
+ +------------------------------------------------+
+ | based on Elite - The New Kind                  |
+ |  by Christian Pinder <christian@newkind.co.uk> |
+ |                      http://www.newkind.co.uk  |
+ +------------------------------------------------+
+
+
+  Contents
+  --------
+    allegro - source and VS2015 build of Allegro
+    assets  - sound and graphics
+    config  - configuration files
+    src     - source and project files
+
+
+ +---------------------------------------------------
+ | The following text is the original readme.txt
+ | file from the newkind repository...
+
+
+
 Elite - The New Kind   Release 1.0
 --------------------   -----------
 
