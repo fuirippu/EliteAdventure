@@ -116,8 +116,8 @@ void draw_wireframe_ship (struct univ_object *univ)
 		ry = vec.y + univ->location.y;
 		rz = vec.z + univ->location.z;
 
-		sx = (rx * 256) / rz;
-		sy = (ry * 256) / rz;
+		sx = (int)((rx * 256) / rz);
+		sy = (int)((ry * 256) / rz);
 
 		sy = -sy;
 
@@ -240,8 +240,8 @@ void draw_solid_ship (struct univ_object *univ)
 		if (rz <= 0)
 			rz = 1;
 		
-		sx = (rx * 256) / rz;
-		sy = (ry * 256) / rz;
+		sx = (int)((rx * 256) / rz);
+		sy = (int)((ry * 256) / rz);
 
 		sy = -sy;
 
@@ -253,7 +253,7 @@ void draw_solid_ship (struct univ_object *univ)
 
 		point_list[i].x = sx;
 		point_list[i].y = sy;
-		point_list[i].z = rz;
+		point_list[i].z = (int)rz;
 		
 	}
 
@@ -589,8 +589,8 @@ void render_planet (int xo, int yo, int radius, struct vector *vec)
 	xo += GFX_X_OFFSET;
 	yo += GFX_Y_OFFSET;
 	
-	vx = vec[1].x * 65536;
-	vy = vec[1].y * 65536;	
+	vx = (int)(vec[1].x * 65536);
+	vy = (int)(vec[1].y * 65536);
 	
 	s = radius;
 	x = radius;
@@ -640,8 +640,8 @@ void draw_planet (struct univ_object *planet)
 	int x,y;
 	int radius;
 	
-	x = (planet->location.x * 256) / planet->location.z;
-	y = (planet->location.y * 256) / planet->location.z;
+	x = (int)((planet->location.x * 256) / planet->location.z);
+	y = (int)((planet->location.y * 256) / planet->location.z);
 
 	y = -y;
 	
@@ -779,8 +779,8 @@ void draw_sun (struct univ_object *planet)
 	int x,y;
 	int radius;
 	
-	x = (planet->location.x * 256) / planet->location.z;
-	y = (planet->location.y * 256) / planet->location.z;
+	x = (int)((planet->location.x * 256) / planet->location.z);
+	y = (int)((planet->location.y * 256) / planet->location.z);
 
 	y = -y;
 	
@@ -893,8 +893,8 @@ void draw_explosion (struct univ_object *univ)
 			ry = vec.y + univ->location.y;
 			rz = vec.z + univ->location.z;
 
-			sx = (rx * 256) / rz;
-			sy = (ry * 256) / rz;
+			sx = (int)((rx * 256) / rz);
+			sy = (int)((ry * 256) / rz);
 
 			sy = -sy;
 

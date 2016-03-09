@@ -118,7 +118,7 @@ int add_new_ship (int ship_type, int x, int y, int z, struct vector *rotmat, int
 			universe[i].location.y = y;
 			universe[i].location.z = z;
 			
-			universe[i].distance = sqrt(x*x + y*y + z*z);
+			universe[i].distance = (int)sqrt(x*x + y*y + z*z);
 
 			universe[i].rotmat[0] = rotmat[0];
 			universe[i].rotmat[1] = rotmat[1];
@@ -190,9 +190,9 @@ void remove_ship (int un)
 	if ((type == SHIP_CORIOLIS) || (type == SHIP_DODEC))
 	{
 		set_init_matrix (rotmat);
-		px = universe[un].location.x;
-		py = universe[un].location.y;
-		pz = universe[un].location.z;
+		px = (int)universe[un].location.x;
+		py = (int)universe[un].location.y;
+		pz = (int)universe[un].location.z;
 		
 		py &= 0xFFFF;
 		py |= 0x60000;
@@ -208,7 +208,7 @@ void add_new_station (double sx, double sy, double sz, Matrix rotmat)
 	
 	station = (current_planet_data.techlevel >= 10) ? SHIP_DODEC : SHIP_CORIOLIS;
 	universe[1].type = 0;
-	add_new_ship (station, sx, sy, sz, rotmat, 0, -127);					
+	add_new_ship (station, (int)sx, (int)sy, (int)sz, rotmat, 0, -127);
 }
 	
 
@@ -229,8 +229,11 @@ void launch_enemy (int un, int type, int flags, int bravery)
 	int newship;
 	struct univ_object *ns;
 	
-	newship = add_new_ship (type, universe[un].location.x, universe[un].location.y,
-							universe[un].location.z, universe[un].rotmat,
+	newship = add_new_ship (type,
+							(int)universe[un].location.x,
+							(int)universe[un].location.y,
+							(int)universe[un].location.z,
+							universe[un].rotmat,
 							universe[un].rotx, universe[un].rotz);
 
 	if (newship == -1)

@@ -77,8 +77,8 @@ void front_starfield (void)
 	{
 		/* Plot the stars in their current locations... */
 
-		sy = stars[i].y;
-		sx = stars[i].x;
+		sy = (int)stars[i].y;
+		sx = (int)stars[i].x;
 		zz = stars[i].z;
 
 		sx += 128;
@@ -127,10 +127,10 @@ void front_starfield (void)
 
 		
 		if (warp_stars)
-			gfx_draw_line (sx, sy, (xx + 128) * GFX_SCALE, (yy + 96) * GFX_SCALE);
+			gfx_draw_line (sx, sy, (int)((xx + 128) * GFX_SCALE), (int)((yy + 96) * GFX_SCALE));
 		
-		sx = xx;
-		sy = yy;
+		sx = (int)xx;
+		sy = (int)yy;
 
 		if ((sx > 120) || (sx < -120) ||
 			(sy > 120) || (sy < -120) || (zz < 16))
@@ -173,8 +173,8 @@ void rear_starfield (void)
 	{
 		/* Plot the stars in their current locations... */
 
-		sy = stars[i].y;
-		sx = stars[i].x;
+		sy = (int)stars[i].y;
+		sx = (int)stars[i].x;
 		zz = stars[i].z;
 
 		sx += 128;
@@ -220,8 +220,8 @@ void rear_starfield (void)
 		
 		if (warp_stars)
 		{
-			ey = yy;
-			ex = xx;
+			ey = (int)yy;
+			ex = (int)xx;
 			ex = (ex + 128) * GFX_SCALE;
 			ey = (ey + 96) * GFX_SCALE;
 
@@ -229,13 +229,13 @@ void rear_starfield (void)
 			   (sy >= GFX_VIEW_TY) && (sy <= GFX_VIEW_BY) &&
 			   (ex >= GFX_VIEW_TX) && (ex <= GFX_VIEW_BX) &&
 			   (ey >= GFX_VIEW_TY) && (ey <= GFX_VIEW_BY))
-				gfx_draw_line (sx, sy, (xx + 128) * GFX_SCALE, (yy + 96) * GFX_SCALE);
+				gfx_draw_line (sx, sy, (int)((xx + 128) * GFX_SCALE), (int)((yy + 96) * GFX_SCALE));
 		}
 		
 		stars[i].y = yy;
 		stars[i].x = xx;
 
-		if ((zz >= 300) || (abs(yy) >= 110))
+		if ((zz >= 300) || (abs((int)yy) >= 110))
 		{
 			stars[i].z = (rand255() & 127) + 51;
 			
@@ -284,8 +284,8 @@ void side_starfield (void)
 	
 	for (i = 0; i < nstars; i++)
 	{
-		sy = stars[i].y;
-		sx = stars[i].x;
+		sy = (int)stars[i].y;
+		sx = (int)stars[i].x;
 		zz = stars[i].z;
 
 		sx += 128;
@@ -329,16 +329,16 @@ void side_starfield (void)
 		stars[i].x = xx;
 
 		if (warp_stars)
-			gfx_draw_line (sx, sy, (xx + 128) * GFX_SCALE, (yy + 96) * GFX_SCALE);
+			gfx_draw_line (sx, sy, (int)((xx + 128) * GFX_SCALE), (int)((yy + 96) * GFX_SCALE));
 
 		
-		if (abs(stars[i].x) >= 116)
+		if (abs((int)stars[i].x) >= 116)
 		{
 			stars[i].y = rand255() - 128;
 			stars[i].x = (current_screen == SCR_LEFT_VIEW) ? 115 : -115;
 			stars[i].z = rand255() | 8;
 		}
-		else if (abs(stars[i].y) >= 116)
+		else if (abs((int)stars[i].y) >= 116)
 		{
 			stars[i].x = rand255() - 128;
 			stars[i].y = (alpha > 0) ? -110 : 110;
@@ -365,8 +365,8 @@ void flip_stars (void)
 	nstars = witchspace ? 3 : 12;
 	for (i = 0; i < nstars; i++)
 	{
-		sy = stars[i].y;
-		sx = stars[i].x;
+		sy = (int)stars[i].y;
+		sx = (int)stars[i].x;
 		stars[i].x = sy;
 		stars[i].y = sx;
 	}

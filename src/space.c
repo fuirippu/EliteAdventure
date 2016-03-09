@@ -153,7 +153,7 @@ void move_univ_object (struct univ_object *obj)
 	obj->location.y = y;
 	obj->location.z = z;	
 
-	obj->distance = sqrt (x*x + y*y + z*z);
+	obj->distance = (int)sqrt (x*x + y*y + z*z);
 	
 	if (obj->type == SHIP_PLANET)
 		beta = 0.0;
@@ -308,7 +308,7 @@ void update_altitude (void)
 		return;
 	}
 
-	myship.altitude = dist;	
+	myship.altitude = (int)dist;
 }
 
 
@@ -701,9 +701,9 @@ void update_scanner (void)
 			(universe[i].flags & FLG_CLOAKED))
 			continue;
 	
-		x = universe[i].location.x / 256;
-		y = universe[i].location.y / 256;
-		z = universe[i].location.z / 256;
+		x = (int)(universe[i].location.x / 256);
+		y = (int)(universe[i].location.y / 256);
+		z = (int)(universe[i].location.z / 256);
 
 		x1 = x;
 		y1 = -z / 4;
@@ -767,8 +767,8 @@ void update_compass (void)
 	
 	dest = unit_vector (&universe[un].location);
 	
-	compass_x = compass_centre_x + (dest.x * 16);
-	compass_y = compass_centre_y + (dest.y * -16);
+	compass_x = compass_centre_x + (int)(dest.x * 16);
+	compass_y = compass_centre_y + (int)(dest.y * -16);
 	
 	if (dest.z < 0)
 	{

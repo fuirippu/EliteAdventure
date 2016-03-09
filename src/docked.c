@@ -100,7 +100,7 @@ int calc_distance_to_planet (struct galaxy_seed from_planet, struct galaxy_seed 
 	dy = dy / 2;
 	dy = dy * dy;
 
-	light_years = sqrt(dx + dy);
+	light_years = (int)sqrt(dx + dy);
 	light_years *= 4;
 
 	return light_years;
