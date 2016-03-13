@@ -28,7 +28,6 @@
 
 #include "allegro.h"
 
-#include "config.h"
 #include "gfx.h"
 #include "main.h"
 #include "vector.h"

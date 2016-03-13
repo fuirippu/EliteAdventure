@@ -20,7 +20,6 @@
 #include <string.h>
 
 #include "elite.h"
-#include "config.h"
 #include "gfx.h"
 #include "options.h"
 #include "main.h"

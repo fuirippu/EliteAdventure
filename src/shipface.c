@@ -26,7 +26,6 @@
 
 #include <stdlib.h>
 
-#include "config.h"
 #include "elite.h"
 #include "shipface.h"
 #include "gfx.h"

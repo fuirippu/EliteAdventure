@@ -25,6 +25,10 @@
 #define GFX_H
 
 
+#define RES_800_600
+ // #define RES_512_512
+
+
 #ifdef RES_512_512
 
 #define GFX_SCALE		(2)

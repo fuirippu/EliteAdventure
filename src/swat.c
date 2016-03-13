@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "gfx.h"
 #include "elite.h"
 #include "vector.h"

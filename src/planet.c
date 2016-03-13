@@ -21,7 +21,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "config.h"
 #include "gfx.h"
 #include "elite.h"
 #include "planet.h"

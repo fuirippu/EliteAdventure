@@ -27,7 +27,6 @@
 
 #include "alg_data.h"
 
-#include "config.h"
 #include "elite.h"
 #include "gfx.h"
 #include "docked.h"

@@ -22,7 +22,6 @@
 #include <string.h>
 
 #include "elite.h"
-#include "config.h"
 #include "file.h"
 
 void write_config_file (void)

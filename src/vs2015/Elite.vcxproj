@@ -146,7 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\alg_data.h" />
-    <ClInclude Include="..\config.h" />
     <ClInclude Include="..\docked.h" />
     <ClInclude Include="..\elite.h" />
     <ClInclude Include="..\file.h" />

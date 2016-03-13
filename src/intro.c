@@ -24,7 +24,6 @@
  
 #include <stdlib.h>
 
-#include "config.h"
 #include "elite.h"
 #include "gfx.h"
 #include "vector.h"

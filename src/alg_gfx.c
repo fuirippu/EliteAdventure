@@ -20,7 +20,6 @@
 
 #include "allegro.h"
 
-#include "config.h"
 #include "gfx.h"
 #include "alg_data.h"
 #include "elite.h"

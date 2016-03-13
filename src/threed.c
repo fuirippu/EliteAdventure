@@ -17,7 +17,6 @@
 #include <math.h>
 #include <ctype.h>
 
-#include "config.h"
 #include "elite.h"
 #include "gfx.h"
 #include "planet.h"
