@@ -1159,7 +1159,7 @@ static void check_for_others(void)
 				universe[newship].flags |= FLG_HAS_ECM;
 		
 			universe[newship].bravery = ((rand255() * 2) | 64) & 127;
-			in_battle++;  
+			in_battle++;
 		}
 	}
 	

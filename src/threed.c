@@ -31,6 +31,9 @@
 #define MAX(x,y) (((x) > (y)) ? (x) : (y))
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 #define LAND_X_MAX	128
 #define LAND_Y_MAX	128
 
@@ -39,6 +42,9 @@ static unsigned char landscape[LAND_X_MAX+1][LAND_Y_MAX+1];
 static struct point point_list[100];
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
 /*
  * The following routine is used to draw a wireframe represtation of a ship.
  *
@@ -46,8 +52,7 @@ static struct point point_list[100];
  * A number of features (such as not showing detail at distance) have not yet been implemented.
  *
  */
-
-static void draw_wireframe_ship (struct univ_object *univ)
+static void draw_wireframe_ship(struct univ_object *univ)
 {
 	Matrix trans_mat;
 	int i;
@@ -69,8 +74,8 @@ static void draw_wireframe_ship (struct univ_object *univ)
 		trans_mat[i] = univ->rotmat[i];
 		
 	camera_vec = univ->location;
-	mult_vector (&camera_vec, trans_mat);
-	camera_vec = unit_vector (&camera_vec);
+	mult_vector(&camera_vec, trans_mat);
+	camera_vec = unit_vector(&camera_vec);
 	
 	num_faces = ship->num_faces;
 	
@@ -86,8 +91,8 @@ static void draw_wireframe_ship (struct univ_object *univ)
 			visible[i] = 1;
 		else
 		{
-			vec = unit_vector (&vec);
-			cos_angle = vector_dot_product (&vec, &camera_vec);
+			vec = unit_vector(&vec);
+			cos_angle = vector_dot_product(&vec, &camera_vec);
 			visible[i] = (cos_angle < -0.2);
 		}
 	}
@@ -110,7 +115,7 @@ static void draw_wireframe_ship (struct univ_object *univ)
 		vec.y = ship->points[i].y;
 		vec.z = ship->points[i].z;
 
-		mult_vector (&vec, trans_mat);
+		mult_vector(&vec, trans_mat);
 
 		rx = vec.x + univ->location.x;
 		ry = vec.y + univ->location.y;
@@ -143,21 +148,17 @@ static void draw_wireframe_ship (struct univ_object *univ)
 			ex = point_list[ship->lines[i].end_point].x;
 			ey = point_list[ship->lines[i].end_point].y;
 
-			gfx_draw_line (sx, sy, ex, ey);
+			gfx_draw_line(sx, sy, ex, ey);
 		}
 	}
-
 
 	if (univ->flags & FLG_FIRING)
 	{
 		lasv = ship_list[univ->type]->front_laser;
-		gfx_draw_line (point_list[lasv].x, point_list[lasv].y,
+		gfx_draw_line(point_list[lasv].x, point_list[lasv].y,
 					   univ->location.x > 0 ? 0 : 511, rand255() * 2);
 	}
 }
-
-
-
 
 /*
  * Hacked version of the draw ship routine to display solid ships...
@@ -165,8 +166,7 @@ static void draw_wireframe_ship (struct univ_object *univ)
  *
  * Check for hidden surface supplied by T.Harte.
  */
-
-static void draw_solid_ship (struct univ_object *univ)
+static void draw_solid_ship(struct univ_object *univ)
 {
 	int i;
 	int sx,sy;
@@ -192,8 +192,8 @@ static void draw_solid_ship (struct univ_object *univ)
 		trans_mat[i] = univ->rotmat[i];
 		
 	camera_vec = univ->location;
-	mult_vector (&camera_vec, trans_mat);
-	camera_vec = unit_vector (&camera_vec);
+	mult_vector(&camera_vec, trans_mat);
+	camera_vec = unit_vector(&camera_vec);
 
 	num_faces = solid_data->num_faces;
 	face_data = solid_data->face_data;
@@ -205,8 +205,8 @@ static void draw_solid_ship (struct univ_object *univ)
 		vec.y = face_data[i].norm_y;
 		vec.z = face_data[i].norm_z;
 
-		vec = unit_vector (&vec);
-		cos_angle = vector_dot_product (&vec, &camera_vec);
+		vec = unit_vector(&vec);
+		cos_angle = vector_dot_product(&vec, &camera_vec);
 
 		visible[i] = (cos_angle < -0.13);
 	}
@@ -224,14 +224,13 @@ static void draw_solid_ship (struct univ_object *univ)
 	trans_mat[1].z = trans_mat[2].y;
 	trans_mat[2].y = tmp;
 
-
 	for (i = 0; i < ship->num_points; i++)
 	{
 		vec.x = ship->points[i].x;
 		vec.y = ship->points[i].y;
 		vec.z = ship->points[i].z;
 
-		mult_vector (&vec, trans_mat);
+		mult_vector(&vec, trans_mat);
 
 		rx = vec.x + univ->location.x;
 		ry = vec.y + univ->location.y;
@@ -315,10 +314,8 @@ static void draw_solid_ship (struct univ_object *univ)
 				poly_list[15] = point_list[face_data[i].p8].y;
 				zavg = MAX(zavg,point_list[face_data[i].p8].z);
 			}
-			
 
-			gfx_render_polygon (face_data[i].points, poly_list, face_data[i].colour, zavg);
-			
+			gfx_render_polygon(face_data[i].points, poly_list, face_data[i].colour, zavg);
 		}
 	}
 
@@ -327,21 +324,19 @@ static void draw_solid_ship (struct univ_object *univ)
 		lasv = ship_list[univ->type]->front_laser;
 		col = (univ->type == SHIP_VIPER) ? GFX_COL_CYAN : GFX_COL_WHITE; 
 		
-		gfx_render_line (point_list[lasv].x, point_list[lasv].y,
+		gfx_render_line(point_list[lasv].x, point_list[lasv].y,
 						 univ->location.x > 0 ? 0 : 511, rand255() * 2,
 						 point_list[lasv].z, col);
 	}
 }
 
 
-
-
+#pragma region Planet Stuff
 
 /*
  * Colour map used to generate a SNES Elite style planet.
  * This is a quick hack and needs tidying up.
  */
-
 static int snes_planet_colour[] =
 {
 	102, 102,
@@ -366,12 +361,10 @@ static int snes_planet_colour[] =
 	102, 102
 }; 
 
-
 /*
  * Generate a landscape map for a SNES Elite style planet.
  */
-
-static void generate_snes_landscape (void)
+static void generate_snes_landscape(void)
 {
 	int x,y;
 	int colour;
@@ -386,15 +379,11 @@ static void generate_snes_landscape (void)
 	}	
 }
 
-
-
-
 /*
  * Guassian random number generator.
  * Returns a number between -7 and +8 with Gaussian distribution.
  */
-
-static int grand (void)
+static int grand(void)
 {
 	int i;
 	int r;
@@ -409,12 +398,10 @@ static int grand (void)
 	return r;
 }
 
-
 /*
  * Calculate the midpoint between two given points.
  */
-
-static int calc_midpoint (int sx, int sy, int ex, int ey)
+static int calc_midpoint(int sx, int sy, int ex, int ey)
 {
 	int a,b,n;
 
@@ -430,12 +417,10 @@ static int calc_midpoint (int sx, int sy, int ex, int ey)
 	return n;
 } 
 
-
 /*
  * Calculate a square on the midpoint map.
  */
-
-static void midpoint_square (int tx, int ty, int w)
+static void midpoint_square(int tx, int ty, int w)
 {
 	int mx,my;
 	int bx,by;
@@ -456,19 +441,17 @@ static void midpoint_square (int tx, int ty, int w)
 	if (d == 1)
 		return;
 	
-	midpoint_square (tx,ty,d);
-	midpoint_square (mx,ty,d);
-	midpoint_square (tx,my,d);
-	midpoint_square (mx,my,d);
+	midpoint_square(tx,ty,d);
+	midpoint_square(mx,ty,d);
+	midpoint_square(tx,my,d);
+	midpoint_square(mx,my,d);
 }
-
 
 /*
  * Generate a fractal landscape.
  * Uses midpoint displacement method.
  */
-
-static void generate_fractal_landscape (int rnd_seed)
+static void generate_fractal_landscape(int rnd_seed)
 {
 	int x,y,d,h;
 	double dist;
@@ -486,7 +469,7 @@ static void generate_fractal_landscape (int rnd_seed)
 
 	for (y = 0; y < LAND_Y_MAX; y += d)
 		for (x = 0; x < LAND_X_MAX; x += d)	
-			midpoint_square (x,y,d);
+			midpoint_square(x,y,d);
 
 	for (y = 0; y <= LAND_Y_MAX; y++)
 	{
@@ -499,15 +482,13 @@ static void generate_fractal_landscape (int rnd_seed)
 				landscape[x][y] = dark ? GFX_COL_GREEN_1 : GFX_COL_GREEN_2;
 			else 
 				landscape[x][y] = dark ? GFX_COL_BLUE_2 : GFX_COL_BLUE_1;
-
 		}
 	}
 
-	set_rand_seed (old_seed);
+	set_rand_seed(old_seed);
 }
 
-
-void generate_landscape (int rnd_seed)
+void generate_landscape(int rnd_seed)
 {
 	switch (planet_render_style)
 	{
@@ -515,7 +496,7 @@ void generate_landscape (int rnd_seed)
 			break;
 		
 		case 1:
-			/* generate_green_landscape (); */
+			/* generate_green_landscape(); */
 			break;
 		
 		case 2:
@@ -523,19 +504,15 @@ void generate_landscape (int rnd_seed)
 			break;
 		
 		case 3:
-			generate_fractal_landscape (rnd_seed);
+			generate_fractal_landscape(rnd_seed);
 			break;
 	}
 }
-
- 
  
 /*
  * Draw a line of the planet with appropriate rotation.
  */
-
-
-static void render_planet_line (int xo, int yo, int x, int y, int radius, int vx, int vy)
+static void render_planet_line(int xo, int yo, int x, int y, int radius, int vx, int vy)
 {
 	int lx, ly;
 	int rx, ry;
@@ -568,19 +545,17 @@ static void render_planet_line (int xo, int yo, int x, int y, int radius, int vx
 			ly = ry / div;
 			colour = landscape[lx][ly];
  
-			gfx_fast_plot_pixel (sx, sy, colour);
+			gfx_fast_plot_pixel(sx, sy, colour);
 		}
 		rx += vx;
 		ry += vy;
 	}
 }
 
-
 /*
  * Draw a solid planet.  Based on Doros circle drawing alogorithm.
  */
-
-static void render_planet (int xo, int yo, int radius, struct vector *vec)
+static void render_planet(int xo, int yo, int radius, struct vector *vec)
 {
 	int x,y;
 	int s;
@@ -599,10 +574,10 @@ static void render_planet (int xo, int yo, int radius, struct vector *vec)
 	s -= x + x;
 	while (y <= x)
 	{
-		render_planet_line (xo, yo, x, y, radius, vx, vy);
-		render_planet_line (xo, yo, x,-y, radius, vx, vy);
-		render_planet_line (xo, yo, y, x, radius, vx, vy);
-		render_planet_line (xo, yo, y,-x, radius, vx, vy);
+		render_planet_line(xo, yo, x, y, radius, vx, vy);
+		render_planet_line(xo, yo, x,-y, radius, vx, vy);
+		render_planet_line(xo, yo, y, x, radius, vx, vy);
+		render_planet_line(xo, yo, y,-x, radius, vx, vy);
 		
 		s += y + y + 1;
 		y++;
@@ -620,12 +595,10 @@ static void render_planet (int xo, int yo, int radius, struct vector *vec)
  * At the moment we just draw a circle.
  * Need to add in the two arcs that the original Elite had.
  */
-
-static void draw_wireframe_planet (int xo, int yo, int radius, struct vector *vec)
+static void draw_wireframe_planet(int xo, int yo, int radius, struct vector *vec)
 {
-	gfx_draw_circle (xo, yo, radius, GFX_COL_WHITE);
+	gfx_draw_circle(xo, yo, radius, GFX_COL_WHITE);
 }
-
 
 /*
  * Draw a planet.
@@ -634,8 +607,7 @@ static void draw_wireframe_planet (int xo, int yo, int radius, struct vector *ve
  * - Fractal landscape.
  * - SNES Elite style.
  */
-
-static void draw_planet (struct univ_object *planet)
+static void draw_planet(struct univ_object *planet)
 {
 	int x,y;
 	int radius;
@@ -665,22 +637,23 @@ static void draw_planet (struct univ_object *planet)
 	switch (planet_render_style)
 	{
 		case 0:
-			draw_wireframe_planet (x, y, radius, planet->rotmat);
+			draw_wireframe_planet(x, y, radius, planet->rotmat);
 			break;
 		
 		case 1:
-			gfx_draw_filled_circle (x, y, radius, GFX_COL_GREEN_1);
+			gfx_draw_filled_circle(x, y, radius, GFX_COL_GREEN_1);
 			break;
 
 		case 2:
 		case 3:
-			render_planet (x, y, radius, planet->rotmat);
+			render_planet(x, y, radius, planet->rotmat);
 			break;
 	}
 }
+#pragma endregion
 
-
-static void render_sun_line (int xo, int yo, int x, int y, int radius)
+#pragma region Sun stuff
+static void render_sun_line(int xo, int yo, int x, int y, int radius)
 {
 	int sy = yo + y;
 	int sx,ex;
@@ -737,12 +710,12 @@ static void render_sun_line (int xo, int yo, int x, int y, int radius)
 		else
 			colour = mix ? GFX_ORANGE_1 : GFX_ORANGE_2;
 		
-		gfx_fast_plot_pixel (sx, sy, colour);
+		gfx_fast_plot_pixel(sx, sy, colour);
 	} 	
 }
 
 
-static void render_sun (int xo, int yo, int radius)
+static void render_sun(int xo, int yo, int radius)
 {
 	int x,y;
 	int s;
@@ -757,10 +730,10 @@ static void render_sun (int xo, int yo, int radius)
 	// s -= x + x;
 	while (y <= x)
 	{
-		render_sun_line (xo, yo, x, y, radius);
-		render_sun_line (xo, yo, x,-y, radius);
-		render_sun_line (xo, yo, y, x, radius);
-		render_sun_line (xo, yo, y,-x, radius);
+		render_sun_line(xo, yo, x, y, radius);
+		render_sun_line(xo, yo, x,-y, radius);
+		render_sun_line(xo, yo, y, x, radius);
+		render_sun_line(xo, yo, y,-x, radius);
 		
 		s += y + y + 1;
 		y++;
@@ -772,9 +745,7 @@ static void render_sun (int xo, int yo, int radius)
 	}
 }
 
-
-
-static void draw_sun (struct univ_object *planet)
+static void draw_sun(struct univ_object *planet)
 {
 	int x,y;
 	int radius;
@@ -800,12 +771,11 @@ static void draw_sun (struct univ_object *planet)
 		(y - radius > 383))
 		return; 
 
-	render_sun (x, y, radius);
+	render_sun(x, y, radius);
 }
+#pragma endregion
 
-
-
-static void draw_explosion (struct univ_object *univ)
+static void draw_explosion(struct univ_object *univ)
 {
 	int i;
 	int z;
@@ -846,8 +816,8 @@ static void draw_explosion (struct univ_object *univ)
 		trans_mat[i] = univ->rotmat[i];
 		
 	camera_vec = univ->location;
-	mult_vector (&camera_vec, trans_mat);
-	camera_vec = unit_vector (&camera_vec);
+	mult_vector(&camera_vec, trans_mat);
+	camera_vec = unit_vector(&camera_vec);
 	
 	ship_norm = ship->normals;
 	
@@ -857,8 +827,8 @@ static void draw_explosion (struct univ_object *univ)
 		vec.y = ship_norm[i].y;
 		vec.z = ship_norm[i].z;
 
-		vec = unit_vector (&vec);
-		cos_angle = vector_dot_product (&vec, &camera_vec);
+		vec = unit_vector(&vec);
+		cos_angle = vector_dot_product(&vec, &camera_vec);
 
 		visible[i] = (cos_angle < -0.13);
 	}
@@ -887,7 +857,7 @@ static void draw_explosion (struct univ_object *univ)
 			vec.y = sp[i].y;
 			vec.z = sp[i].z;
 
-			mult_vector (&vec, trans_mat);
+			mult_vector(&vec, trans_mat);
 
 			rx = vec.x + univ->location.x;
 			ry = vec.y + univ->location.y;
@@ -927,7 +897,7 @@ static void draw_explosion (struct univ_object *univ)
 	q = pr / 32;	
 		
 	old_seed = get_rand_seed();
-	set_rand_seed (univ->exp_seed);
+	set_rand_seed(univ->exp_seed);
 
 	for (cnt = 0; cnt < np; cnt++)
 	{
@@ -950,21 +920,18 @@ static void draw_explosion (struct univ_object *univ)
 
 			for (psy = 0; psy < sizey; psy++)
 				for (psx = 0; psx < sizex; psx++)		
-					gfx_plot_pixel (px+psx, py+psy, GFX_COL_WHITE);
+					gfx_plot_pixel(px+psx, py+psy, GFX_COL_WHITE);
 		}
 	}
 
-	set_rand_seed (old_seed);
+	set_rand_seed(old_seed);
 }
-
-
 
 /*
  * Draws an object in the universe.
  * (Ship, Planet, Sun etc).
  */
-
-void draw_ship (struct univ_object *ship)
+void draw_ship(struct univ_object *ship)
 {
 
 	if ((current_screen != SCR_FRONT_VIEW) && (current_screen != SCR_REAR_VIEW) && 
@@ -982,7 +949,7 @@ void draw_ship (struct univ_object *ship)
 
 	if (ship->flags & FLG_EXPLOSION)
 	{
-		draw_explosion (ship);
+		draw_explosion(ship);
 		return;
 	}
 	
@@ -991,13 +958,13 @@ void draw_ship (struct univ_object *ship)
 
 	if (ship->type == SHIP_PLANET)
 	{
-		draw_planet (ship);
+		draw_planet(ship);
 		return;
 	}
 
 	if (ship->type == SHIP_SUN)
 	{
-		draw_sun (ship);
+		draw_sun(ship);
 		return;
 	}
 	
@@ -1006,8 +973,7 @@ void draw_ship (struct univ_object *ship)
 		return;
 		
 	if (wireframe)
-		draw_wireframe_ship (ship);
+		draw_wireframe_ship(ship);
 	else
-		draw_solid_ship (ship);
+		draw_solid_ship(ship);
 }
-
