@@ -55,8 +55,12 @@ extern struct univ_object universe[MAX_UNIV_OBJECTS];
 #define NO_OF_SHIPS		33
 extern int ship_count[NO_OF_SHIPS + 1];  /* many */
 
+extern int hyper_ready;
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Prototypes
+/////////////////////////////////////////////////////////////////////////////
 void update_universe (void);
 
 void update_console (void);
@@ -74,7 +78,7 @@ void dock_player (void);
 void damage_ship (int damage, int front);
 void decrease_energy (int amount);
 
-extern int hyper_ready;
+
 
 void start_hyperspace (void);
 void start_galactic_hyperspace (void);

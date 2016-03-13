@@ -65,7 +65,7 @@ struct ship_data
 	struct ship_face_normal *normals;
 };
 
-
+#pragma region defines for SHIP_ type
 #define SHIP_SUN				-2
 #define SHIP_PLANET				-1
 #define SHIP_MISSILE			1
@@ -101,7 +101,9 @@ struct ship_data
 #define SHIP_CONSTRICTOR		31
 #define SHIP_COUGAR				32
 #define SHIP_DODEC				33
+#pragma endregion
 
+#pragma region A global struct ship_data for every ship type?
 extern struct ship_data missile_data;
 extern struct ship_data coriolis_data;
 extern struct ship_data esccaps_data;
@@ -135,6 +137,7 @@ extern struct ship_data thargon_data;
 extern struct ship_data constrct_data;
 extern struct ship_data cougar_data;
 extern struct ship_data dodec_data;
+#pragma endregion
 
 
 #endif		// #ifndef SHIPDATA_H
