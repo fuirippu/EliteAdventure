@@ -33,6 +33,10 @@
 #include "keyboard.h"
  
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals (all static char arrays)
+/////////////////////////////////////////////////////////////////////////////
+#pragma region Mission Text
 static char *mission1_brief_a =
 	"Greetings Commander, I am Captain Curruthers of "
 	"Her Majesty's Space Navy and I beg a moment of your "
@@ -101,10 +105,13 @@ static char *mission2_debrief =
 	"We did not expect the Thargoids to find out about you."
 	"For the moment please accept this Navy Extra Energy Unit as payment. "
 	"---MESSAGE ENDS.";
-
+#pragma endregion
 	
 
-char *mission_planet_desc (struct galaxy_seed planet)
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
+char *mission_planet_desc(struct galaxy_seed planet)
 {
 	int pnum;
 
@@ -119,7 +126,7 @@ char *mission_planet_desc (struct galaxy_seed planet)
 	    (planet.f != docked_planet.f))
 		return NULL;
 	
-	pnum = find_planet_number (planet);
+	pnum = find_planet_number(planet);
 	
 	if (cmdr.galaxy_number == 0)
 	{
@@ -178,8 +185,9 @@ char *mission_planet_desc (struct galaxy_seed planet)
 	return NULL;
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
-static void constrictor_mission_brief (void)
+static void constrictor_mission_brief(void)
 {
 	Matrix rotmat;
 
@@ -188,34 +196,33 @@ static void constrictor_mission_brief (void)
 	current_screen = SCR_FRONT_VIEW;
 
 	gfx_clear_display();
-	gfx_display_centre_text (10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_pretty_text (16, 50, 300, 384, mission1_brief_a);
-	gfx_display_pretty_text (16, 200, 470, 384,
+	gfx_display_pretty_text(16, 50, 300, 384, mission1_brief_a);
+	gfx_display_pretty_text(16, 200, 470, 384,
 	      (cmdr.galaxy_number == 0) ? mission1_brief_b : mission1_brief_c);
 		
-	gfx_display_centre_text (330, "Press space to continue.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(330, "Press space to continue.", 140, GFX_COL_GOLD);
 		
 	clear_universe();
-	set_init_matrix (rotmat);
-	add_new_ship (SHIP_CONSTRICTOR, 200, 90, 600, rotmat, -127, -127);
+	set_init_matrix(rotmat);
+	add_new_ship(SHIP_CONSTRICTOR, 200, 90, 600, rotmat, -127, -127);
 	flight_roll = 0;
 	flight_climb = 0;
 	flight_speed = 0;
 
 	do
 	{
-		gfx_clear_area (310, 50, 510, 180);
-		update_universe ();
+		gfx_clear_area(310, 50, 510, 180);
+		update_universe();
 		universe[0].location.z = 600;
 		gfx_update_screen();
 		kbd_poll_keyboard();
 	} while (!kbd_space_pressed);
 }	
 
-
-static void constrictor_mission_debrief (void)
+static void constrictor_mission_debrief(void)
 {
 	int keyasc;
 
@@ -224,14 +231,14 @@ static void constrictor_mission_debrief (void)
 	cmdr.credits += 50000;
 	
 	gfx_clear_display();
-	gfx_display_centre_text (10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_centre_text (100, "Congratulations Commander!", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(100, "Congratulations Commander!", 140, GFX_COL_GOLD);
 	
-	gfx_display_pretty_text (116, 132, 400, 384, mission1_debrief);
+	gfx_display_pretty_text(116, 132, 400, 384, mission1_debrief);
 
-	gfx_display_centre_text (330, "Press space to continue.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(330, "Press space to continue.", 140, GFX_COL_GOLD);
 
 	gfx_update_screen();
 	
@@ -241,20 +248,19 @@ static void constrictor_mission_debrief (void)
 	} while (keyasc != ' ');
 }
 
-
-static void thargoid_mission_first_brief (void)
+static void thargoid_mission_first_brief(void)
 {
 	int keyasc;
 
 	cmdr.mission = 4;
 	
 	gfx_clear_display();
-	gfx_display_centre_text (10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_pretty_text (116, 132, 400, 384, mission2_brief_a);
+	gfx_display_pretty_text(116, 132, 400, 384, mission2_brief_a);
 
-	gfx_display_centre_text (330, "Press space to continue.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(330, "Press space to continue.", 140, GFX_COL_GOLD);
 
 	gfx_update_screen();
 	
@@ -264,23 +270,22 @@ static void thargoid_mission_first_brief (void)
 	} while (keyasc != ' ');
 }
 
-
-static void thargoid_mission_second_brief (void)
+static void thargoid_mission_second_brief(void)
 {
 	int keyasc;
 
 	cmdr.mission = 5;
 	
 	gfx_clear_display();
-	gfx_display_centre_text (10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_pretty_text (16, 50, 300, 384, mission2_brief_b);
-	gfx_display_pretty_text (16, 200, 470, 384, mission2_brief_c);
+	gfx_display_pretty_text(16, 50, 300, 384, mission2_brief_b);
+	gfx_display_pretty_text(16, 200, 470, 384, mission2_brief_c);
 
-	gfx_draw_sprite (IMG_BLAKE, 352, 46);
+	gfx_draw_sprite(IMG_BLAKE, 352, 46);
 	
-	gfx_display_centre_text (330, "Press space to continue.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(330, "Press space to continue.", 140, GFX_COL_GOLD);
 
 	gfx_update_screen();
 	
@@ -290,8 +295,7 @@ static void thargoid_mission_second_brief (void)
 	} while (keyasc != ' ');
 }
 
-
-static void thargoid_mission_debrief (void)
+static void thargoid_mission_debrief(void)
 {
 	int keyasc;
 
@@ -299,15 +303,15 @@ static void thargoid_mission_debrief (void)
 	cmdr.score += 256;
 	cmdr.energy_unit = 2;
 	
-	gfx_clear_display ();
-	gfx_display_centre_text (10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_clear_display();
+	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_centre_text (100, "Well done Commander.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(100, "Well done Commander.", 140, GFX_COL_GOLD);
 	
-	gfx_display_pretty_text (116, 132, 400, 384, mission2_debrief);
+	gfx_display_pretty_text(116, 132, 400, 384, mission2_debrief);
 
-	gfx_display_centre_text (330, "Press space to continue.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(330, "Press space to continue.", 140, GFX_COL_GOLD);
 
 	gfx_update_screen();
 	
@@ -317,9 +321,10 @@ static void thargoid_mission_debrief (void)
 	} while (keyasc != ' ');
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
 
-void check_mission_brief (void)
+void check_mission_brief(void)
 {
 	if ((cmdr.mission == 0) && (cmdr.score >= 256) && (cmdr.galaxy_number < 2))
 	{
