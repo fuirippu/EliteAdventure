@@ -171,10 +171,10 @@ static void draw_fuel_limit_circle(int cx, int cy)
 		cross_size = 16 * GFX_SCALE;
 	}
 	
-	gfx_draw_circle (cx, cy, radius, GFX_COL_GREEN_1);
+	gfx_draw_circle(cx, cy, radius, GFX_COL_GREEN_1);
 
-	gfx_draw_line (cx, cy - cross_size, cx, cy + cross_size);
-	gfx_draw_line (cx - cross_size, cy, cx + cross_size, cy);
+	gfx_draw_line(cx, cy - cross_size, cx, cy + cross_size);
+	gfx_draw_line(cx - cross_size, cy, cx + cross_size, cy);
 }
 
 int calc_distance_to_planet(struct galaxy_seed from_planet, struct galaxy_seed to_planet)
@@ -207,7 +207,7 @@ static void show_distance(int ypos, struct galaxy_seed from_planet, struct galax
 	else
 		strcpy(str,"                                                     ");
 
-	gfx_display_text (16, ypos, str);
+	gfx_display_text(16, ypos, str);
 }
 
 void show_distance_to_planet(void)
@@ -227,15 +227,14 @@ void show_distance_to_planet(void)
 		py = ((cross_y - GFX_Y_CENTRE) / (2 * GFX_SCALE)) + docked_planet.b;
 	}
 
-	hyperspace_planet = find_planet (px, py);
-
-	name_planet (planet_name, hyperspace_planet);
+	hyperspace_planet = find_planet(px, py);
+	name_planet(planet_name, hyperspace_planet);
 
 	gfx_clear_text_area();
-	sprintf (str, "%-18s", planet_name);
-	gfx_display_text (16, 340, str);
+	sprintf(str, "%-18s", planet_name);
+	gfx_display_text(16, 340, str);
 
-	show_distance (356, docked_planet, hyperspace_planet);
+	show_distance(356, docked_planet, hyperspace_planet);
 
 	if (current_screen == SCR_GALACTIC_CHART)
 	{
@@ -278,34 +277,34 @@ void find_planet_by_name(char *find_name)
 	
 	for (i = 0; i < 256; i++)
 	{
-		name_planet (planet_name, glx);
+		name_planet(planet_name, glx);
 		
-		if (strcmp (planet_name, find_name) == 0)
+		if (strcmp(planet_name, find_name) == 0)
 		{
 			found = 1;
 			break;
 		}
 
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
 	}
 
 	if (!found)
 	{
 		gfx_clear_text_area();
-		gfx_display_text (16, 340, "Unknown Planet");
+		gfx_display_text(16, 340, "Unknown Planet");
 		return;
 	}
 
 	hyperspace_planet = glx;
 
-	gfx_clear_text_area ();
-	sprintf (str, "%-18s", planet_name);
-	gfx_display_text (16, 340, str);
+	gfx_clear_text_area();
+	sprintf(str, "%-18s", planet_name);
+	gfx_display_text(16, 340, str);
 
-	show_distance (356, docked_planet, hyperspace_planet);
+	show_distance(356, docked_planet, hyperspace_planet);
 
 	if (current_screen == SCR_GALACTIC_CHART)
 	{
@@ -334,11 +333,11 @@ void display_short_range_chart(void)
 
 	gfx_clear_display();
 
-	gfx_display_centre_text (10, "SHORT RANGE CHART", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(10, "SHORT RANGE CHART", 140, GFX_COL_GOLD);
 
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_draw_line(0, 36, 511, 36);
 
-	draw_fuel_limit_circle (GFX_X_CENTRE, GFX_Y_CENTRE);
+	draw_fuel_limit_circle(GFX_X_CENTRE, GFX_Y_CENTRE);
 
 	for (i = 0; i < 64; i++)
 		row_used[i] = 0;
@@ -348,15 +347,15 @@ void display_short_range_chart(void)
 	for (i = 0; i < 256; i++)
 	{
 
-		dx = abs (glx.d - docked_planet.d);
-		dy = abs (glx.b - docked_planet.b);
+		dx = abs(glx.d - docked_planet.d);
+		dy = abs(glx.b - docked_planet.b);
 
 		if ((dx >= 20) || (dy >= 38))
 		{
-			waggle_galaxy (&glx);
-			waggle_galaxy (&glx);
-			waggle_galaxy (&glx);
-			waggle_galaxy (&glx);
+			waggle_galaxy(&glx);
+			waggle_galaxy(&glx);
+			waggle_galaxy(&glx);
+			waggle_galaxy(&glx);
 
 			continue;
 		}
@@ -377,10 +376,10 @@ void display_short_range_chart(void)
 
 		if (row <= 3)
 		{
-			waggle_galaxy (&glx);
-			waggle_galaxy (&glx);
-			waggle_galaxy (&glx);
-			waggle_galaxy (&glx);
+			waggle_galaxy(&glx);
+			waggle_galaxy(&glx);
+			waggle_galaxy(&glx);
+			waggle_galaxy(&glx);
 
 			continue;
 		}
@@ -389,10 +388,10 @@ void display_short_range_chart(void)
 		{
 			row_used[row] = 1;
 
-			name_planet (planet_name, glx);
-			capitalise_name (planet_name);
+			name_planet(planet_name, glx);
+			capitalise_name(planet_name);
 
-			gfx_display_text (px + (4 * GFX_SCALE), (row * 8 - 5) * GFX_SCALE, planet_name);
+			gfx_display_text(px + (4 * GFX_SCALE), (row * 8 - 5) * GFX_SCALE, planet_name);
 		}
 
 
@@ -402,12 +401,12 @@ void display_short_range_chart(void)
 
 		blob_size = (glx.f & 1) + 2 + carry_flag;
 		blob_size *= GFX_SCALE;
-		gfx_draw_filled_circle (px, py, blob_size, GFX_COL_GOLD);
+		gfx_draw_filled_circle(px, py, blob_size, GFX_COL_GOLD);
 
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
 	}
 
 	cross_x = ((hyperspace_planet.d - docked_planet.d) * 4 * GFX_SCALE) + GFX_X_CENTRE;
@@ -426,14 +425,14 @@ void display_galactic_chart(void)
 
 	gfx_clear_display();
 
-	sprintf (str, "GALACTIC CHART %d", cmdr.galaxy_number + 1);
+	sprintf(str, "GALACTIC CHART %d", cmdr.galaxy_number + 1);
 
-	gfx_display_centre_text (10, str, 140, GFX_COL_GOLD);
+	gfx_display_centre_text(10, str, 140, GFX_COL_GOLD);
 
-	gfx_draw_line (0, 36, 511, 36);
-	gfx_draw_line (0, 36+258, 511, 36+258);
+	gfx_draw_line(0, 36, 511, 36);
+	gfx_draw_line(0, 36+258, 511, 36+258);
 
-	draw_fuel_limit_circle (docked_planet.d * GFX_SCALE,
+	draw_fuel_limit_circle(docked_planet.d * GFX_SCALE,
 					(docked_planet.b / (2 / GFX_SCALE)) + (18 * GFX_SCALE) + 1);
 
 	glx = cmdr.galaxy;
@@ -443,18 +442,16 @@ void display_galactic_chart(void)
 		px = glx.d * GFX_SCALE;
 		py = (glx.b / (2 / GFX_SCALE)) + (18 * GFX_SCALE) + 1;
 
-		gfx_plot_pixel (px, py, GFX_COL_WHITE);
+		gfx_plot_pixel(px, py, GFX_COL_WHITE);
 
 		if ((glx.e | 0x50) < 0x90)
-			gfx_plot_pixel (px + 1, py, GFX_COL_WHITE);
+			gfx_plot_pixel(px + 1, py, GFX_COL_WHITE);
 
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-		waggle_galaxy (&glx);
-
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
+		waggle_galaxy(&glx);
 	}
-
 
 	cross_x = hyperspace_planet.d * GFX_SCALE;
 	cross_y = (hyperspace_planet.b / (2 / GFX_SCALE)) + (18 * GFX_SCALE) + 1;
@@ -474,41 +471,41 @@ void display_data_on_planet(void)
 
 	gfx_clear_display();
 
-	name_planet (planet_name, hyperspace_planet);
-	sprintf (str, "DATA ON %s", planet_name);
+	name_planet(planet_name, hyperspace_planet);
+	sprintf(str, "DATA ON %s", planet_name);
 
-	gfx_display_centre_text (10, str, 140, GFX_COL_GOLD);
+	gfx_display_centre_text(10, str, 140, GFX_COL_GOLD);
 
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_draw_line(0, 36, 511, 36);
 
 
-	generate_planet_data (&hyper_planet_data, hyperspace_planet);
+	generate_planet_data(&hyper_planet_data, hyperspace_planet);
 
-	show_distance (42, docked_planet, hyperspace_planet);
+	show_distance(42, docked_planet, hyperspace_planet);
 
-	sprintf (str, "Economy:%s", economy_type[hyper_planet_data.economy]);
-	gfx_display_text (16, 74, str);
+	sprintf(str, "Economy:%s", economy_type[hyper_planet_data.economy]);
+	gfx_display_text(16, 74, str);
 
-	sprintf (str, "Government:%s", government_type[hyper_planet_data.government]);
-	gfx_display_text (16, 106, str);
+	sprintf(str, "Government:%s", government_type[hyper_planet_data.government]);
+	gfx_display_text(16, 106, str);
 
-	sprintf (str, "Tech.Level:%3d", hyper_planet_data.techlevel + 1);
-	gfx_display_text (16, 138, str);
+	sprintf(str, "Tech.Level:%3d", hyper_planet_data.techlevel + 1);
+	gfx_display_text(16, 138, str);
 
-	sprintf (str, "Population:%d.%d Billion", hyper_planet_data.population / 10, hyper_planet_data.population % 10);
-	gfx_display_text (16, 170, str);
+	sprintf(str, "Population:%d.%d Billion", hyper_planet_data.population / 10, hyper_planet_data.population % 10);
+	gfx_display_text(16, 170, str);
 
-	describe_inhabitants (str, hyperspace_planet);
-	gfx_display_text (16, 202, str);
+	describe_inhabitants(str, hyperspace_planet);
+	gfx_display_text(16, 202, str);
 
-	sprintf (str, "Gross Productivity:%5d M CR", hyper_planet_data.productivity);
-	gfx_display_text (16, 234, str);
+	sprintf(str, "Gross Productivity:%5d M CR", hyper_planet_data.productivity);
+	gfx_display_text(16, 234, str);
 
-	sprintf (str, "Average Radius:%5d km", hyper_planet_data.radius);
-	gfx_display_text (16, 266, str);
+	sprintf(str, "Average Radius:%5d km", hyper_planet_data.radius);
+	gfx_display_text(16, 266, str);
 
-	description = describe_planet (hyperspace_planet);
-	gfx_display_pretty_text (16, 298, 400, 384, description);
+	description = describe_planet(hyperspace_planet);
+	gfx_display_pretty_text(16, 298, 400, 384, description);
 }
 
 static const char *laser_type(int strength)
@@ -544,28 +541,28 @@ void display_commander_status(void)
 
 	gfx_clear_display();
 
-	sprintf (str, "COMMANDER %s", cmdr.name);
+	sprintf(str, "COMMANDER %s", cmdr.name);
 
-	gfx_display_centre_text (10, str, 140, GFX_COL_GOLD);
+	gfx_display_centre_text(10, str, 140, GFX_COL_GOLD);
 
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_draw_line(0, 36, 511, 36);
 
 
-	gfx_display_colour_text (16, 58, "Present System:", GFX_COL_GREEN_1);
+	gfx_display_colour_text(16, 58, "Present System:", GFX_COL_GREEN_1);
 	
 	if (!witchspace)
 	{
-		name_planet (planet_name, docked_planet);
-		capitalise_name (planet_name);
-		sprintf (str, "%s", planet_name);
-		gfx_display_text (190, 58, str);
+		name_planet(planet_name, docked_planet);
+		capitalise_name(planet_name);
+		sprintf(str, "%s", planet_name);
+		gfx_display_text(190, 58, str);
 	}
 
-	gfx_display_colour_text (16, 74, "Hyperspace System:", GFX_COL_GREEN_1);
-	name_planet (planet_name, hyperspace_planet);
-	capitalise_name (planet_name);
-	sprintf (str, "%s", planet_name);
-	gfx_display_text (190, 74, str);
+	gfx_display_colour_text(16, 74, "Hyperspace System:", GFX_COL_GREEN_1);
+	name_planet(planet_name, hyperspace_planet);
+	capitalise_name(planet_name);
+	sprintf(str, "%s", planet_name);
+	gfx_display_text(190, 74, str);
 
 	if (docked)
 		condition = 0;
@@ -589,70 +586,70 @@ void display_commander_status(void)
 			condition = 3;
 	}
 	
-	gfx_display_colour_text (16, 90, "Condition:", GFX_COL_GREEN_1);
-	gfx_display_text (190, 90, condition_txt[condition]);
+	gfx_display_colour_text(16, 90, "Condition:", GFX_COL_GREEN_1);
+	gfx_display_text(190, 90, condition_txt[condition]);
 
-	sprintf (str, "%d.%d Light Years", cmdr.fuel / 10, cmdr.fuel % 10);
-	gfx_display_colour_text (16, 106, "Fuel:", GFX_COL_GREEN_1);
-	gfx_display_text (70, 106, str);
+	sprintf(str, "%d.%d Light Years", cmdr.fuel / 10, cmdr.fuel % 10);
+	gfx_display_colour_text(16, 106, "Fuel:", GFX_COL_GREEN_1);
+	gfx_display_text(70, 106, str);
 
-	sprintf (str, "%d.%d Cr", cmdr.credits / 10, cmdr.credits % 10);
-	gfx_display_colour_text (16, 122, "Cash:", GFX_COL_GREEN_1);
-	gfx_display_text (70, 122, str);
+	sprintf(str, "%d.%d Cr", cmdr.credits / 10, cmdr.credits % 10);
+	gfx_display_colour_text(16, 122, "Cash:", GFX_COL_GREEN_1);
+	gfx_display_text(70, 122, str);
 
 	if (cmdr.legal_status == 0)
-		strcpy (str, "Clean");
+		strcpy(str, "Clean");
 	else
-		strcpy (str, cmdr.legal_status > 50 ? "Fugitive" : "Offender");
+		strcpy(str, cmdr.legal_status > 50 ? "Fugitive" : "Offender");
 
-	gfx_display_colour_text (16, 138, "Legal Status:", GFX_COL_GREEN_1);
-	gfx_display_text (128, 138, str);
+	gfx_display_colour_text(16, 138, "Legal Status:", GFX_COL_GREEN_1);
+	gfx_display_text(128, 138, str);
 
 	for (i = 0; i < NO_OF_RANKS; i++)
 		if (cmdr.score >= rating[i].score)
-			strcpy (str, rating[i].title);
+			strcpy(str, rating[i].title);
 	
-	gfx_display_colour_text (16, 154, "Rating:", GFX_COL_GREEN_1);
-	gfx_display_text (80, 154, str);
+	gfx_display_colour_text(16, 154, "Rating:", GFX_COL_GREEN_1);
+	gfx_display_text(80, 154, str);
 
-	gfx_display_colour_text (16, 186, "EQUIPMENT:", GFX_COL_GREEN_1);
+	gfx_display_colour_text(16, 186, "EQUIPMENT:", GFX_COL_GREEN_1);
 
 	x = EQUIP_START_X;
 	y = EQUIP_START_Y;
 
 	if (cmdr.cargo_capacity > 20)
 	{
-		gfx_display_text (x, y, "Large Cargo Bay");
+		gfx_display_text(x, y, "Large Cargo Bay");
 		y += Y_INC;
 	}
 	
 	if (cmdr.escape_pod)
 	{
-		gfx_display_text (x, y, "Escape Pod");
+		gfx_display_text(x, y, "Escape Pod");
 		y += Y_INC;
 	}
 	
 	if (cmdr.fuel_scoop)
 	{
-		gfx_display_text (x, y, "Fuel Scoops");
+		gfx_display_text(x, y, "Fuel Scoops");
 		y += Y_INC;
 	}
 
 	if (cmdr.ecm)
 	{
-		gfx_display_text (x, y, "E.C.M. System");
+		gfx_display_text(x, y, "E.C.M. System");
 		y += Y_INC;
 	}
 
 	if (cmdr.energy_bomb)
 	{
-		gfx_display_text (x, y, "Energy Bomb");
+		gfx_display_text(x, y, "Energy Bomb");
 		y += Y_INC;
 	}
 
 	if (cmdr.energy_unit)
 	{
-		gfx_display_text (x, y,
+		gfx_display_text(x, y,
 				  cmdr.energy_unit == 1 ? "Extra Energy Unit" :"Naval Energy Unit");
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
@@ -664,7 +661,7 @@ void display_commander_status(void)
 
 	if (cmdr.docking_computer)
 	{
-		gfx_display_text (x, y, "Docking Computers");
+		gfx_display_text(x, y, "Docking Computers");
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -676,7 +673,7 @@ void display_commander_status(void)
 	
 	if (cmdr.galactic_hyperdrive)
 	{
-		gfx_display_text (x, y, "Galactic Hyperspace");
+		gfx_display_text(x, y, "Galactic Hyperspace");
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -687,8 +684,8 @@ void display_commander_status(void)
 
 	if (cmdr.front_laser)
 	{
-		sprintf (str, "Front %s Laser", laser_type(cmdr.front_laser));
-		gfx_display_text (x, y, str);
+		sprintf(str, "Front %s Laser", laser_type(cmdr.front_laser));
+		gfx_display_text(x, y, str);
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -699,8 +696,8 @@ void display_commander_status(void)
 	
 	if (cmdr.rear_laser)
 	{
-		sprintf (str, "Rear %s Laser", laser_type(cmdr.rear_laser));
-		gfx_display_text (x, y, str);
+		sprintf(str, "Rear %s Laser", laser_type(cmdr.rear_laser));
+		gfx_display_text(x, y, str);
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -711,8 +708,8 @@ void display_commander_status(void)
 
 	if (cmdr.left_laser)
 	{
-		sprintf (str, "Left %s Laser", laser_type(cmdr.left_laser));
-		gfx_display_text (x, y, str);
+		sprintf(str, "Left %s Laser", laser_type(cmdr.left_laser));
+		gfx_display_text(x, y, str);
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -723,8 +720,8 @@ void display_commander_status(void)
 
 	if (cmdr.right_laser)
 	{
-		sprintf (str, "Right %s Laser", laser_type(cmdr.right_laser));
-		gfx_display_text (x, y, str);
+		sprintf(str, "Right %s Laser", laser_type(cmdr.right_laser));
+		gfx_display_text(x, y, str);
 	}
 }
 
@@ -735,28 +732,28 @@ static void display_stock_price(int i)
 
 	y = i * 15 + 55;
 
-	gfx_display_text (16, y, stock_market[i].name);
+	gfx_display_text(16, y, stock_market[i].name);
 
-	gfx_display_text (180, y, unit_name[stock_market[i].units]);
-	sprintf (str, "%d.%d", stock_market[i].current_price / 10,
+	gfx_display_text(180, y, unit_name[stock_market[i].units]);
+	sprintf(str, "%d.%d", stock_market[i].current_price / 10,
 						   stock_market[i].current_price % 10);
-	gfx_display_text (256, y, str);
+	gfx_display_text(256, y, str);
 
 	if (stock_market[i].current_quantity > 0)
-		sprintf (str, "%d%s", stock_market[i].current_quantity,
+		sprintf(str, "%d%s", stock_market[i].current_quantity,
 							  unit_name[stock_market[i].units]);
 	else
-		strcpy (str, "-");
+		strcpy(str, "-");
 
-	gfx_display_text (338, y, str);
+	gfx_display_text(338, y, str);
 
 	if (cmdr.current_cargo[i] > 0)
-		sprintf (str, "%d%s", cmdr.current_cargo[i],
+		sprintf(str, "%d%s", cmdr.current_cargo[i],
 							  unit_name[stock_market[i].units]);
 	else
-		strcpy (str, "-");
+		strcpy(str, "-");
 
-	gfx_display_text (444, y, str);
+	gfx_display_text(444, y, str);
 }
 
 static void highlight_stock(int i)
@@ -773,14 +770,14 @@ static void highlight_stock(int i)
 
 	y = i * 15 + 55;
 	
-	gfx_draw_rectangle (2, y, 510, y + 15, GFX_COL_DARK_RED);
-	display_stock_price (i);		
+	gfx_draw_rectangle(2, y, 510, y + 15, GFX_COL_DARK_RED);
+	display_stock_price(i);		
 
 	hilite_item = i;
 
 	gfx_clear_text_area();
-	sprintf (str, "Cash: %d.%d", cmdr.credits / 10, cmdr.credits % 10);
-	gfx_display_text (16, 340, str);
+	sprintf(str, "Cash: %d.%d", cmdr.credits / 10, cmdr.credits % 10);
+	gfx_display_text(16, 340, str);
 }
 
 void select_previous_stock(void)
@@ -823,7 +820,7 @@ void buy_stock(void)
 	item->current_quantity--;
 	cmdr.credits -= item->current_price;	
 
-	highlight_stock (hilite_item);
+	highlight_stock(hilite_item);
 }
 
 void sell_stock(void)
@@ -839,7 +836,7 @@ void sell_stock(void)
 	item->current_quantity++;
 	cmdr.credits += item->current_price;	
 
-	highlight_stock (hilite_item);
+	highlight_stock(hilite_item);
 }
 
 void display_market_prices(void)
@@ -852,27 +849,27 @@ void display_market_prices(void)
 
 	gfx_clear_display();
 
-	name_planet (planet_name, docked_planet);
-	sprintf (str, "%s MARKET PRICES", planet_name);
-	gfx_display_centre_text (10, str, 140, GFX_COL_GOLD);
+	name_planet(planet_name, docked_planet);
+	sprintf(str, "%s MARKET PRICES", planet_name);
+	gfx_display_centre_text(10, str, 140, GFX_COL_GOLD);
 
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_colour_text (16,  40, "PRODUCT", GFX_COL_GREEN_1);
-	gfx_display_colour_text (166, 40, "UNIT", GFX_COL_GREEN_1);
-	gfx_display_colour_text (246, 40, "PRICE", GFX_COL_GREEN_1);
-	gfx_display_colour_text (314, 40, "FOR SALE", GFX_COL_GREEN_1);
-	gfx_display_colour_text (420, 40, "IN HOLD", GFX_COL_GREEN_1);
+	gfx_display_colour_text(16,  40, "PRODUCT", GFX_COL_GREEN_1);
+	gfx_display_colour_text(166, 40, "UNIT", GFX_COL_GREEN_1);
+	gfx_display_colour_text(246, 40, "PRICE", GFX_COL_GREEN_1);
+	gfx_display_colour_text(314, 40, "FOR SALE", GFX_COL_GREEN_1);
+	gfx_display_colour_text(420, 40, "IN HOLD", GFX_COL_GREEN_1);
 
 	for (i = 0; i < 17; i++)
 	{
-		display_stock_price (i);
+		display_stock_price(i);
 	}
 
 	if (docked)
 	{
 		hilite_item = -1;
-		highlight_stock (0);
+		highlight_stock(0);
 	}
 }
 
@@ -885,28 +882,28 @@ void display_inventory(void)
 	current_screen = SCR_INVENTORY;
 
 	gfx_clear_display();
-	gfx_display_centre_text (10, "INVENTORY", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "INVENTORY", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 	
-	sprintf (str, "%d.%d Light Years", cmdr.fuel / 10, cmdr.fuel % 10);
-	gfx_display_colour_text (16, 50, "Fuel:", GFX_COL_GREEN_1);
-	gfx_display_text (70, 50, str);
+	sprintf(str, "%d.%d Light Years", cmdr.fuel / 10, cmdr.fuel % 10);
+	gfx_display_colour_text(16, 50, "Fuel:", GFX_COL_GREEN_1);
+	gfx_display_text(70, 50, str);
 
-	sprintf (str, "%d.%d Cr", cmdr.credits / 10, cmdr.credits % 10);
-	gfx_display_colour_text (16, 66, "Cash:", GFX_COL_GREEN_1);
-	gfx_display_text (70, 66, str);
+	sprintf(str, "%d.%d Cr", cmdr.credits / 10, cmdr.credits % 10);
+	gfx_display_colour_text(16, 66, "Cash:", GFX_COL_GREEN_1);
+	gfx_display_text(70, 66, str);
 	
 	y = 98;
 	for (i = 0; i < 17; i++)
 	{
 		if (cmdr.current_cargo[i] > 0)
 		{
-			gfx_display_text (16, y, stock_market[i].name);
+			gfx_display_text(16, y, stock_market[i].name);
 
-			sprintf (str, "%d%s", cmdr.current_cargo[i],
+			sprintf(str, "%d%s", cmdr.current_cargo[i],
 							  unit_name[stock_market[i].units]);
 
-			gfx_display_text (180, y, str);
+			gfx_display_text(180, y, str);
 			y += 16;
 		}		
 	}
@@ -1012,12 +1009,12 @@ static void display_equip_price(int i)
 
 	x = *(equip_stock[i].name) == '>' ? 50 : 16; 
 
-	gfx_display_colour_text (x, y, &equip_stock[i].name[1], col);
+	gfx_display_colour_text(x, y, &equip_stock[i].name[1], col);
 
 	if (equip_stock[i].price != 0)
 	{
-		sprintf (str, "%d.%d", equip_stock[i].price / 10, equip_stock[i].price % 10);
-		gfx_display_colour_text (338, y, str, col);
+		sprintf(str, "%d.%d", equip_stock[i].price / 10, equip_stock[i].price % 10);
+		gfx_display_colour_text(338, y, str, col);
 	}
 }
 
@@ -1218,82 +1215,82 @@ void buy_equip(void)
 			break;
 			
 		case EQ_FRONT_PULSE:
-			cmdr.credits += laser_refund (cmdr.front_laser);
+			cmdr.credits += laser_refund(cmdr.front_laser);
 			cmdr.front_laser = PULSE_LASER;
 			break;
 		
 		case EQ_REAR_PULSE:
-			cmdr.credits += laser_refund (cmdr.rear_laser);
+			cmdr.credits += laser_refund(cmdr.rear_laser);
 			cmdr.rear_laser = PULSE_LASER;
 			break;
 
 		case EQ_LEFT_PULSE:
-			cmdr.credits += laser_refund (cmdr.left_laser);
+			cmdr.credits += laser_refund(cmdr.left_laser);
 			cmdr.left_laser = PULSE_LASER;
 			break;
 
 		case EQ_RIGHT_PULSE:
-			cmdr.credits += laser_refund (cmdr.right_laser);
+			cmdr.credits += laser_refund(cmdr.right_laser);
 			cmdr.right_laser = PULSE_LASER;
 			break;
 
 		case EQ_FRONT_BEAM:
-			cmdr.credits += laser_refund (cmdr.front_laser);
+			cmdr.credits += laser_refund(cmdr.front_laser);
 			cmdr.front_laser = BEAM_LASER;
 			break;
 
 		case EQ_REAR_BEAM:
-			cmdr.credits += laser_refund (cmdr.rear_laser);
+			cmdr.credits += laser_refund(cmdr.rear_laser);
 			cmdr.rear_laser = BEAM_LASER;
 			break;
 
 		case EQ_LEFT_BEAM:
-			cmdr.credits += laser_refund (cmdr.left_laser);
+			cmdr.credits += laser_refund(cmdr.left_laser);
 			cmdr.left_laser = BEAM_LASER;
 			break;
 
 		case EQ_RIGHT_BEAM:
-			cmdr.credits += laser_refund (cmdr.right_laser);
+			cmdr.credits += laser_refund(cmdr.right_laser);
 			cmdr.right_laser = BEAM_LASER;
 			break;
 
 		case EQ_FRONT_MINING:
-			cmdr.credits += laser_refund (cmdr.front_laser);
+			cmdr.credits += laser_refund(cmdr.front_laser);
 			cmdr.front_laser = MINING_LASER;
 			break;
 
 		case EQ_REAR_MINING:
-			cmdr.credits += laser_refund (cmdr.rear_laser);
+			cmdr.credits += laser_refund(cmdr.rear_laser);
 			cmdr.rear_laser = MINING_LASER;
 			break;
 
 		case EQ_LEFT_MINING:
-			cmdr.credits += laser_refund (cmdr.left_laser);
+			cmdr.credits += laser_refund(cmdr.left_laser);
 			cmdr.left_laser = MINING_LASER;
 			break;
 
 		case EQ_RIGHT_MINING:
-			cmdr.credits += laser_refund (cmdr.right_laser);
+			cmdr.credits += laser_refund(cmdr.right_laser);
 			cmdr.right_laser = MINING_LASER;
 			break;
 
 		case EQ_FRONT_MILITARY:
-			cmdr.credits += laser_refund (cmdr.front_laser);
+			cmdr.credits += laser_refund(cmdr.front_laser);
 			cmdr.front_laser = MILITARY_LASER;
 			break;
 
 		case EQ_REAR_MILITARY:
-			cmdr.credits += laser_refund (cmdr.rear_laser);
+			cmdr.credits += laser_refund(cmdr.rear_laser);
 			cmdr.rear_laser = MILITARY_LASER;
 			break;
 
 		case EQ_LEFT_MILITARY:
-			cmdr.credits += laser_refund (cmdr.left_laser);
+			cmdr.credits += laser_refund(cmdr.left_laser);
 			cmdr.left_laser = MILITARY_LASER;
 			break;
 
 		case EQ_RIGHT_MILITARY:
-			cmdr.credits += laser_refund (cmdr.right_laser);
+			cmdr.credits += laser_refund(cmdr.right_laser);
 			cmdr.right_laser = MILITARY_LASER;
 			break;
 	}
