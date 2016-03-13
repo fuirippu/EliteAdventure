@@ -35,8 +35,12 @@
 #include "trade.h"
 #include "pilot.h" 
 
+
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 static int laser_counter;
-int laser;
+static int laser;
 static int laser2;
 static int laser_x;
 static int laser_y;
@@ -48,7 +52,6 @@ int in_battle;
 
 struct univ_object universe[MAX_UNIV_OBJECTS];
 int ship_count[NO_OF_SHIPS + 1];  /* many */
-
 
 static int initial_flags[NO_OF_SHIPS + 1] =
 {
@@ -89,8 +92,9 @@ static int initial_flags[NO_OF_SHIPS + 1] =
 };
 
 
-
-
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
 void clear_universe (void)
 {
 	int i;
@@ -150,8 +154,6 @@ int add_new_ship (int ship_type, int x, int y, int z, struct vector *rotmat, int
 
 	return -1;
 }
-
-
 
 
 static void check_missiles (int un)
@@ -214,9 +216,6 @@ void add_new_station (double sx, double sy, double sz, Matrix rotmat)
 	add_new_ship (station, (int)sx, (int)sy, (int)sz, rotmat, 0, -127);
 }
 	
-
-
-	
 void reset_weapons (void)
 {
 	laser_temp = 0;
@@ -225,8 +224,8 @@ void reset_weapons (void)
 	ecm_active = 0;
 	missile_target = MISSILE_UNARMED;
 }
-
  
+
 static void launch_enemy (int un, int type, int flags, int bravery)
 {
 	int newship;
@@ -267,7 +266,6 @@ static void launch_enemy (int un, int type, int flags, int bravery)
 	}
 }
 
-
 static void launch_loot (int un, int loot)
 {
 	int i,cnt;
@@ -293,8 +291,6 @@ static void launch_loot (int un, int loot)
 }
 
 
-
-
 static int in_target (int type, double x, double y, double z)
 {
 	double size;
@@ -306,8 +302,6 @@ static int in_target (int type, double x, double y, double z)
 
 	return ((x*x + y*y) <= size);	
 }
-
-
 
 static void make_angry (int un)
 {
@@ -334,7 +328,6 @@ static void make_angry (int un)
 	}
 }
 
-
 void explode_object (int un)
 {
 
@@ -349,7 +342,6 @@ void explode_object (int un)
 	if (universe[un].type == SHIP_CONSTRICTOR)
 		cmdr.mission = 2;
 }
-
 
 void check_target (int un, struct univ_object *flip)
 {
@@ -405,7 +397,7 @@ void check_target (int un, struct univ_object *flip)
 }
 
 
-
+#pragma region ECM and user missiles
 void activate_ecm (int ours)
 {
 	if (ecm_active == 0)
@@ -415,7 +407,6 @@ void activate_ecm (int ours)
 		snd_play_sample (SND_ECM);
 	}
 }
-
 
 void time_ecm (void)
 {
@@ -427,13 +418,11 @@ void time_ecm (void)
 	}
 }
 
-
 void arm_missile (void)
 {
 	if ((cmdr.missiles != 0) && (missile_target == MISSILE_UNARMED))
 		missile_target = MISSILE_ARMED;
 }
-
 
 void unarm_missile (void)
 {
@@ -476,7 +465,7 @@ void fire_missile (void)
 	
 	snd_play_sample (SND_MISSILE);
 }
-
+#pragma endregion
 
 
 static void track_object (struct univ_object *ship, double direction, Vector nvec)
@@ -519,7 +508,6 @@ static void track_object (struct univ_object *ship, double direction, Vector nve
 		}		
 	}
 }
-
 
 
 static void missile_tactics (int un)
@@ -609,7 +597,6 @@ static void missile_tactics (int un)
 			missile->acceleration = -2;
 	return;
 }
-
 
 
 static void launch_shuttle (void)
@@ -984,7 +971,6 @@ static int create_other_ship (int type)
 	return newship;
 }
 
-
 void create_thargoid (void)
 {
 	int newship;
@@ -999,8 +985,6 @@ void create_thargoid (void)
 			launch_enemy (newship, SHIP_THARGLET, FLG_ANGRY | FLG_HAS_ECM, 96);
 	}	
 }
-
-
 
 static void create_cougar (void)
 {
@@ -1017,8 +1001,6 @@ static void create_cougar (void)
 		universe[newship].velocity = 18;
 	}	
 }
-
-
 
 static void create_trader (void)
 {
@@ -1046,7 +1028,6 @@ static void create_trader (void)
 //			universe[newship].flags |= FLG_ANGRY; 
 	}
 }
-
 
 static void create_lone_hunter (void)
 {
@@ -1080,9 +1061,7 @@ static void create_lone_hunter (void)
 }
 
 
-
 /* Check for a random asteroid encounter... */
-
 static void check_for_asteroids (void)
 {
 	int newship;
@@ -1107,10 +1086,7 @@ static void check_for_asteroids (void)
 	}
 }
 
-
-
 /* If we've been a bad boy then send the cops after us... */
-
 static void check_for_cops (void)
 {
 	int newship;
@@ -1134,7 +1110,6 @@ static void check_for_cops (void)
 		universe[newship].bravery = ((rand255() * 2) | 64) & 127;  
 	}
 }
-
 
 static void check_for_others (void)
 {
@@ -1189,7 +1164,6 @@ static void check_for_others (void)
 	}
 	
 }
-
 
 void random_encounter (void)
 {

@@ -144,7 +144,6 @@ void gfx_clear_area (int tx, int ty, int bx, int by);
 void gfx_display_pretty_text (int tx, int ty, int bx, int by, char *txt);
 void gfx_draw_scanner (void);
 void gfx_set_clip_region (int tx, int ty, int bx, int by);
-void gfx_polygon (int num_points, int *poly_list, int face_colour);
 void gfx_draw_sprite (int sprite_no, int x, int y);
 void gfx_start_render (void);
 void gfx_render_polygon (int num_points, int *point_list, int face_colour, int zavg);

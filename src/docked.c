@@ -706,7 +706,7 @@ static int hilite_item;
 static char *unit_name[] = {"t", "kg", "g"};
 
 
-void display_stock_price (int i)
+static void display_stock_price (int i)
 {
 	int y;
 	char str[100];
