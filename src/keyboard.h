@@ -62,9 +62,9 @@ extern int kbd_space_pressed;
 #pragma endregion
 
 
-int kbd_keyboard_startup (void);
-void kbd_poll_keyboard (void);
-int kbd_read_key (void);
+int kbd_keyboard_startup(void);
+void kbd_poll_keyboard(void);
+int kbd_read_key(void);
 
 
 #endif		// #ifndef KEYBOARD_H

@@ -20,6 +20,11 @@
  
 #include "allegro.h"
 
+
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
+#pragma region int flag per key !?
 int kbd_F1_pressed;
 int kbd_F2_pressed;
 int kbd_F3_pressed;
@@ -59,16 +64,21 @@ int kbd_right_pressed;
 int kbd_enter_pressed;
 int kbd_backspace_pressed;
 int kbd_space_pressed;
+#pragma endregion
 
 
-int kbd_keyboard_startup (void)
+
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
+int kbd_keyboard_startup(void)
 {
 //	set_keyboard_rate(2000, 2000);
 	return 0;
 }
 
 
-void kbd_poll_keyboard (void)
+void kbd_poll_keyboard(void)
 {
 	poll_keyboard();
 
@@ -125,7 +135,7 @@ void kbd_poll_keyboard (void)
 }
 
 
-int kbd_read_key (void)
+int kbd_read_key(void)
 {
 	int keynum;
 	int keycode;
