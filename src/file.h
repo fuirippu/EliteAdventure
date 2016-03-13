@@ -20,10 +20,10 @@
 #define FILE_H
 
 
-void write_config_file (void);
-void read_config_file (void);
-int save_commander_file (char *path);
-int load_commander_file (char *path);
+void write_config_file(void);
+void read_config_file(void);
+int save_commander_file(char *path);
+int load_commander_file(char *path);
 
 
 #endif		// #ifndef FILE_H

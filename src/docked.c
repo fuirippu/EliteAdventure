@@ -29,6 +29,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
+int cross_x = 0;
+int cross_y = 0;
+
+
 static const char *economy_type[] = {"Rich Industrial",
 						"Average Industrial",
 						"Poor Industrial",
@@ -46,9 +50,6 @@ static const char *government_type[] = {	"Anarchy",
 							"Confederacy",
 							"Democracy",
 							"Corporate State"};
-
-int cross_x = 0;
-int cross_y = 0;
 
 #define NO_OF_RANKS	9
 static struct rank
@@ -155,6 +156,7 @@ static struct equip_item
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
+#pragma region Galactic and Short-range charts
 static void draw_fuel_limit_circle(int cx, int cy)
 {
 	int radius;
@@ -456,10 +458,9 @@ void display_galactic_chart(void)
 	cross_x = hyperspace_planet.d * GFX_SCALE;
 	cross_y = (hyperspace_planet.b / (2 / GFX_SCALE)) + (18 * GFX_SCALE) + 1;
 }
+#pragma endregion
 
-/*
- * Displays data on the currently selected Hyperspace Planet.
- */
+/// Display data on the currently selected Hyperspace Planet (F7)
 void display_data_on_planet(void)
 {
     char planet_name[16];
@@ -508,6 +509,7 @@ void display_data_on_planet(void)
 	gfx_display_pretty_text(16, 298, 400, 384, description);
 }
 
+#pragma region Status screen (F9)
 static const char *laser_type(int strength)
 {
 	switch (strength)
@@ -724,7 +726,9 @@ void display_commander_status(void)
 		gfx_display_text(x, y, str);
 	}
 }
+#pragma endregion
 
+#pragma region Stock
 static void display_stock_price(int i)
 {
 	int y;
@@ -908,7 +912,9 @@ void display_inventory(void)
 		}		
 	}
 }
+#pragma endregion
 
+#pragma region Equip ship
 static int equip_present(int type)
 {
 	switch (type)
@@ -1313,3 +1319,4 @@ void equip_ship(void)
 	
 	list_equip_prices();
 }
+#pragma endregion

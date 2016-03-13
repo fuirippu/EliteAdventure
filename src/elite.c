@@ -21,6 +21,9 @@
 #include "shipdata.h"
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 struct galaxy_seed docked_planet;
 
 struct galaxy_seed hyperspace_planet;
@@ -38,7 +41,6 @@ int anti_alias_gfx = 0;
 int hoopy_casinos = 0;
 int speed_cap = 75;
 int instant_dock = 0;
-
 
 char scanner_filename[256];
 int scanner_cx;
@@ -142,15 +144,18 @@ struct ship_data *ship_list[NO_OF_SHIPS + 1] =
 
 
 
-void restore_saved_commander (void)
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
+void restore_saved_commander(void)
 {
 	cmdr = saved_cmdr;
 
-	docked_planet = find_planet (cmdr.ship_x, cmdr.ship_y);
+	docked_planet = find_planet(cmdr.ship_x, cmdr.ship_y);
 	hyperspace_planet = docked_planet;
 
-	generate_planet_data (&current_planet_data, docked_planet);
-	generate_stock_market ();
-	set_stock_quantities (cmdr.station_stock);
+	generate_planet_data(&current_planet_data, docked_planet);
+	generate_stock_market();
+	set_stock_quantities(cmdr.station_stock);
 }
 
