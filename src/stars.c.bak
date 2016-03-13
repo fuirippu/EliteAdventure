@@ -32,7 +32,7 @@ static struct star
 } stars[20];
 
 
-void create_new_stars(void)
+void create_new_stars (void)
 {
 	int i;
 	int nstars;
@@ -50,7 +50,7 @@ void create_new_stars(void)
 }
 
 
-static void front_starfield(void)
+static void front_starfield (void)
 {
 	int i;
 	double Q;
@@ -144,7 +144,9 @@ static void front_starfield(void)
 	warp_stars = 0;
 }
 
-static void rear_starfield(void)
+
+
+static void rear_starfield (void)
 {
 	int i;
 	double Q;
@@ -252,7 +254,8 @@ static void rear_starfield(void)
 	warp_stars = 0;
 }
 
-static void side_starfield(void)
+
+static void side_starfield (void)
 {
 	int i;
 	double delta;
@@ -349,7 +352,8 @@ static void side_starfield(void)
 /*
  * When we change view, flip the stars over so they look like other stars.
  */
-void flip_stars(void)
+
+void flip_stars (void)
 {
 	int i;
 	int nstars;
@@ -366,7 +370,8 @@ void flip_stars(void)
 	}
 }
 
-void update_starfield(void)
+
+void update_starfield (void)
 {
 	switch (current_screen)
 	{

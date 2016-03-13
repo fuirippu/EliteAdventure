@@ -15,6 +15,9 @@
 #ifndef DOCKED_H
 #define DOCKED_H
 
+extern int cross_x;
+extern int cross_y;
+
 void display_short_range_chart (void);
 void display_galactic_chart (void);
 void display_data_on_planet (void);
@@ -35,7 +38,5 @@ void select_previous_equip (void);
 void buy_equip (void);
 
 
-extern int cross_x;
-extern int cross_y;
 
 #endif		// #ifndef DOCKED_H

@@ -19,6 +19,7 @@
 #define KEYBOARD_H
  
 
+#pragma region int flag per key !?
 extern int kbd_F1_pressed;
 extern int kbd_F2_pressed;
 extern int kbd_F3_pressed;
@@ -58,6 +59,7 @@ extern int kbd_right_pressed;
 extern int kbd_enter_pressed;
 extern int kbd_backspace_pressed;
 extern int kbd_space_pressed;
+#pragma endregion
 
 
 int kbd_keyboard_startup (void);
