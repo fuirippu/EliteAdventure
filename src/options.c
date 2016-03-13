@@ -27,6 +27,9 @@
 #include "docked.h"
 #include "file.h" 
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 static int hilite_item;
  
 #define NUM_OPTIONS 4
@@ -62,6 +65,9 @@ static struct setting
 };
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
 static void quit_screen (void)
 {
 	current_screen = SCR_QUIT;
@@ -74,9 +80,7 @@ static void quit_screen (void)
 }
 
 
-
-
-
+#pragma region Settings
 static void display_setting_item (int item)
 {
 	int x,y;
@@ -123,7 +127,6 @@ static void display_setting_item (int item)
 	gfx_display_colour_text (x + 120, y, setting_list[item].value[v], GFX_COL_WHITE);
 }
 
-
 static void highlight_setting (int item)
 {
 	int x,y;
@@ -166,8 +169,6 @@ static void highlight_setting (int item)
 	hilite_item = item;
 }
 
-
-
 void select_left_setting (void)
 {
 	if ((hilite_item & 1) != 0)
@@ -180,7 +181,6 @@ void select_right_setting (void)
 		highlight_setting (hilite_item + 1);
 }
 
-
 void select_up_setting (void)
 {
 	if (hilite_item == (NUM_SETTINGS - 1))
@@ -192,7 +192,6 @@ void select_up_setting (void)
 	if (hilite_item > 1)
 		highlight_setting (hilite_item - 2);
 }
-
 
 void select_down_setting (void)
 {
@@ -237,10 +236,8 @@ void toggle_setting (void)
 			instant_dock ^= 1;
 			break;
 	}
-
 	highlight_setting (hilite_item);
 }
-
 
 static void game_settings_screen (void)
 {
@@ -260,9 +257,11 @@ static void game_settings_screen (void)
 	hilite_item = -1;
 	highlight_setting (0);
 }
+#pragma endregion
 
 
-static void display_option_item (int i)
+#pragma region Options
+static void display_option_item(int i)
 {
 	int y;
 	int col;
@@ -274,8 +273,7 @@ static void display_option_item (int i)
 	gfx_display_centre_text (y, option_list[i].text, 120, col);
 }
 
-
-static void highlight_option (int i)
+static void highlight_option(int i)
 {
 	int y;
 	int x;
@@ -300,20 +298,19 @@ static void highlight_option (int i)
 	hilite_item = i;
 }
 
-void select_previous_option (void)
+void select_previous_option(void)
 {
 	if (hilite_item > 0)
 		highlight_option (hilite_item - 1);
 }
 
-void select_next_option (void)
+void select_next_option(void)
 {
 	if (hilite_item < (NUM_OPTIONS - 1))
 		highlight_option (hilite_item + 1);
 }
 
-
-void do_option (void)
+void do_option(void)
 {
 	if ((!docked) && option_list[hilite_item].docked_only)
 		return;
@@ -339,8 +336,7 @@ void do_option (void)
 	}
 }
 
-
-void display_options (void)
+void display_options(void)
 {
 	int i;
 
@@ -355,8 +351,9 @@ void display_options (void)
 	gfx_display_centre_text (360, "Based on original code by Ian Bell & David Braben", 120, GFX_COL_WHITE);
 	
 	for (i = 0; i < NUM_OPTIONS; i++)
-		display_option_item (i);
+		display_option_item(i);
 
 	hilite_item = -1;
-	highlight_option (0);
+	highlight_option(0);
 }
+#pragma endregion
