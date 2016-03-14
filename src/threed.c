@@ -338,27 +338,27 @@ static void draw_solid_ship(struct univ_object *univ)
  */
 static int snes_planet_colour[] =
 {
-	102, 102,
-	134, 134, 134, 134,
-	167, 167, 167, 167,
-	213, 213,
-	255,
-	83,83,83,83,
-	122,
-	83,83,
-	249,249,249,249, 
-	83,
-	122,
-	249,249,249,249,249,249,
-	83, 83,
-	122,
-	83,83, 83, 83,
-	255,
-	213, 213,
-	167,167, 167, 167,
-	134,134, 134, 134,
-	102, 102
-}; 
+	GFX_COL_SNES_102, GFX_COL_SNES_102,
+	GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
+	GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
+	GFX_COL_SNES_213, GFX_COL_SNES_213,
+	GFX_COL_SNES_255,
+	GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83,
+	GFX_COL_SNES_122,
+	GFX_COL_SNES__83, GFX_COL_SNES__83,
+	GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249,
+	GFX_COL_SNES__83,
+	GFX_COL_SNES_122,
+	GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249,
+	GFX_COL_SNES__83, GFX_COL_SNES__83,
+	GFX_COL_SNES_122,
+	GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83,
+	GFX_COL_SNES_255,
+	GFX_COL_SNES_213, GFX_COL_SNES_213,
+	GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
+	GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
+	GFX_COL_SNES_102, GFX_COL_SNES_102
+};
 
 /*
  * Generate a landscape map for a SNES Elite style planet.
@@ -373,7 +373,7 @@ static void generate_snes_landscape(void)
 		colour = snes_planet_colour[y * (sizeof(snes_planet_colour)/sizeof(int)) / LAND_Y_MAX];  
 		for (x = 0; x <= LAND_X_MAX; x++)
 		{
-			landscape[x][y] = colour;		
+			landscape[x][y] = pColours[colour];
 		}
 	}	
 }
@@ -491,14 +491,15 @@ void generate_landscape(int rnd_seed)
 {
 	switch (planet_render_style)
 	{
-		case 0:		/* Wireframe... do nothing for now... */
+		case 0:		// Wireframe: no initialisation required
 			break;
 		
 		case 1:
-			/* generate_green_landscape(); */
+			// ToDo: generate_green_landscape();
 			break;
 		
 		case 2:
+			// ToDo: randomise landscape
 			generate_snes_landscape();
 			break;
 		

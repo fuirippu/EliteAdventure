@@ -20,6 +20,8 @@
 #define FILE_H
 
 
+#define DIRNAME_ASSETS	"assets\\"
+
 void write_config_file(void);
 void read_config_file(void);
 int save_commander_file(char *path);

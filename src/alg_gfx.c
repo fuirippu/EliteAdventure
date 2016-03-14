@@ -12,6 +12,15 @@
  *
  **/
 
+
+/// alg_gfx.c
+///
+/// Routines for drawing primitives, clearing the screen and
+/// general interface to Allegro graphics.
+///
+/// All functions which accept a colour parameter take an
+/// index into the global palette, pColours [colours.c, gfx.h].
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,7 +32,11 @@
 #include "gfx.h"
 #include "alg_data.h"
 #include "elite.h"
+#include "file.h"
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 static BITMAP *gfx_screen;
 static volatile int frame_count;
 DATAFILE *datafile;
@@ -44,8 +57,9 @@ static struct poly_data
 } poly_chain[MAX_POLYS];
 
 
-
-
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
 void frame_timer (void)
 {
 	frame_count++;
@@ -53,6 +67,116 @@ void frame_timer (void)
 END_OF_FUNCTION(frame_timer);
 
 
+#pragma region Startup and shutdown
+/// Updates allegro BITMAP (memory is ARGB) from .phd file
+static int patch_bmp_for_directx(const char *strFileName, BITMAP *sprite)
+{
+	FILE *f = fopen(strFileName, "rb");
+	if (f == NULL)
+		return -1;
+
+	for (int i = sprite->h - 1; i >= 0; --i)
+	{
+		for (int j = 0; j <sprite->w; ++j)
+		{
+			unsigned char argb[4];
+			size_t s = fread(argb, sizeof(unsigned char), 4, f);
+			if (s != 4)
+			{
+				fclose(f);
+				return -2;
+			}
+
+			////////////////////////
+			// Mem layout:        //
+			//     A R G B        //
+			//   0xFF000000 alpha //
+			//   0x00FF0000 red   //
+			//   0x0000FF00 green //
+			//   0x000000FF blue  //
+			//////////////////////////////
+			// .fui file layout B G R A //
+			//////////////////////////////
+			unsigned int pixel = (unsigned int)argb[3] << 24;
+			pixel |= (unsigned int)argb[2] << 16;
+			pixel |= (unsigned int)argb[1] << 8;
+			pixel |= (unsigned int)argb[0];
+
+			((unsigned int **)sprite->line)[i][j] = pixel;
+		}
+	}
+	fclose(f);
+
+	return 0;
+}
+static int patch_for_directx(DATAFILE *datafile)
+{
+	int rv = 0;
+
+	// ToDo: DANUBE and THEME (midi), ELITE_1 and ELITE_2 (fonts)
+
+#pragma region Patch BMPs (.fui files)
+	rv = patch_bmp_for_directx("assets\\directx\\blake32-v3.fui", datafile[BLAKE].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\ecm.fui", datafile[ECM].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\elitetx3.fui", datafile[ELITETXT].dat);
+	if (rv != 0)
+		return rv;
+
+	// FRONTV - not used ?
+
+	rv = patch_bmp_for_directx("assets\\directx\\greendot.fui", datafile[GRNDOT].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\missgrn.fui", datafile[MISSILE_G].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\missred.fui", datafile[MISSILE_R].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\missyell.fui", datafile[MISSILE_Y].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\reddot.fui", datafile[REDDOT].dat);
+	if (rv != 0)
+		return rv;
+
+	rv = patch_bmp_for_directx("assets\\directx\\safe.fui", datafile[SAFE].dat);
+	if (rv != 0)
+		return rv;
+#pragma endregion
+
+	/*
+	//DATAFILE data;
+	//memcpy(&data, &datafile[ELITE_1], sizeof(DATAFILE));
+	//fui_output("ELITE_1\n");
+	//gfx_dump_datafile(&data);
+	//
+	//memcpy(&data, &datafile[GRNDOT], sizeof(DATAFILE));
+	//fui_output("GRNDOT\n");
+	//gfx_dump_datafile(&data);
+
+	ELITE_1
+	DATAFILE at 0x007724D8
+	->dat at 0x007687A0
+	type = 1179602516, size = 3069
+	GRNDOT
+	DATAFILE at 0x00772518
+	->dat at 0x007C05D8
+	type = 1112363040, size = 106
+	*/
+
+	return rv;
+}
 
 int gfx_graphics_startup (void)
 {
@@ -73,9 +197,12 @@ int gfx_graphics_startup (void)
 	if (rv == 0)
 		set_display_switch_mode (SWITCH_BACKGROUND);
 #else
- 	rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
-	
-	if (rv != 0)
+	if (directx == 1)
+	{
+		set_color_depth(32);
+		rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
+	}
+	else
 		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
 #endif
 
@@ -90,13 +217,26 @@ int gfx_graphics_startup (void)
       	return 1;
 	}
 	
-	datafile = load_datafile("assets\\elite.dat");
+	const char *strFileName = DIRNAME_ASSETS "elite.dat";
+	datafile = load_datafile(strFileName);
 	if (!datafile)
 	{
 		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-      	allegro_message("Error loading %s!\n", "assets\\elite.dat");
+        allegro_message("Error loading %s!\n", strFileName);
       	return 1;
 	}
+
+	if (directx == 1)
+	{
+		rv = patch_for_directx(datafile);
+		if (rv != 0)
+		{
+			set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+			allegro_message("Unable to patch datafile.");
+			return 1;
+		}
+	}
+	setColours(directx);
 
 	scanner_image = load_bitmap(scanner_filename, the_palette);
 	if (!scanner_image)
@@ -136,6 +276,7 @@ void gfx_graphics_shutdown (void)
 	destroy_bitmap(gfx_screen);
 	unload_datafile(datafile);
 }
+#pragma endregion
 
 
 /*
@@ -168,30 +309,40 @@ void gfx_release_screen (void)
 void gfx_fast_plot_pixel (int x, int y, int col)
 {
 //	_putpixel(gfx_screen, x, y, col);
-	gfx_screen->line[y][x] = col;
+
+	if (directx == 1)
+		((long *)gfx_screen->line[y])[x] = pColours[col];
+	else
+		gfx_screen->line[y][x] = pColours[col];
 }
 
 
-void gfx_plot_pixel (int x, int y, int col)
+void gfx_plot_pixel(int x, int y, int col)
 {
-	putpixel (gfx_screen, x + GFX_X_OFFSET, y + GFX_Y_OFFSET, col);
+	putpixel(gfx_screen, x + GFX_X_OFFSET, y + GFX_Y_OFFSET, pColours[col]);
 }
 
 
-void gfx_draw_filled_circle (int cx, int cy, int radius, int circle_colour)
+void gfx_draw_filled_circle(int cx, int cy, int radius, int colour)
 {
-	circlefill (gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, circle_colour);
+	circlefill(gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, pColours[colour]);
 }
 
 
+#pragma region Anti-aliasing
 #define AA_BITS 3
 #define AA_AND  7
-#define AA_BASE 235
 
 #define trunc(x) ((x) & ~65535)
 #define frac(x) ((x) & 65535)
 #define invfrac(x) (65535-frac(x))
-#define plot(x,y,c) putpixel(gfx_screen, (x), (y), (c)+AA_BASE)
+
+//#define plot(x,y,c) putpixel(gfx_screen, (x), (y), (c)+AA_BASE)	[235]
+static void plot_aa_pixel(int x, int y, int col)
+{
+	// The parameter col should range from 0 .. 7.
+	putpixel(gfx_screen, (x), (y), pColours[col + GFX_COL_AA_0]);
+}
 
 /*
  * Draw anti-aliased wireframe circle.
@@ -218,47 +369,47 @@ static void gfx_draw_aa_circle(int cx, int cy, int radius)
 		//wide pixels
 		sx = cx + (x >> AA_BITS); sy = cy + (y >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx + 1,	sy,	x&AA_AND);
+		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx + 1, sy, x & AA_AND);
 
 		sy = cy - (y >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx + 1,	sy,	x&AA_AND);
+		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx + 1, sy, x & AA_AND);
 
 		sx = cx - (x >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx - 1,	sy,	x&AA_AND);
+		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx - 1, sy, x & AA_AND);
 
 		sy = cy + (y >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx - 1,	sy,	x&AA_AND);
+		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx - 1, sy, x & AA_AND);
 
 		//tall pixels
 		sx = cx + (y >> AA_BITS); sy = cy + (x >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx,	sy + 1,	x&AA_AND);
+		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx, sy + 1, x & AA_AND);
 
 		sy = cy - (x >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx,	sy - 1,	x&AA_AND);
+		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx, sy - 1, x & AA_AND);
 
 		sx = cx - (y >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx,	sy - 1,	x&AA_AND);
+		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx, sy - 1, x & AA_AND);
 
 		sy = cy + (x >> AA_BITS);
 
-		plot(sx,	sy,	AA_AND - (x&AA_AND));
-		plot(sx,	sy + 1,	x&AA_AND);
+		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
+		plot_aa_pixel(sx, sy + 1, x & AA_AND);
 
-		s +=	AA_AND+1 + (y << (AA_BITS+1)) + ((1 << (AA_BITS+2))-2);
-		y +=	AA_AND+1;
+		s += AA_AND + 1 + (y << (AA_BITS + 1)) + ((1 << (AA_BITS + 2)) - 2);
+		y += AA_AND + 1;
 
 		while(s >= 0)
 		{
@@ -315,8 +466,8 @@ static void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
 		brightness1 = fmul(invfrac(yend), xgap);
 		brightness2 = fmul(frac(yend), xgap);
 
-		plot(ix1, iy1, brightness1 >> (16-AA_BITS));
-		plot(ix1, iy1+1, brightness2 >> (16-AA_BITS));
+		plot_aa_pixel(ix1, iy1,   brightness1 >> (16 - AA_BITS));
+		plot_aa_pixel(ix1, iy1+1, brightness2 >> (16 - AA_BITS));
 
 		yf = yend+grad;
 
@@ -333,16 +484,16 @@ static void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
 		brightness1 = fmul(invfrac(yend), xgap);
 		brightness2 = fmul(frac(yend), xgap);
       
-		plot(ix2, iy2, brightness1 >> (16-AA_BITS));
-		plot(ix2, iy2+1, brightness2 >> (16-AA_BITS));
+		plot_aa_pixel(ix2, iy2,   brightness1 >> (16 - AA_BITS));
+		plot_aa_pixel(ix2, iy2+1, brightness2 >> (16 - AA_BITS));
 
 		for(x = ix1+1; x <= ix2-1; x++)
 		{
 			brightness1 = invfrac(yf);
 			brightness2 = frac(yf);
 
-			plot(x, (yf >> 16), brightness1 >> (16-AA_BITS));
-			plot(x, 1+(yf >> 16), brightness2 >> (16-AA_BITS));
+			plot_aa_pixel(x, (yf >> 16),   brightness1 >> (16 - AA_BITS));
+			plot_aa_pixel(x, 1+(yf >> 16), brightness2 >> (16 - AA_BITS));
 
 			yf += grad;
 		}
@@ -372,8 +523,8 @@ static void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
 		brightness1 = fmul(invfrac(xend), ygap);
 		brightness2 = fmul(frac(xend), ygap);
 
-		plot(ix1, iy1, brightness1 >> (16-AA_BITS));
-		plot(ix1+1, iy1, brightness2 >> (16-AA_BITS));
+		plot_aa_pixel(ix1,   iy1, brightness1 >> (16 - AA_BITS));
+		plot_aa_pixel(ix1+1, iy1, brightness2 >> (16 - AA_BITS));
 
 		xf = xend+grad;
 
@@ -390,16 +541,16 @@ static void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
 		brightness1 = fmul(invfrac(xend), ygap);
 		brightness2 = fmul(frac(xend), ygap);
       
-		plot(ix2, iy2, brightness1 >> (16-AA_BITS));
-		plot(ix2+1, iy2, brightness2 >> (16-AA_BITS));
+		plot_aa_pixel(ix2,   iy2, brightness1 >> (16 - AA_BITS));
+		plot_aa_pixel(ix2+1, iy2, brightness2 >> (16 - AA_BITS));
 
 		for(y = iy1+1; y <= iy2-1; y++)
 		{
 			brightness1 = invfrac(xf);
 			brightness2 = frac(xf);
 
-			plot((xf >> 16), y, brightness1 >> (16-AA_BITS));
-			plot(1+(xf >> 16), y, brightness2 >> (16-AA_BITS));
+			plot_aa_pixel((xf >> 16),   y, brightness1 >> (16 - AA_BITS));
+			plot_aa_pixel(1+(xf >> 16), y, brightness2 >> (16 - AA_BITS));
 
 			xf += grad;
 		}
@@ -409,12 +560,10 @@ static void gfx_draw_aa_line (int x1, int y1, int x2, int y2)
 #undef trunc
 #undef frac
 #undef invfrac
-#undef plot
 
 #undef AA_BITS
 #undef AA_AND
-#undef AA_BASE
-
+#pragma endregion
 
 
 void gfx_draw_circle (int cx, int cy, int radius, int circle_colour)
@@ -422,7 +571,7 @@ void gfx_draw_circle (int cx, int cy, int radius, int circle_colour)
 	if (anti_alias_gfx && (circle_colour == GFX_COL_WHITE))
 		gfx_draw_aa_circle (cx, cy, itofix(radius));
 	else	
-		circle (gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, circle_colour);
+		circle(gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, pColours[circle_colour]);
 }
 
 
@@ -431,50 +580,47 @@ void gfx_draw_line (int x1, int y1, int x2, int y2)
 {
 	if (y1 == y2)
 	{
-		hline (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, GFX_COL_WHITE);
+		hline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, pColours[GFX_COL_WHITE]);
 		return;
 	}
 
 	if (x1 == x2)
 	{
-		vline (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, y2 + GFX_Y_OFFSET, GFX_COL_WHITE);
+		vline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, y2 + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
 		return;
 	}
 
 	if (anti_alias_gfx)
 		gfx_draw_aa_line (itofix(x1), itofix(y1), itofix(x2), itofix(y2));
 	else
-		line (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, GFX_COL_WHITE);
+		line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
 }
-
-
-
 void gfx_draw_colour_line (int x1, int y1, int x2, int y2, int line_colour)
 {
 	if (y1 == y2)
 	{
-		hline (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, line_colour);
+		hline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, pColours[line_colour]);
 		return;
 	}
 
 	if (x1 == x2)
 	{
-		vline (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, y2 + GFX_Y_OFFSET, line_colour);
+		vline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, y2 + GFX_Y_OFFSET, pColours[line_colour]);
 		return;
 	}
 
 	if (anti_alias_gfx && (line_colour == GFX_COL_WHITE))
 		gfx_draw_aa_line (itofix(x1), itofix(y1), itofix(x2), itofix(y2));
 	else
-		line (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, line_colour);
+		line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[line_colour]);
 }
 
 
 
 void gfx_draw_triangle (int x1, int y1, int x2, int y2, int x3, int y3, int col)
 {
-	triangle (gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET,
-				   x3 + GFX_X_OFFSET, y3 + GFX_Y_OFFSET, col);
+	triangle(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET,
+				   x3 + GFX_X_OFFSET, y3 + GFX_Y_OFFSET, pColours[col]);
 }
 
 
@@ -482,18 +628,13 @@ void gfx_draw_triangle (int x1, int y1, int x2, int y2, int x3, int y3, int col)
 void gfx_display_text (int x, int y, char *txt)
 {
 	text_mode (-1);
-	textout (gfx_screen, datafile[ELITE_1].dat, txt, (x / (2 / GFX_SCALE)) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, GFX_COL_WHITE);
+	textout(gfx_screen, datafile[ELITE_1].dat, txt, (x / (2 / GFX_SCALE)) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
 }
-
-
 void gfx_display_colour_text (int x, int y, char *txt, int col)
 {
 	text_mode (-1);
-	textout (gfx_screen, datafile[ELITE_1].dat, txt, (x / (2 / GFX_SCALE)) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, col);
+	textout(gfx_screen, datafile[ELITE_1].dat, txt, (x / (2 / GFX_SCALE)) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, pColours[col]);
 }
-
-
-
 void gfx_display_centre_text (int y, char *str, int psize, int col)
 {
 	int txt_size;
@@ -507,35 +648,33 @@ void gfx_display_centre_text (int y, char *str, int psize, int col)
 	else
 	{
 		txt_size = ELITE_1;
-		txt_colour = col;
+		txt_colour = pColours[col];
 	}
 
 	text_mode (-1);
-	textout_centre (gfx_screen,  datafile[txt_size].dat, str, (128 * GFX_SCALE) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, txt_colour);
+	textout_centre(gfx_screen,  datafile[txt_size].dat, str, (128 * GFX_SCALE) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, txt_colour);
 }
 
 
 void gfx_clear_display (void)
 {
-	rectfill (gfx_screen, GFX_X_OFFSET + 1, GFX_Y_OFFSET + 1, 510 + GFX_X_OFFSET, 383 + GFX_Y_OFFSET, GFX_COL_BLACK);
+	rectfill(gfx_screen, GFX_X_OFFSET + 1, GFX_Y_OFFSET + 1, 510 + GFX_X_OFFSET, 383 + GFX_Y_OFFSET, pColours[GFX_COL_BLACK]);
 }
-
 void gfx_clear_text_area (void)
 {
-	rectfill (gfx_screen, GFX_X_OFFSET + 1, GFX_Y_OFFSET + 340, 510 + GFX_X_OFFSET, 383 + GFX_Y_OFFSET, GFX_COL_BLACK);
+	rectfill(gfx_screen, GFX_X_OFFSET + 1, GFX_Y_OFFSET + 340, 510 + GFX_X_OFFSET, 383 + GFX_Y_OFFSET, pColours[GFX_COL_BLACK]);
 }
-
-
 void gfx_clear_area (int tx, int ty, int bx, int by)
 {
-	rectfill (gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET,
-				   bx + GFX_X_OFFSET, by + GFX_Y_OFFSET, GFX_COL_BLACK);
+	rectfill(gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET,
+				   bx + GFX_X_OFFSET, by + GFX_Y_OFFSET, pColours[GFX_COL_BLACK]);
 }
+
 
 void gfx_draw_rectangle (int tx, int ty, int bx, int by, int col)
 {
-	rectfill (gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET,
-				   bx + GFX_X_OFFSET, by + GFX_Y_OFFSET, col);
+	rectfill(gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET,
+				   bx + GFX_X_OFFSET, by + GFX_Y_OFFSET, pColours[col]);
 }
 
 
@@ -573,7 +712,7 @@ void gfx_display_pretty_text (int tx, int ty, int bx, int by, char *txt)
 		*bptr = '\0';
 
 		text_mode (-1);
-		textout (gfx_screen, datafile[ELITE_1].dat, strbuf, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET, GFX_COL_WHITE);
+		textout(gfx_screen, datafile[ELITE_1].dat, strbuf, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
 		ty += (8 * GFX_SCALE);
 	}
 }
@@ -597,7 +736,7 @@ void gfx_start_render (void)
 }
 
 
-void gfx_render_polygon (int num_points, int *point_list, int face_colour, int zavg)
+void gfx_render_polygon(int num_points, int *point_list, int col, int zavg)
 {
 	int i;
 	int x;
@@ -610,7 +749,7 @@ void gfx_render_polygon (int num_points, int *point_list, int face_colour, int z
 	total_polys++;
 	
 	poly_chain[x].no_points = num_points;
-	poly_chain[x].face_colour = face_colour;
+	poly_chain[x].face_colour = col;
 	poly_chain[x].z = zavg;
 	poly_chain[x].next = -1;
 
@@ -641,8 +780,6 @@ void gfx_render_polygon (int num_points, int *point_list, int face_colour, int z
 	
 	poly_chain[i].next = x;
 }
-
-
 void gfx_render_line (int x1, int y1, int x2, int y2, int dist, int col)
 {
 	int point_list[4];
@@ -654,7 +791,6 @@ void gfx_render_line (int x1, int y1, int x2, int y2, int dist, int col)
 	
 	gfx_render_polygon (2, point_list, col, dist);
 }
-
 
 static void gfx_polygon(int num_points, int *poly_list, int face_colour)
 {
@@ -671,7 +807,7 @@ static void gfx_polygon(int num_points, int *poly_list, int face_colour)
 		y += 2;
 	}
 
-	polygon(gfx_screen, num_points, poly_list, face_colour);
+	polygon(gfx_screen, num_points, poly_list, pColours[face_colour]);
 }
 
 

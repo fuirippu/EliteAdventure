@@ -139,6 +139,7 @@ extern int current_screen;
 
 extern struct ship_data *ship_list[];
 
+extern int directx;			/// 1 == Use directx, 0 == Use GDI
 extern int wireframe;
 extern int anti_alias_gfx;
 extern char scanner_filename[256];

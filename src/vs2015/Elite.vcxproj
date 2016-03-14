@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="..\alg_gfx.c" />
     <ClCompile Include="..\alg_main.c" />
+    <ClCompile Include="..\colours.c" />
     <ClCompile Include="..\docked.c" />
     <ClCompile Include="..\elite.c" />
     <ClCompile Include="..\file.c" />

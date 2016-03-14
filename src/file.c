@@ -25,26 +25,24 @@
 #include "file.h"
 
 
-void write_config_file(void)
+#define DIRNAME_CONFIG		"config\\"
+
+
+void write_config_file (void)
 {
 	FILE *fp;
 	
-	fp = fopen("newkind.cfg", "w");
+	fp = fopen(DIRNAME_CONFIG "newkind.cfg", "w");
 	if (fp == NULL)
 		return;
 
-	fprintf(fp, "%d\t\t# Game Speed, the lower the number the faster the game.\n", speed_cap);
-
-	fprintf(fp, "%d\t\t# Graphics: 0 = Solid, 1 = Wireframe\n", wireframe);
-
-	fprintf(fp, "%d\t\t# Anti-Alias Wireframe: 0 = Normal, 1 = Anti-Aliased\n", anti_alias_gfx);
-
-	fprintf(fp, "%d\t\t# Planet style: 0 = Wireframe, 1 = Green, 2 = SNES, 3 = Fractal\n", planet_render_style);
-	
-	fprintf(fp, "%d\t\t# Planet Descriptions: 0 = Tree Grubs, 1 = Hoopy Casinos\n", hoopy_casinos);
-
-	fprintf(fp, "%d\t\t# Instant dock: 0 = off, 1 = on\n", instant_dock);
-	
+	fprintf(fp, "%d\t\t\t# Game Speed, the lower the number the faster the game.\n", speed_cap);
+	fprintf(fp, "%d\t\t\t# Graphics: 0 = Solid, 1 = Wireframe\n", wireframe);
+	fprintf(fp, "%d\t\t\t# Anti-Alias Wireframe: 0 = Normal, 1 = Anti-Aliased\n", anti_alias_gfx);
+	fprintf(fp, "%d\t\t\t# Planet style: 0 = Wireframe, 1 = Green, 2 = SNES, 3 = Fractal\n", planet_render_style);
+	fprintf(fp, "%d\t\t\t# Planet Descriptions: 0 = Tree Grubs, 1 = Hoopy Casinos\n", hoopy_casinos);
+	fprintf(fp, "%d\t\t\t# Instant dock: 0 = off, 1 = on\n", instant_dock);
+	fprintf(fp, "%d\t\t\t# DirectX: 0 = off (use GDI), 1 = on\n", directx);
 	fprintf(fp, "newscan.cfg\t# Name of scanner config file to use.\n");
 
 	fclose(fp);
@@ -99,9 +97,9 @@ static void read_scanner_config_file(char *filename)
 	if (fp == NULL)
 		return;
 
-	read_cfg_line(str, sizeof(str), fp);
-	sprintf(scanner_filename, "assets\\%s", str);
-	//strcpy(scanner_filename, str);
+	read_cfg_line (str, sizeof(str), fp);
+	sprintf(scanner_filename, DIRNAME_ASSETS "%s", str);
+	//strcpy (scanner_filename, str);
 
 	read_cfg_line(str, sizeof(str), fp);
 	sscanf(str, "%d,%d", &scanner_cx, &scanner_cy);
@@ -122,7 +120,7 @@ void read_config_file(void)
 	FILE *fp;
 	char str[128];
 	
-	fp = fopen("config\\newkind.cfg", "r");
+	fp = fopen (DIRNAME_CONFIG "newkind.cfg", "r");
 	if (fp == NULL)
 		return;
 
@@ -145,8 +143,11 @@ void read_config_file(void)
 	sscanf(str, "%d", &instant_dock);
 
 	read_cfg_line(str, sizeof(str), fp);
+	sscanf(str, "%d", &directx);
+
+	read_cfg_line(str, sizeof(str), fp);
 	char scannerConfigFileName[256];
-	sprintf(scannerConfigFileName, "config\\%s", str);
+	sprintf(scannerConfigFileName, DIRNAME_CONFIG "%s", str);
 	read_scanner_config_file(scannerConfigFileName);
 		
 	fclose(fp);

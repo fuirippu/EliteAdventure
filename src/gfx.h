@@ -75,44 +75,74 @@
 #endif
  
 
+#pragma region Colours
+/// The GFX_COL_xxx defines are now indices into the global
+/// palette pColours [colours.c, gfx.h].
 
 #define GFX_COL_BLACK		0
-#define GFX_COL_DARK_RED	28
-#define GFX_COL_WHITE		255
-#define GFX_COL_GOLD		39
-#define GFX_COL_RED			49
-#define GFX_COL_CYAN		11
+#define GFX_COL_DARK_RED	1
+#define GFX_COL_WHITE		2
+#define GFX_COL_GOLD		3
+#define GFX_COL_RED			4
+#define GFX_COL_CYAN		5
 
-#define GFX_COL_GREY_1		248
-#define GFX_COL_GREY_2		235
-#define GFX_COL_GREY_3		234
-#define GFX_COL_GREY_4		237
+#define GFX_COL_GREY_1		6
+#define GFX_COL_GREY_2		7
+#define GFX_COL_GREY_3		8
+#define GFX_COL_GREY_4		9
 
-#define GFX_COL_BLUE_1		45
-#define GFX_COL_BLUE_2		46
-#define GFX_COL_BLUE_3		133
-#define GFX_COL_BLUE_4		4
+#define GFX_COL_BLUE_1		10
+#define GFX_COL_BLUE_2		11
+#define GFX_COL_BLUE_3		12
+#define GFX_COL_BLUE_4		13
 
-#define GFX_COL_RED_3		1
-#define GFX_COL_RED_4		71
+#define GFX_COL_RED_3		14
+#define GFX_COL_RED_4		15
 
-#define GFX_COL_WHITE_2		242
+#define GFX_COL_WHITE_2		16
 
-#define GFX_COL_YELLOW_1	37
-#define GFX_COL_YELLOW_2	39
-#define GFX_COL_YELLOW_3	89
-#define GFX_COL_YELLOW_4	160
-#define GFX_COL_YELLOW_5	251
+#define GFX_COL_YELLOW_1	17
+#define GFX_COL_YELLOW_2	18
+#define GFX_COL_YELLOW_3	19
+#define GFX_COL_YELLOW_4	20
+#define GFX_COL_YELLOW_5	21
 
-#define GFX_ORANGE_1		76
-#define GFX_ORANGE_2		77
-#define GFX_ORANGE_3		122
+#define GFX_ORANGE_1		22
+#define GFX_ORANGE_2		23
+#define GFX_ORANGE_3		24
 
-#define GFX_COL_GREEN_1		2
-#define GFX_COL_GREEN_2		17
-#define GFX_COL_GREEN_3		86
+#define GFX_COL_GREEN_1		25
+#define GFX_COL_GREEN_2		26
+#define GFX_COL_GREEN_3		27
 
-#define GFX_COL_PINK_1		183
+#define GFX_COL_PINK_1		28
+
+#define GFX_COL_SNES_102	29
+#define GFX_COL_SNES_134	30
+#define GFX_COL_SNES_167	31
+#define GFX_COL_SNES_213	32
+#define GFX_COL_SNES_255	GFX_COL_WHITE
+#define GFX_COL_SNES__83	33
+#define GFX_COL_SNES_122	GFX_ORANGE_3
+#define GFX_COL_SNES_249	34
+
+#define GFX_COL_AA_0		35
+#define GFX_COL_AA_1		36
+#define GFX_COL_AA_2		37
+#define GFX_COL_AA_3		38
+#define GFX_COL_AA_4		39
+#define GFX_COL_AA_5		40
+#define GFX_COL_AA_6		41
+#define GFX_COL_AA_7		42
+
+
+// The globals pColours and setColours() are in colours.c
+#define NUM_COLOURS			43
+extern const int *pColours;
+
+void setColours(int use_directx);
+#pragma endregion
+
 
 #define IMG_GREEN_DOT		1
 #define IMG_RED_DOT			2
