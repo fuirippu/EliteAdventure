@@ -25,6 +25,11 @@
 #include "config.h"
 #include "file.h"
 
+
+
+#define DIRNAME_CONFIG		"config\\"
+
+
 void write_config_file (void)
 {
 	FILE *fp;
@@ -103,7 +108,7 @@ static void read_scanner_config_file (char *filename)
 		return;
 
 	read_cfg_line (str, sizeof(str), fp);
-	sprintf(scanner_filename, "assets\\%s", str);
+	sprintf(scanner_filename, DIRNAME_ASSETS "%s", str);
 	//strcpy (scanner_filename, str);
 
 	read_cfg_line (str, sizeof(str), fp);
@@ -126,7 +131,7 @@ void read_config_file (void)
 	FILE *fp;
 	char str[128];
 	
-	fp = fopen ("config\\newkind.cfg", "r");
+	fp = fopen (DIRNAME_CONFIG "newkind.cfg", "r");
 	if (fp == NULL)
 		return;
 
@@ -150,7 +155,7 @@ void read_config_file (void)
 
 	read_cfg_line (str, sizeof(str), fp);
 	char scannerConfigFileName[256];
-	sprintf(scannerConfigFileName, "config\\%s", str);
+	sprintf(scannerConfigFileName, DIRNAME_CONFIG "%s", str);
 	read_scanner_config_file (scannerConfigFileName);
 		
 	fclose (fp);

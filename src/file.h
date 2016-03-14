@@ -19,6 +19,11 @@
 #ifndef FILE_H
 #define FILE_H
 
+
+#define DIRNAME_ASSETS	"assets\\"
+
+//extern const char* strAssetDir;
+
 void write_config_file (void);
 void read_config_file (void);
 int save_commander_file (char *path);

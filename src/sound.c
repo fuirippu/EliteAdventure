@@ -20,6 +20,7 @@
 #include <allegro.h>
 #include "sound.h"
 #include "alg_data.h" 
+#include "file.h"
 
 #define NUM_SAMPLES 14 
 
@@ -35,20 +36,20 @@ static struct sound_sample
 	int timeleft;
 } sample_list[NUM_SAMPLES] =
 {
-	{NULL, "assets\\launch.wav",	32, 0},
-	{NULL, "assets\\crash.wav",		 7, 0},
-	{NULL, "assets\\dock.wav",		36, 0},
-	{NULL, "assets\\gameover.wav",	24, 0},
-	{NULL, "assets\\pulse.wav",		 4, 0},
-	{NULL, "assets\\hitem.wav",		 4, 0},
-	{NULL, "assets\\explode.wav",	23, 0},
-	{NULL, "assets\\ecm.wav",		23, 0},
-	{NULL, "assets\\missile.wav",	25, 0},
-	{NULL, "assets\\hyper.wav",		37, 0},
-	{NULL, "assets\\incom1.wav",	 4, 0},
-	{NULL, "assets\\incom2.wav",	 5, 0},
-	{NULL, "assets\\beep.wav",		 2, 0},
-	{NULL, "assets\\boop.wav",		 7, 0},
+	{NULL, DIRNAME_ASSETS "launch.wav",	32, 0},
+	{NULL, DIRNAME_ASSETS "crash.wav",		 7, 0},
+	{NULL, DIRNAME_ASSETS "dock.wav",		36, 0},
+	{NULL, DIRNAME_ASSETS "gameover.wav",	24, 0},
+	{NULL, DIRNAME_ASSETS "pulse.wav",		 4, 0},
+	{NULL, DIRNAME_ASSETS "hitem.wav",		 4, 0},
+	{NULL, DIRNAME_ASSETS "explode.wav",	23, 0},
+	{NULL, DIRNAME_ASSETS "ecm.wav",		23, 0},
+	{NULL, DIRNAME_ASSETS "missile.wav",	25, 0},
+	{NULL, DIRNAME_ASSETS "hyper.wav",		37, 0},
+	{NULL, DIRNAME_ASSETS "incom1.wav",	 4, 0},
+	{NULL, DIRNAME_ASSETS "incom2.wav",	 5, 0},
+	{NULL, DIRNAME_ASSETS "beep.wav",		 2, 0},
+	{NULL, DIRNAME_ASSETS "boop.wav",		 7, 0},
 };
  
  

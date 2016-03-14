@@ -24,6 +24,7 @@
 #include "gfx.h"
 #include "alg_data.h"
 #include "elite.h"
+#include "file.h"
 
 static BITMAP *gfx_screen;
 static volatile int frame_count;
@@ -53,8 +54,6 @@ void frame_timer (void)
 }
 END_OF_FUNCTION(frame_timer);
 
-
-
 int gfx_graphics_startup (void)
 {
 	PALETTE the_palette;
@@ -74,8 +73,8 @@ int gfx_graphics_startup (void)
 	if (rv == 0)
 		set_display_switch_mode (SWITCH_BACKGROUND);
 #else
- 	rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
-	
+	rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
+
 	if (rv != 0)
 		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
 #endif
@@ -91,11 +90,12 @@ int gfx_graphics_startup (void)
       	return 1;
 	}
 	
-	datafile = load_datafile("assets\\elite.dat");
+	const char *strFileName = DIRNAME_ASSETS "elite.dat";
+	datafile = load_datafile(strFileName);
 	if (!datafile)
 	{
 		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-      	allegro_message("Error loading %s!\n", "assets\\elite.dat");
+        allegro_message("Error loading %s!\n", strFileName);
       	return 1;
 	}
 
