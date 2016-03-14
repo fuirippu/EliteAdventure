@@ -3,6 +3,9 @@
     Elite Adventurous - game in development
     =======================================
 
+14/3/16 London
+	dx branch for directx fix (win8.1)
+	
 
  +------------------------------------------------+
  | based on Elite - The New Kind                  |
