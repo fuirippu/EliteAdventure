@@ -36,7 +36,7 @@ int carry_flag = 0;
 int current_screen = 0;
 int witchspace;
 
-int directx = 1;			// ToDo: read from config file
+int directx = 1;
 int wireframe = 0;
 int anti_alias_gfx = 0;
 int hoopy_casinos = 0;

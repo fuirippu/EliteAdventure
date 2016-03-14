@@ -26,13 +26,14 @@
 
 
 #define DIRNAME_CONFIG		"config\\"
+#define FILENAME_CONFIG		"newkind.cfg"
 
 
 void write_config_file (void)
 {
 	FILE *fp;
 	
-	fp = fopen(DIRNAME_CONFIG "newkind.cfg", "w");
+	fp = fopen(DIRNAME_CONFIG FILENAME_CONFIG, "w");
 	if (fp == NULL)
 		return;
 
@@ -120,7 +121,7 @@ void read_config_file(void)
 	FILE *fp;
 	char str[128];
 	
-	fp = fopen (DIRNAME_CONFIG "newkind.cfg", "r");
+	fp = fopen (DIRNAME_CONFIG FILENAME_CONFIG, "r");
 	if (fp == NULL)
 		return;
 

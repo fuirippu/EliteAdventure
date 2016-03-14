@@ -27,7 +27,7 @@
 #include <math.h>
 #include <ctype.h>
 
-#include "allegro.h"
+#include <allegro.h>
 
 #include "gfx.h"
 #include "alg_data.h"
@@ -55,6 +55,8 @@ static struct poly_data
 	int point_list[16];
 	int next;
 } poly_chain[MAX_POLYS];
+
+#define DIRNAME_DX_ASSETS	DIRNAME_ASSETS "directx\\"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -116,41 +118,41 @@ static int patch_for_directx(DATAFILE *datafile)
 	// ToDo: DANUBE and THEME (midi), ELITE_1 and ELITE_2 (fonts)
 
 #pragma region Patch BMPs (.fui files)
-	rv = patch_bmp_for_directx("assets\\directx\\blake32-v3.fui", datafile[BLAKE].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "blake32-v3.fui", datafile[BLAKE].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\ecm.fui", datafile[ECM].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "ecm.fui", datafile[ECM].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\elitetx3.fui", datafile[ELITETXT].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "elitetx3.fui", datafile[ELITETXT].dat);
 	if (rv != 0)
 		return rv;
 
 	// FRONTV - not used ?
 
-	rv = patch_bmp_for_directx("assets\\directx\\greendot.fui", datafile[GRNDOT].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "greendot.fui", datafile[GRNDOT].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\missgrn.fui", datafile[MISSILE_G].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "missgrn.fui", datafile[MISSILE_G].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\missred.fui", datafile[MISSILE_R].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "missred.fui", datafile[MISSILE_R].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\missyell.fui", datafile[MISSILE_Y].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "missyell.fui", datafile[MISSILE_Y].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\reddot.fui", datafile[REDDOT].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "reddot.fui", datafile[REDDOT].dat);
 	if (rv != 0)
 		return rv;
 
-	rv = patch_bmp_for_directx("assets\\directx\\safe.fui", datafile[SAFE].dat);
+	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "safe.fui", datafile[SAFE].dat);
 	if (rv != 0)
 		return rv;
 #pragma endregion

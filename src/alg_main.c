@@ -26,7 +26,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include "allegro.h"
+#include <allegro.h>
 
 #include "gfx.h"
 #include "main.h"
