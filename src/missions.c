@@ -146,19 +146,19 @@ char *mission_planet_desc(struct galaxy_seed planet)
 	{
 		switch (pnum)
 		{
+			case 3:
+			case 5:
+			case 16:
+			case 26:
 			case 32:
 			case 68:
-			case 164:
-			case 220:
 			case 106:
-			case 16:
-			case 162:
-			case 3:
 			case 107:
-			case 26:
-			case 192:
+			case 162:
+			case 164:
 			case 184:
-			case 5:
+			case 192:
+			case 220:
 				return mission1_pdesc[3];
 		
 			case 253:
@@ -322,37 +322,28 @@ static void thargoid_mission_debrief(void)
 
 /////////////////////////////////////////////////////////////////////////////
 
-
+/// Called whenever docking, before displaying the status screen.
+/// The commander.mission int field is mostly managed by missions.c.
+/// when the flag is 1 (player is on the first mission), describe_planet()
+/// calls mission_planet_desc() to retrieve the planet description.
+/// explode_object() [swat.c] advances the flag to 2 if the CONSTRICTOR is
+/// destroyed. create_lone_hunter() [swat.c] checks the flag to conditionally
+/// create the CONSTRICTOR. {ToDo: other missions}
 void check_mission_brief(void)
 {
 	if ((cmdr.mission == 0) && (cmdr.score >= 256) && (cmdr.galaxy_number < 2))
-	{
 		constrictor_mission_brief();
-		return;
-	}
 
-	if (cmdr.mission == 2)
-	{
+	else if (cmdr.mission == 2)
 		constrictor_mission_debrief();
-		return;
-	}
 
-	if ((cmdr.mission == 3) && (cmdr.score >= 1280) && (cmdr.galaxy_number == 2))
-	{
+	else if ((cmdr.mission == 3) && (cmdr.score >= 1280) && (cmdr.galaxy_number == 2))
 		thargoid_mission_first_brief();
-		return;
-	}
 
-	if ((cmdr.mission == 4) && (docked_planet.d == 215) && (docked_planet.b == 84))
-	{
+	else if ((cmdr.mission == 4) && (docked_planet.d == 215) && (docked_planet.b == 84))
 		thargoid_mission_second_brief();
-		return;
-	}
 
-	if ((cmdr.mission == 5) && (docked_planet.d == 63) && (docked_planet.b == 72))
-	{
+	else if ((cmdr.mission == 5) && (docked_planet.d == 63) && (docked_planet.b == 72))
 		thargoid_mission_debrief();
-		return;
-	}
 }
 
