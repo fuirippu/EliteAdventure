@@ -50,12 +50,15 @@
 #include "keyboard.h"
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
+int mcount;
 
 static int old_cross_x, old_cross_y;
 static int cross_timer;
 
 static int draw_lasers;
-int mcount;
 static int message_count;
 static char message_string[80];
 static int rolling;
@@ -66,12 +69,15 @@ static int have_joystick;
 static int find_input;
 static char find_name[20];
 
+//#define X360_CONTROLLER
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
 /*
  * Initialise the game parameters.
  */
-
 static void initialise_game(void)
 {
 	set_rand_seed (time(NULL));
@@ -109,7 +115,6 @@ static void initialise_game(void)
 	myship.max_fuel = 70;		/* 7.0 Light Years */
 }
 
-
 static void finish_game (void)
 {
 	finish = 1;
@@ -117,16 +122,9 @@ static void finish_game (void)
 }
 
 
-
-
-
-
-
 /*
  * Move the planet chart cross hairs to specified position.
  */
-
-
 static void move_cross (int dx, int dy)
 {
 	cross_timer = 5;
@@ -156,12 +154,9 @@ static void move_cross (int dx, int dy)
 			cross_y = 293;
 	}
 }
-
-
 /*
  * Draw the cross hairs at the specified position.
  */
-
 static void draw_cross (int cx, int cy)
 {
 	if (current_screen == SCR_SHORT_RANGE)
@@ -185,7 +180,6 @@ static void draw_cross (int cx, int cy)
 		gfx_set_clip_region (1, 1, 510, 383);
 	}
 }
-
 
 
 static void draw_laser_sights(void)
@@ -252,7 +246,8 @@ static void draw_laser_sights(void)
 }
 
 
-static void arrow_right (void)
+#pragma region Key press actions
+static void arrow_right(void)
 {
 	switch (current_screen)
 	{
@@ -285,8 +280,7 @@ static void arrow_right (void)
 	}
 }
 
-
-static void arrow_left (void)
+static void arrow_left(void)
 {
 	switch (current_screen)
 	{
@@ -319,8 +313,7 @@ static void arrow_left (void)
 	}
 }
 
-
-static void arrow_up (void)
+static void arrow_up(void)
 {
 	switch (current_screen)
 	{
@@ -360,9 +353,7 @@ static void arrow_up (void)
 	}
 }
 
-
-
-static void arrow_down (void)
+static void arrow_down(void)
 {
 	switch (current_screen)
 	{
@@ -403,8 +394,7 @@ static void arrow_down (void)
 	}
 }
 
-
-static void return_pressed (void)
+static void return_pressed(void)
 {
 	switch (current_screen)
 	{
@@ -422,8 +412,7 @@ static void return_pressed (void)
 	}	
 }
 
-
-static void y_pressed (void)
+static void y_pressed(void)
 {
 	switch (current_screen)
 	{
@@ -433,8 +422,7 @@ static void y_pressed (void)
 	}
 }
 
-
-static void n_pressed (void)
+static void n_pressed(void)
 {
 	switch (current_screen)
 	{
@@ -447,8 +435,7 @@ static void n_pressed (void)
 	}
 }
 
-
-static void d_pressed (void)
+static void d_pressed(void)
 {
 	switch (current_screen)
 	{
@@ -467,8 +454,7 @@ static void d_pressed (void)
 	}
 }
 
-
-static void f_pressed (void)
+static void f_pressed(void)
 {
 	if ((current_screen == SCR_GALACTIC_CHART) ||
 		(current_screen == SCR_SHORT_RANGE))
@@ -480,49 +466,48 @@ static void f_pressed (void)
 	}
 }
 
-
-static void add_find_char (int letter)
-{
-	char str[40];
-	
-	if (strlen (find_name) == 16)
-		return;
-		
-	str[0] = toupper (letter);
-	str[1] = '\0';
-	strcat (find_name, str);
-
-	sprintf (str, "Planet Name? %s", find_name);		
-	gfx_clear_text_area ();
-	gfx_display_text(16, 340, str);
-}
-
-
-static void delete_find_char (void)
-{
-	char str[40];
-	int len;
-
-	len = strlen (find_name);
-	if (len == 0)
-		return;
-		
-	find_name[len - 1] = '\0';	
-		
-	sprintf (str, "Planet Name? %s", find_name);		
-	gfx_clear_text_area();
-	gfx_display_text(16, 340, str);
-}
-
 static void o_pressed()
 {
 	switch (current_screen)
 	{
 		case SCR_GALACTIC_CHART:
 		case SCR_SHORT_RANGE:
-    		move_cursor_to_origin();
+			move_cursor_to_origin();
 			break;
 	}
+}
+#pragma endregion
+
+
+static void add_find_char(int letter)
+{
+	char str[40];
+
+	if (strlen(find_name) == 16)
+		return;
+
+	str[0] = toupper(letter);
+	str[1] = '\0';
+	strcat(find_name, str);
+
+	sprintf(str, "Planet Name? %s", find_name);
+	gfx_clear_text_area();
+	gfx_display_text(16, 340, str);
+}
+static void delete_find_char(void)
+{
+	char str[40];
+	int len;
+
+	len = strlen(find_name);
+	if (len == 0)
+		return;
+
+	find_name[len - 1] = '\0';
+
+	sprintf(str, "Planet Name? %s", find_name);
+	gfx_clear_text_area();
+	gfx_display_text(16, 340, str);
 }
 
 
@@ -685,13 +670,6 @@ static void handle_flight_keys (void)
 {
     int keyasc;
 	
-	if (docked &&
-	    ((current_screen == SCR_MARKET_PRICES) ||
-		 (current_screen == SCR_OPTIONS) ||
-		 (current_screen == SCR_SETTINGS) ||
-		 (current_screen == SCR_EQUIP_SHIP)))
-		kbd_read_key();
-
 	kbd_poll_keyboard();
 
 	if (have_joystick)
@@ -700,24 +678,49 @@ static void handle_flight_keys (void)
 
 		if (joy[0].stick[0].axis[1].d1)
 			arrow_up();
-		
 		if (joy[0].stick[0].axis[1].d2)
 			arrow_down();
-
 		if (joy[0].stick[0].axis[0].d1)
 			arrow_left();
-
 		if (joy[0].stick[0].axis[0].d2)
 			arrow_right();
-		
-		if (joy[0].button[0].b)
-			kbd_fire_pressed = 1;
 
-		if (joy[0].button[1].b)
-			kbd_inc_speed_pressed = 1;
-
-		if (joy[0].button[2].b)
-			kbd_dec_speed_pressed = 1;
+		// Respond to buttons
+		if (current_screen == SCR_QUIT)
+		{
+			if (joy[0].button[0].b)
+				kbd_y_pressed = 1;
+			if (joy[0].button[1].b)
+				kbd_n_pressed = 1;
+		}
+		else if ((current_screen == SCR_MARKET_PRICES) ||
+				 (current_screen == SCR_EQUIP_SHIP) ||
+				 (current_screen == SCR_OPTIONS)	||
+				 (current_screen == SCR_SETTINGS)	)
+		{
+			if (joy[0].button[0].b)
+				kbd_enter_pressed = 1;
+		}
+		else  // in flight
+		{
+#ifdef X360_CONTROLLER
+			if (joy[0].button[4].b)
+				kbd_fire_pressed = 1;
+			if (joy[0].button[3].b)
+				kbd_jump_pressed = 1;
+#else
+			if (joy[0].button[0].b)
+				kbd_fire_pressed = 1;
+#endif
+			if (joy[0].button[1].b)
+				kbd_inc_speed_pressed = 1;
+			if (joy[0].button[2].b)
+				kbd_dec_speed_pressed = 1;
+		}
+#ifdef X360_CONTROLLER
+		if (joy[0].button[7].b)
+			kbd_F11_pressed = 1;
+#endif
 	}
 
 	
@@ -861,7 +864,6 @@ static void handle_flight_keys (void)
 
 	if (kbd_n_pressed)
 		n_pressed();
-
  
 	if (kbd_fire_pressed)
 	{
@@ -979,7 +981,6 @@ static void handle_flight_keys (void)
 }
 
 
-
 static void set_commander_name (char *path)
 {
 	char *fname, *cname;
@@ -998,8 +999,6 @@ static void set_commander_name (char *path)
 
 	*cname = '\0';
 }
-
-
 void save_commander_screen (void)
 {
 	char path[255];
@@ -1039,8 +1038,6 @@ void save_commander_screen (void)
 	saved_cmdr.ship_x = docked_planet.d;
 	saved_cmdr.ship_y = docked_planet.b;
 }
-
-
 void load_commander_screen (void)
 {
 	char path[255];
@@ -1078,6 +1075,32 @@ void load_commander_screen (void)
 }
 
 
+static void joystick_poll_fire_for_space()
+{
+	if (have_joystick)
+	{
+		poll_joystick();
+#ifdef X360_CONTROLLER
+		if (joy[0].button[4].b)
+			kbd_space_pressed = 1;
+#else
+		if (joy[0].button[0].b)
+			kbd_space_pressed = 1;
+#endif
+	}
+}
+static void joystick_poll_yes_no()
+{
+	if (have_joystick)
+	{
+		poll_joystick();
+
+		if (joy[0].button[0].b)
+			kbd_y_pressed = 1;
+		else if (joy[0].button[1].b)
+			kbd_n_pressed = 1;
+	}
+}
 
 static void run_first_intro_screen (void)
 {
@@ -1094,6 +1117,7 @@ static void run_first_intro_screen (void)
 		gfx_update_screen();
 
 		kbd_poll_keyboard();
+		joystick_poll_yes_no();
 
 		if (kbd_y_pressed)
 		{
@@ -1101,7 +1125,6 @@ static void run_first_intro_screen (void)
 			load_commander_screen();
 			break;
 		}
-		
 		if (kbd_n_pressed)
 		{ 
 			snd_stop_midi();	
@@ -1110,8 +1133,6 @@ static void run_first_intro_screen (void)
 	} 
 
 }
-
-
 
 static void run_second_intro_screen (void)
 {
@@ -1132,6 +1153,7 @@ static void run_second_intro_screen (void)
 		gfx_update_screen();
 
 		kbd_poll_keyboard();
+		joystick_poll_fire_for_space();
 
 		if (kbd_space_pressed) 
 			break;
@@ -1140,12 +1162,9 @@ static void run_second_intro_screen (void)
 	snd_stop_midi();
 }
 
-
-
 /*
  * Draw the game over sequence. 
  */
-
 static void run_game_over_screen()
 {
 	int i;
@@ -1188,13 +1207,10 @@ static void run_game_over_screen()
 }
 
 
-
-
 /*
  * Draw a break pattern (for launching, docking and hyperspacing).
  * Just draw a very simple one for the moment.
  */
-
 static void display_break_pattern (void)
 {
 	int i;
@@ -1228,10 +1244,6 @@ void info_message (char *message)
 }
 
 
-
-
-
-
 static void initialise_allegro (void)
 {
 	allegro_init();
@@ -1246,9 +1258,6 @@ static void initialise_allegro (void)
 		have_joystick = (num_joysticks > 0);
 	}
 }
-
-
-
 int main()
 {
 	initialise_allegro();

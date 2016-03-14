@@ -257,9 +257,12 @@ int gfx_graphics_startup (void)
 	clear (gfx_screen);
 
 	blit (scanner_image, gfx_screen, 0, 0, GFX_X_OFFSET, 385+GFX_Y_OFFSET, scanner_image->w, scanner_image->h);
-	gfx_draw_line (0, 0, 0, 384);
-	gfx_draw_line (0, 0, 511, 0);
-	gfx_draw_line (511, 0, 511, 384);
+
+	// Draw viewport border
+	gfx_draw_line(  0,   0,   0, 384);
+	gfx_draw_line(  0,   0, 511,   0);
+	gfx_draw_line(511,   0, 511, 384);
+	gfx_draw_line(  0, 384, 511, 384);
 
 	/* Install a timer to regulate the speed of the game... */
 
