@@ -171,7 +171,7 @@ void scoop_item (int un)
 	{
 		trade = rand255() & 7;
 		cmdr.current_cargo[trade]++;
-		info_message (stock_market[trade].name);
+		info_message(stock_market[trade].name, GFX_COL_WHITE, 0);
 		remove_ship (un);
 		return;					
 	}
@@ -180,7 +180,7 @@ void scoop_item (int un)
 	{
 		trade = ship_list[type]->scoop_type + 1;
 		cmdr.current_cargo[trade]++;
-		info_message (stock_market[trade].name);
+		info_message(stock_market[trade].name, GFX_COL_WHITE, 0);
 		remove_ship (un);
 		return;					
 	}

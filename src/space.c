@@ -43,6 +43,10 @@
 #include "stars.h"
 #include "pilot.h"
 
+
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 extern int flight_climb;
 extern int flight_roll;
 extern int flight_speed;
@@ -55,11 +59,10 @@ static int hyper_distance;
 static int hyper_galactic;
 
 
-
-
-
-
-static void rotate_x_first (double *a, double *b, int direction)
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
+static void rotate_x_first(double *a, double *b, int direction)
 {
 	double fx,ux;
 
@@ -77,9 +80,7 @@ static void rotate_x_first (double *a, double *b, int direction)
 		*b = ux - (ux / 512) + (fx / 19);
 	}
 }
-
-
-static void rotate_vec (struct vector *vec, double alpha, double beta)
+static void rotate_vec(struct vector *vec, double alpha, double beta)
 {
 	double x,y,z;
 	
@@ -97,12 +98,10 @@ static void rotate_vec (struct vector *vec, double alpha, double beta)
 	vec->z = z;
 }
 
-
 /*
  * Update an objects location in the universe.
  */
-
-static void move_univ_object (struct univ_object *obj)
+static void move_univ_object(struct univ_object *obj)
 {
 	double x,y,z;
 	double k2;
@@ -203,8 +202,7 @@ static void move_univ_object (struct univ_object *obj)
 /*
  * Dock the player into the space station.
  */
-
-void dock_player (void)
+void dock_player(void)
 {
 	disengage_auto_pilot();
 	docked = 1;
@@ -219,12 +217,10 @@ void dock_player (void)
 	reset_weapons();
 }
 
-
 /*
  * Check if we are correctly aligned to dock.
  */
-
-static int is_docking (int sn)
+static int is_docking(int sn)
 {
 	struct vector vec;
 	double fz;
@@ -257,15 +253,13 @@ static int is_docking (int sn)
 /*
  * Game Over...
  */
-
-static void do_game_over (void)
+static void do_game_over(void)
 {
 	snd_play_sample (SND_GAMEOVER);
 	game_over = 1;
 }
 
-
-void update_altitude (void)
+void update_altitude(void)
 {
 	double x,y,z;
 	double dist;
@@ -310,8 +304,7 @@ void update_altitude (void)
 	myship.altitude = (int)dist;
 }
 
-
-void update_cabin_temp (void)
+void update_cabin_temp(void)
 {
 	int x,y,z;
 	int dist;
@@ -347,27 +340,25 @@ void update_cabin_temp (void)
 	if (myship.cabtemp > 255)
 	{
 		myship.cabtemp = 255;
-		do_game_over ();
+		do_game_over();
 		return;
 	}
 	
 	if ((myship.cabtemp < 224) || (cmdr.fuel_scoop == 0))
 		return;
 
-	cmdr.fuel += flight_speed / 2;
+	cmdr.fuel += flight_speed / 16;
 	if (cmdr.fuel > myship.max_fuel)
 		cmdr.fuel = myship.max_fuel;
 
-	info_message ("Fuel Scoop On");	
+	info_message("Fuel Scoop On", GFX_COL_SNES_249, 1);
 }
-
 
 
 /*
  * Regenerate the shields and the energy banks.
  */
-
-void regenerate_shields (void)
+void regenerate_shields(void)
 {
 	if (energy > 127)
 	{
@@ -389,22 +380,17 @@ void regenerate_shields (void)
 	if (energy > 255)
 		energy = 255;
 }
-
-
-void decrease_energy (int amount)
+void decrease_energy(int amount)
 {
 	energy += amount;
 
 	if (energy <= 0)
 		do_game_over();
 }
-
-
 /*
  * Deplete the shields.  Drain the energy banks if the shields fail.
  */
-
-void damage_ship (int damage, int front)
+void damage_ship(int damage, int front)
 {
 	int shield;
 
@@ -427,9 +413,7 @@ void damage_ship (int damage, int front)
 }
 
 
-
-
-static void make_station_appear (void)
+static void make_station_appear(void)
 {
 	double px,py,pz;
 	double sx,sy,sz;
@@ -470,8 +454,7 @@ static void make_station_appear (void)
 }
 
 
-
-static void check_docking (int i)
+static void check_docking(int i)
 {
 	if (is_docking(i))
 	{
@@ -493,7 +476,7 @@ static void check_docking (int i)
 }
 
 
-static void switch_to_view (struct univ_object *flip)
+static void switch_to_view(struct univ_object *flip)
 {
 	double tmp;
 	
@@ -566,8 +549,7 @@ static void switch_to_view (struct univ_object *flip)
 /*
  * Update all the objects in the universe and render them.
  */
-
-void update_universe (void)
+void update_universe(void)
 {
 	int i;
 	int type;
@@ -595,7 +577,7 @@ void update_universe (void)
 				{
 					cmdr.credits += bounty;
 					sprintf (str, "%d.%d CR", cmdr.credits / 10, cmdr.credits % 10);
-					info_message (str);
+					info_message(str, GFX_COL_WHITE, 0);
 				}
 				
 				remove_ship (i);
@@ -680,13 +662,10 @@ void update_universe (void)
 }
 
 
-
-
 /*
  * Update the scanner and draw all the lollipops.
  */
-
-static void update_scanner (void)
+static void update_scanner(void)
 {
 	int i;
 	int x,y,z;
@@ -745,13 +724,10 @@ static void update_scanner (void)
 		gfx_draw_colour_line (x1+2, y1, x1+2, y2, colour);
 	}
 }
-
-
 /*
  * Update the compass which tracks the space station / planet.
  */
-
-static void update_compass (void)
+static void update_compass(void)
 {
 	struct vector dest;
 	int compass_x;
@@ -781,11 +757,11 @@ static void update_compass (void)
 }
 
 
+#pragma region display console items
 /*
  * Display the speed bar.
  */
-
-static void display_speed (void)
+static void display_speed(void)
 {
 	int sx,sy;
 	int i;
@@ -805,13 +781,11 @@ static void display_speed (void)
 	}
 }
 
-
 /*
  * Draw an indicator bar.
  * Used for shields and energy banks.
  */
-
-static void display_dial_bar (int len, int x, int y)
+static void display_dial_bar(int len, int x, int y)
 {
 	int i = 0;
 
@@ -825,12 +799,10 @@ static void display_dial_bar (int len, int x, int y)
 	gfx_draw_colour_line (x, y + i + 384, x + len, y + i + 384, GFX_COL_DARK_RED);
 }
 
-
 /*
  * Display the current shield strengths.
  */
-
-static void display_shields (void)
+static void display_shields(void)
 {
 	if (front_shield > 3)
 		display_dial_bar (front_shield / 4, 31, 7);
@@ -840,31 +812,28 @@ static void display_shields (void)
 }
 
 
-static void display_altitude (void)
+static void display_altitude(void)
 {
 	if (myship.altitude > 3)
 		display_dial_bar (myship.altitude / 4, 31, 92);
 }
 
-static void display_cabin_temp (void)
+static void display_cabin_temp(void)
 {
 	if (myship.cabtemp > 3)
 		display_dial_bar (myship.cabtemp / 4, 31, 60);
 }
 
-
-static void display_laser_temp (void)
+static void display_laser_temp(void)
 {
 	if (laser_temp > 0)
 		display_dial_bar (laser_temp / 4, 31, 76);
 }
 
-
 /*
  * Display the energy banks.
  */
-
-static void display_energy (void)
+static void display_energy(void)
 {
 	int e1,e2,e3,e4;
 
@@ -886,9 +855,7 @@ static void display_energy (void)
 		display_dial_bar (e1, 416, 115);
 }
 
-
-
-static void display_flight_roll (void)
+static void display_flight_roll(void)
 {
 	int sx,sy;
 	int i;
@@ -906,7 +873,7 @@ static void display_flight_roll (void)
 	}
 }
 
-static void display_flight_climb (void)
+static void display_flight_climb(void)
 {
 	int sx,sy;
 	int i;
@@ -924,15 +891,14 @@ static void display_flight_climb (void)
 	}
 }
 
-
-static void display_fuel (void)
+static void display_fuel(void)
 {
 	if (cmdr.fuel > 0)
 		display_dial_bar ((cmdr.fuel * 64) / myship.max_fuel, 31, 44);
 }
 
 
-static void display_missiles (void)
+static void display_missiles(void)
 {
 	int nomiss;
 	int x,y;
@@ -959,9 +925,10 @@ static void display_missiles (void)
 		x += 16;
 	}
 }
+#pragma endregion
 
 
-void update_console (void)
+void update_console(void)
 {
 	gfx_set_clip_region (0, 0, 512, 512);
 	gfx_draw_scanner();
@@ -990,34 +957,29 @@ void update_console (void)
 		gfx_draw_sprite (IMG_BIG_E, 115, 490);
 }
 
-void increase_flight_roll (void)
+void increase_flight_roll(void)
 {
 	if (flight_roll < myship.max_roll)
 		flight_roll++;
 }
-
-
-void decrease_flight_roll (void)
+void decrease_flight_roll(void)
 {
 	if (flight_roll > -myship.max_roll)
 		flight_roll--;
 }
-
-
-void increase_flight_climb (void)
+void increase_flight_climb(void)
 {
 	if (flight_climb < myship.max_climb)
 		flight_climb++;
 }
-
-void decrease_flight_climb (void)
+void decrease_flight_climb(void)
 {
 	if (flight_climb > -myship.max_climb)
 		flight_climb--;
 }
 
 
-void start_hyperspace (void)
+void start_hyperspace(void)
 {
 	if (hyper_ready)
 		return;
@@ -1038,7 +1000,7 @@ void start_hyperspace (void)
 	disengage_auto_pilot();
 }
 
-void start_galactic_hyperspace (void)
+void start_galactic_hyperspace(void)
 {
 	if (hyper_ready)
 		return;
@@ -1052,9 +1014,7 @@ void start_galactic_hyperspace (void)
 	disengage_auto_pilot();
 }
 
-
-
-void display_hyper_status (void)
+void display_hyper_status(void)
 {
 	char str[80];
 
@@ -1081,13 +1041,11 @@ void display_hyper_status (void)
 	}
 }
 
-
-static int rotate_byte_left (int x)
+static int rotate_byte_left(int x)
 {
 	return ((x << 1) | (x >> 7)) & 255;
 }
-
-static void enter_next_galaxy (void)
+static void enter_next_galaxy(void)
 {
 	cmdr.galaxy_number++;
 	cmdr.galaxy_number &= 7;
@@ -1103,11 +1061,7 @@ static void enter_next_galaxy (void)
 	hyperspace_planet = docked_planet;
 }
 
-
-
-
-
-static void enter_witchspace (void)
+static void enter_witchspace(void)
 {
 	int i;
 	int nthg;
@@ -1131,8 +1085,7 @@ static void enter_witchspace (void)
 	snd_play_sample (SND_HYPERSPACE);
 }
 
-
-static void complete_hyperspace (void)
+static void complete_hyperspace(void)
 {
 	Matrix rotmat;
 	int px,py,pz;
@@ -1199,8 +1152,7 @@ static void complete_hyperspace (void)
 	snd_play_sample (SND_HYPERSPACE);
 }
 
-
-void countdown_hyperspace (void)
+void countdown_hyperspace(void)
 {
 	if (hyper_countdown == 0)
 	{
@@ -1212,8 +1164,7 @@ void countdown_hyperspace (void)
 }
 
 
-
-void jump_warp (void)
+void jump_warp(void)
 {
 	int i;
 	int type;
@@ -1227,14 +1178,14 @@ void jump_warp (void)
 			(type != SHIP_ALLOY) && (type != SHIP_ROCK) &&
 			(type != SHIP_BOULDER) && (type != SHIP_ESCAPE_CAPSULE))
 		{
-			info_message ("Mass Locked");
+			info_message("Mass Locked", GFX_COL_SNES_167, 2);
 			return;
 		}
 	}
 
 	if ((universe[0].distance < 75001) || (universe[1].distance < 75001))
 	{
-		info_message ("Mass Locked");
+		info_message("Mass Locked", GFX_COL_SNES_167, 2);
 		return;
 	}
 
@@ -1259,7 +1210,7 @@ void jump_warp (void)
 }
 
 
-void launch_player (void)
+void launch_player(void)
 {
 	Matrix rotmat;
 
@@ -1284,13 +1235,11 @@ void launch_player (void)
 }
 
 
-
 /*
  * Engage the docking computer.
  * For the moment we just do an instant dock if we are in the safe zone.
  */
-
-void engage_docking_computer (void)
+void engage_docking_computer(void)
 {
 	if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
 	{

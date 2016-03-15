@@ -16,9 +16,10 @@
 #define MAIN_H
 
 
-void info_message (char *message);
-void save_commander_screen (void);
-void load_commander_screen (void);
+void info_message(const char *message, int col, int beep);
+
+void save_commander_screen(void);
+void load_commander_screen(void);
 
 
 #endif		// #ifndef MAIN_H

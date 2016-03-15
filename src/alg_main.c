@@ -55,12 +55,16 @@
 /////////////////////////////////////////////////////////////////////////////
 int mcount;
 
+#pragma region statics
 static int old_cross_x, old_cross_y;
 static int cross_timer;
 
 static int draw_lasers;
-static int message_count;
-static char message_string[80];
+
+static int message_colour;			/// info_message() sets the colour, count
+static int message_count;			/// & copies the string. The main loop
+static char message_string[80];		/// displays the text.
+
 static int rolling;
 static int climbing;
 static int game_paused;
@@ -68,7 +72,7 @@ static int have_joystick;
 
 static int find_input;
 static char find_name[20];
-
+#pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
 // Functions
@@ -113,7 +117,7 @@ static void initialise_game(void)
 	myship.max_fuel = 70;		/* 7.0 Light Years */
 }
 
-static void finish_game (void)
+static void finish_game(void)
 {
 	finish = 1;
 	game_over = 1;
@@ -123,7 +127,7 @@ static void finish_game (void)
 /*
  * Move the planet chart cross hairs to specified position.
  */
-static void move_cross (int dx, int dy)
+static void move_cross(int dx, int dy)
 {
 	cross_timer = 5;
 
@@ -155,7 +159,7 @@ static void move_cross (int dx, int dy)
 /*
  * Draw the cross hairs at the specified position.
  */
-static void draw_cross (int cx, int cy)
+static void draw_cross(int cx, int cy)
 {
 	if (current_screen == SCR_SHORT_RANGE)
 	{
@@ -509,7 +513,7 @@ static void delete_find_char(void)
 }
 
 
-static void auto_dock (void)
+static void auto_dock(void)
 {
 	struct univ_object ship;
 
@@ -593,7 +597,7 @@ static void auto_dock (void)
 }
 
 
-static void run_escape_sequence (void)
+static void run_escape_sequence(void)
 {
 	int i;
 	int newship;
@@ -664,7 +668,7 @@ static void run_escape_sequence (void)
 }
 
 
-static void handle_flight_keys (void)
+static void handle_flight_keys(void)
 {
     int keyasc;
 	
@@ -1002,7 +1006,7 @@ static void handle_flight_keys (void)
 }
 
 
-static void set_commander_name (char *path)
+static void set_commander_name(char *path)
 {
 	char *fname, *cname;
 	int i;
@@ -1020,7 +1024,7 @@ static void set_commander_name (char *path)
 
 	*cname = '\0';
 }
-void save_commander_screen (void)
+void save_commander_screen(void)
 {
 	char path[255];
 	int okay;
@@ -1059,7 +1063,7 @@ void save_commander_screen (void)
 	saved_cmdr.ship_x = docked_planet.d;
 	saved_cmdr.ship_y = docked_planet.b;
 }
-void load_commander_screen (void)
+void load_commander_screen(void)
 {
 	char path[255];
 	int rv;
@@ -1123,7 +1127,7 @@ static void joystick_poll_yes_no()
 	}
 }
 
-static void run_first_intro_screen (void)
+static void run_first_intro_screen(void)
 {
 	current_screen = SCR_INTRO_ONE;
 
@@ -1155,7 +1159,7 @@ static void run_first_intro_screen (void)
 
 }
 
-static void run_second_intro_screen (void)
+static void run_second_intro_screen(void)
 {
 	current_screen = SCR_INTRO_TWO;
 	
@@ -1232,7 +1236,7 @@ static void run_game_over_screen()
  * Draw a break pattern (for launching, docking and hyperspacing).
  * Just draw a very simple one for the moment.
  */
-static void display_break_pattern (void)
+static void display_break_pattern(void)
 {
 	int i;
 
@@ -1257,15 +1261,28 @@ static void display_break_pattern (void)
 }
 
 
-void info_message (char *message)
+void info_message(const char *message, int col, int beep)
 {
-	strcpy (message_string, message);
-	message_count = 37;
-//	snd_play_sample (SND_BEEP);
+	if (message_count > 0)			// ToDo: implement message queue
+		return;
+
+	if (col == GFX_COL_BLACK)		/// Indicates a pause between messages
+		message_count = 12;
+	else
+	{
+		message_count = 37;
+
+		if (beep == 1)
+			snd_play_sample(SND_BEEP);
+		else if (beep == 2)
+			snd_play_sample(SND_BOOP);
+	}
+	message_colour = col;
+	strcpy(message_string, message);
 }
 
 
-static void initialise_allegro (void)
+static void initialise_allegro(void)
 {
 	allegro_init();
 	install_keyboard(); 
@@ -1333,6 +1350,10 @@ int main()
 			if (message_count > 0)
 				message_count--;
 
+			/// If a message has just finished, pause before the next...
+			if ((message_count == 0) && (message_colour != GFX_COL_BLACK))
+				info_message(" ", GFX_COL_BLACK, 0);
+
 			if (!rolling)
 			{
 				if (flight_roll > 0)
@@ -1369,7 +1390,7 @@ int main()
 				{
 					auto_dock();
 					if ((mcount & 127) == 0)
-						info_message ("Docking Computers On");
+						info_message("Docking Computers On", GFX_COL_WHITE, 1);
 				}
 
 				update_universe ();
@@ -1393,8 +1414,8 @@ int main()
 					draw_laser_sights();
 				}
 
-				if (message_count > 0)
-					gfx_display_centre_text (358, message_string, 120, GFX_COL_WHITE);
+				if ((message_count > 0) && (message_colour != GFX_COL_BLACK))
+					gfx_display_centre_text(358, message_string, 120, message_colour);
 					
 				if (hyper_ready)
 				{
@@ -1418,8 +1439,7 @@ int main()
 				{
 					if (energy < 50)
 					{
-						info_message ("ENERGY LOW");
-						snd_play_sample (SND_BEEP);
+						info_message("ENERGY LOW", GFX_COL_SNES_249, 1);
 					}
 
 					update_altitude();

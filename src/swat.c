@@ -162,7 +162,7 @@ static void check_missiles(int un)
 	if (missile_target == un)
 	{
 		missile_target = MISSILE_UNARMED;
-		info_message("Target Lost");
+		info_message("Target Lost", GFX_COL_WHITE, 2);
 	}
 
 	for (i = 0; i < MAX_UNIV_OBJECTS; i++)
@@ -333,7 +333,7 @@ void explode_object(int un)
 	cmdr.score++;
 
 	if ((cmdr.score & 255) == 0)
-		info_message("Right On Commander!");
+		info_message("Right On Commander!", GFX_COL_CYAN, 1);
 	
 	snd_play_sample(SND_EXPLODE);
 	universe[un].flags |= FLG_DEAD;
@@ -353,7 +353,7 @@ void check_target(int un, struct univ_object *flip)
 		if ((missile_target == MISSILE_ARMED) && (univ->type >= 0))
 		{
 			missile_target = un;
-			info_message("Target Locked");
+			info_message("Target Locked", GFX_COL_WHITE, 1);
 			snd_play_sample(SND_BEEP);
 		}
 	
@@ -446,7 +446,7 @@ void fire_missile(void)
 
 	if (newship == -1)
 	{
-		info_message("Missile Jammed");
+		info_message("Missile Jammed", GFX_COL_RED_4, 2);
 		return;
 	}
 
@@ -762,7 +762,7 @@ void tactics(int un)
 			else
 			{
 				launch_enemy(un, SHIP_MISSILE, FLG_ANGRY, 126);
-				info_message("INCOMING MISSILE");
+				info_message("INCOMING MISSILE", GFX_COL_WHITE, 0);
 			}
 			return;
 		}
