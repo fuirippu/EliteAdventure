@@ -139,6 +139,7 @@ extern int current_screen;
 
 extern struct ship_data *ship_list[];
 
+extern int x360_controller;	/// 1 == yes, 0 == no
 extern int directx;			/// 1 == Use directx, 0 == Use GDI
 extern int wireframe;
 extern int anti_alias_gfx;

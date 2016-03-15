@@ -69,8 +69,6 @@ static int have_joystick;
 static int find_input;
 static char find_name[20];
 
-//#define X360_CONTROLLER
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Functions
@@ -703,24 +701,47 @@ static void handle_flight_keys (void)
 		}
 		else  // in flight
 		{
-#ifdef X360_CONTROLLER
-			if (joy[0].button[4].b)
+			int buttonNumber = 0;
+			if (x360_controller == 1)
+				buttonNumber = 4;					// L bumper to shoot
+
+			if (joy[0].button[buttonNumber].b)
 				kbd_fire_pressed = 1;
-			if (joy[0].button[3].b)
-				kbd_jump_pressed = 1;
-#else
-			if (joy[0].button[0].b)
-				kbd_fire_pressed = 1;
-#endif
+
 			if (joy[0].button[1].b)
 				kbd_inc_speed_pressed = 1;
 			if (joy[0].button[2].b)
 				kbd_dec_speed_pressed = 1;
 		}
-#ifdef X360_CONTROLLER
-		if (joy[0].button[7].b)
-			kbd_F11_pressed = 1;
-#endif
+
+		/// Bonus controls for x360
+		if (x360_controller == 1)
+		{
+			if (joy[0].button[7].b)					/// Options menu on start button
+				kbd_F11_pressed = 1;
+
+			if (docked)
+			{
+				if (joy[0].button[9].b)				/// Launch by clicking right stick
+					kbd_F1_pressed = 1;
+			}
+			else // if (!docked)
+			{
+				if (joy[0].button[9].b)				/// Hyper - space by clicking right stick
+					kbd_hyperspace_pressed = 1;
+				if (joy[0].button[3].b)				/// Y to jump
+					kbd_jump_pressed = 1;
+
+				if (joy[0].stick[1].axis[1].d1)		/// Switch view in flight with d-pad
+					kbd_F1_pressed = 1;
+				if (joy[0].stick[1].axis[1].d2)
+					kbd_F2_pressed = 1;
+				if (joy[0].stick[1].axis[0].d1)
+					kbd_F3_pressed = 1;
+				if (joy[0].stick[1].axis[0].d2)
+					kbd_F4_pressed = 1;
+			}
+		}
 	}
 
 	
@@ -1080,13 +1101,13 @@ static void joystick_poll_fire_for_space()
 	if (have_joystick)
 	{
 		poll_joystick();
-#ifdef X360_CONTROLLER
-		if (joy[0].button[4].b)
+
+		int buttonNumber = 0;
+		if (x360_controller == 1)
+			buttonNumber = 4;
+
+		if (joy[0].button[buttonNumber].b)
 			kbd_space_pressed = 1;
-#else
-		if (joy[0].button[0].b)
-			kbd_space_pressed = 1;
-#endif
 	}
 }
 static void joystick_poll_yes_no()

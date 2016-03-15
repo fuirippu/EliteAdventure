@@ -36,6 +36,7 @@ int carry_flag = 0;
 int current_screen = 0;
 int witchspace;
 
+int x360_controller = 0;
 int directx = 1;
 int wireframe = 0;
 int anti_alias_gfx = 0;

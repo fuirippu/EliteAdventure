@@ -44,6 +44,7 @@ void write_config_file (void)
 	fprintf(fp, "%d\t\t\t# Planet Descriptions: 0 = Tree Grubs, 1 = Hoopy Casinos\n", hoopy_casinos);
 	fprintf(fp, "%d\t\t\t# Instant dock: 0 = off, 1 = on\n", instant_dock);
 	fprintf(fp, "%d\t\t\t# DirectX: 0 = off (use GDI), 1 = on\n", directx);
+	fprintf(fp, "%d\t\t\t# x360 controller: 0 = no, 1 = yes - extra controls :)\n", x360_controller);
 	fprintf(fp, "newscan.cfg\t# Name of scanner config file to use.\n");
 
 	fclose(fp);
@@ -145,6 +146,9 @@ void read_config_file(void)
 
 	read_cfg_line(str, sizeof(str), fp);
 	sscanf(str, "%d", &directx);
+
+	read_cfg_line(str, sizeof(str), fp);
+	sscanf(str, "%d", &x360_controller);
 
 	read_cfg_line(str, sizeof(str), fp);
 	char scannerConfigFileName[256];
