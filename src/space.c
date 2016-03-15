@@ -59,6 +59,16 @@ static int hyper_distance;
 static int hyper_galactic;
 
 
+static const int bar_colours[3][3] = {
+	{ GFX_COL_BAR_SAFE0, GFX_COL_BAR_SAFE1,  GFX_COL_BAR_SAFE2 },	// green
+	{ GFX_COL_GOLD,      GFX_COL_YELLOW_1,   GFX_COL_DARK_RED },	// amber
+	{ GFX_ORANGE_2,      GFX_COL_BAR_ALERT0, GFX_COL_BAR_ALERT1 }	// red
+};
+#define BAR_COL_GREEN	0
+#define BAR_COL_AMBER	1
+#define BAR_COL_RED		2
+
+
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
@@ -758,9 +768,6 @@ static void update_compass(void)
 
 
 #pragma region display console items
-/*
- * Display the speed bar.
- */
 static void display_speed(void)
 {
 	int sx,sy;
@@ -781,58 +788,72 @@ static void display_speed(void)
 	}
 }
 
-/*
- * Draw an indicator bar.
- * Used for shields and energy banks.
- */
-static void display_dial_bar(int len, int x, int y)
+
+static void display_bar(int len, int x, int y, int colour_theme)
 {
 	int i = 0;
 
-	gfx_draw_colour_line (x, y + 384, x + len, y + 384, GFX_COL_GOLD);
+	gfx_draw_colour_line(x, y + 384, x + len, y + 384, bar_colours[colour_theme][0]);
 	i++;
-	gfx_draw_colour_line (x, y + i + 384, x + len, y + i + 384, GFX_COL_GOLD);
-	
-	for (i = 2; i < 7; i++)
-		gfx_draw_colour_line (x, y + i + 384, x + len, y + i + 384, GFX_COL_YELLOW_1);
+	gfx_draw_colour_line(x, y + i + 384, x + len, y + i + 384, bar_colours[colour_theme][0]);
 
-	gfx_draw_colour_line (x, y + i + 384, x + len, y + i + 384, GFX_COL_DARK_RED);
+	for (i = 2; i < 7; i++)
+		gfx_draw_colour_line(x, y + i + 384, x + len, y + i + 384, bar_colours[colour_theme][1]);
+
+	gfx_draw_colour_line(x, y + i + 384, x + len, y + i + 384, bar_colours[colour_theme][2]);
 }
 
-/*
- * Display the current shield strengths.
- */
 static void display_shields(void)
 {
 	if (front_shield > 3)
-		display_dial_bar (front_shield / 4, 31, 7);
-
+	{
+		if (front_shield < 64)
+			display_bar(front_shield / 4, 31, 7, BAR_COL_RED);
+		else
+			display_bar(front_shield / 4, 31, 7, BAR_COL_AMBER);
+	}
 	if (aft_shield > 3)
-		display_dial_bar (aft_shield / 4, 31, 23);
+	{
+		if (aft_shield < 64)
+			display_bar(aft_shield / 4, 31, 23, BAR_COL_RED);
+		else
+			display_bar(aft_shield / 4, 31, 23, BAR_COL_AMBER);
+	}
 }
-
 
 static void display_altitude(void)
 {
 	if (myship.altitude > 3)
-		display_dial_bar (myship.altitude / 4, 31, 92);
+	{
+		int altKilometres = myship.altitude / 4;
+
+		if (altKilometres < 24)
+			display_bar(altKilometres, 31, 92, BAR_COL_RED);
+		else if (altKilometres < 48)
+			display_bar(altKilometres, 31, 92, BAR_COL_AMBER);
+		else
+			display_bar(altKilometres, 31, 92, BAR_COL_GREEN);
+	}
 }
 
 static void display_cabin_temp(void)
 {
-	if (myship.cabtemp > 3)
-		display_dial_bar (myship.cabtemp / 4, 31, 60);
+	if (myship.cabtemp > 160)
+		display_bar(myship.cabtemp / 4, 31, 60, BAR_COL_RED);
+	else if (myship.cabtemp > 64)
+		display_bar(myship.cabtemp / 4, 31, 60, BAR_COL_AMBER);
+	else if (myship.cabtemp > 3)
+		display_bar(myship.cabtemp / 4, 31, 60, BAR_COL_GREEN);
 }
 
 static void display_laser_temp(void)
 {
-	if (laser_temp > 0)
-		display_dial_bar (laser_temp / 4, 31, 76);
+	if (laser_temp > 224)
+		display_bar(laser_temp / 4, 31, 76, BAR_COL_RED);
+	else if (laser_temp > 0)
+		display_bar(laser_temp / 4, 31, 76, BAR_COL_AMBER);
 }
 
-/*
- * Display the energy banks.
- */
 static void display_energy(void)
 {
 	int e1,e2,e3,e4;
@@ -843,16 +864,13 @@ static void display_energy(void)
 	e4 = energy - 192;  	
 	
 	if (e4 > 0)
-		display_dial_bar (e4, 416, 61);
-
+		display_bar(e4, 416, 61, BAR_COL_AMBER);
 	if (e3 > 0)
-		display_dial_bar (e3, 416, 79);
-
+		display_bar(e3, 416, 79, BAR_COL_AMBER);
 	if (e2 > 0)
-		display_dial_bar (e2, 416, 97);
-
+		display_bar(e2, 416, 97, BAR_COL_AMBER);
 	if (e1 > 0)
-		display_dial_bar (e1, 416, 115);
+		display_bar(e1, 416, 115, BAR_COL_AMBER);
 }
 
 static void display_flight_roll(void)
@@ -894,7 +912,14 @@ static void display_flight_climb(void)
 static void display_fuel(void)
 {
 	if (cmdr.fuel > 0)
-		display_dial_bar ((cmdr.fuel * 64) / myship.max_fuel, 31, 44);
+	{
+		int sixtyFourths = (cmdr.fuel * 64) / myship.max_fuel;
+
+		if (sixtyFourths < 16)
+			display_bar((cmdr.fuel * 64) / myship.max_fuel, 31, 44, BAR_COL_RED);
+		else
+			display_bar((cmdr.fuel * 64) / myship.max_fuel, 31, 44, BAR_COL_AMBER);
+	}
 }
 
 
