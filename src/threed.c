@@ -366,22 +366,17 @@ static int snes_planet_colour[] =
 	GFX_COL_SNES_102, GFX_COL_SNES_102
 };
 
-
-/*
- * Generate a landscape map for a SNES Elite style planet.
- */
-
-static void generate_snes_landscape (void)
+static void generate_snes_landscape(void)
 {
 	int x,y;
 	int colour;
 	
 	for (y = 0; y <= LAND_Y_MAX; y++)
 	{
-		colour = snes_planet_colour[y * (sizeof(snes_planet_colour)/sizeof(int)) / LAND_Y_MAX];  
+		colour = snes_planet_colour[y * (sizeof(snes_planet_colour) / sizeof(int)) / LAND_Y_MAX];
 		for (x = 0; x <= LAND_X_MAX; x++)
 		{
-			landscape[x][y] = pColours[colour];
+			landscape[x][y] = colour;
 		}
 	}	
 }
