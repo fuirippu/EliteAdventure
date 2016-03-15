@@ -344,10 +344,10 @@ void display_options(void)
 	gfx_clear_display();
 	gfx_display_centre_text(10, "GAME OPTIONS", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
-	gfx_display_centre_text(300, "Version: Release 1.0", 120, GFX_COL_WHITE);
-	gfx_display_centre_text(320, "www.newkind.co.uk", 120, GFX_COL_WHITE);
-	gfx_display_centre_text(340, "Written by Christian Pinder 1999-2001", 120, GFX_COL_WHITE);
-	gfx_display_centre_text(360, "Based on original code by Ian Bell & David Braben", 120, GFX_COL_WHITE);
+	gfx_display_centre_text(300, VERSION_STRING, 120, GFX_COL_WHITE);
+	gfx_display_centre_text(320, "Elite TNK by Christian Pinder 1999-2001 www.newkind.co.uk", 120, GFX_COL_WHITE);
+	gfx_display_centre_text(340, "Based on original code by Ian Bell & David Braben", 120, GFX_COL_WHITE);
+	gfx_display_centre_text(360, "Further works by fuirippu", 120, GFX_COL_FUI);
 	
 	for (i = 0; i < NUM_OPTIONS; i++)
 		display_option_item(i);
