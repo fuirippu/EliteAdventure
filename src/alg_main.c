@@ -72,6 +72,9 @@ static int have_joystick;
 
 static int find_input;
 static char find_name[20];
+
+static int finish = 0;              /// flag set to 1 Y is pressed on quit screen
+									/// main game loop is while (!finish)
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////

@@ -158,7 +158,6 @@ extern int planet_render_style;
 
 extern int game_over;
 extern int docked;
-extern int finish;
 extern int flight_speed;
 extern int flight_roll;
 extern int flight_climb;
