@@ -261,12 +261,9 @@ static int is_docking(int sn)
 }
 
 
-/*
- * Game Over...
- */
 static void do_game_over(void)
 {
-	snd_play_sample (SND_GAMEOVER);
+	snd_play_sample(SND_GAMEOVER);
 	game_over = 1;
 }
 
@@ -469,7 +466,7 @@ static void check_docking(int i)
 {
 	if (is_docking(i))
 	{
-		snd_play_sample (SND_DOCK);					
+		snd_play_sample(SND_DOCK);					
 		dock_player();
 		current_screen = SCR_BREAK_PATTERN;
 		return;
@@ -483,7 +480,7 @@ static void check_docking(int i)
 
 	flight_speed = 1;
 	damage_ship (5, universe[i].location.z > 0);
-	snd_play_sample (SND_CRASH);
+	snd_play_sample(SND_CRASH);
 }
 
 
@@ -607,7 +604,7 @@ void update_universe(void)
 				(type != SHIP_CONSTRICTOR) && (type != SHIP_COUGAR) &&
 				(type != SHIP_CORIOLIS) && (type != SHIP_DODEC))
 			{
-				snd_play_sample (SND_EXPLODE);
+				snd_play_sample(SND_EXPLODE);
 				universe[i].flags |= FLG_DEAD;		
 			}
 
@@ -1138,7 +1135,7 @@ static void enter_witchspace(void)
 		create_thargoid();	
 	
 	current_screen = SCR_BREAK_PATTERN;
-	snd_play_sample (SND_HYPERSPACE);
+	snd_play_sample(SND_HYPERSPACE);
 }
 
 static void complete_hyperspace(void)
@@ -1207,7 +1204,7 @@ static void complete_hyperspace(void)
 	add_new_ship (SHIP_SUN, px, py, pz, rotmat, 0, 0);
 
 	current_screen = SCR_BREAK_PATTERN;
-	snd_play_sample (SND_HYPERSPACE);
+	snd_play_sample(SND_HYPERSPACE);
 }
 
 void countdown_hyperspace(void)
@@ -1298,7 +1295,7 @@ void launch_player(void)
 	add_new_station (0, 0, -256, rotmat);
 
 	current_screen = SCR_BREAK_PATTERN;
-	snd_play_sample (SND_LAUNCH);
+	snd_play_sample(SND_LAUNCH);
 }
 
 
@@ -1310,7 +1307,7 @@ void engage_docking_computer(void)
 {
 	if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
 	{
-		snd_play_sample (SND_DOCK);					
+		snd_play_sample(SND_DOCK);					
 		dock_player();
 		current_screen = SCR_BREAK_PATTERN;
 	}

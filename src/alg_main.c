@@ -651,14 +651,14 @@ static void run_escape_sequence(void)
 	
 	newship = add_new_ship (SHIP_COBRA3, 0, 0, 200, rotmat, -127, -127);
 	universe[newship].velocity = 7;
-	snd_play_sample (SND_LAUNCH);
+	snd_play_sample(SND_LAUNCH);
 
 	for (i = 0; i < 90; i++)
 	{
 		if (i == 40)
 		{
 			universe[newship].flags |= FLG_DEAD;
-			snd_play_sample (SND_EXPLODE);
+			snd_play_sample(SND_EXPLODE);
 		}
 
 		gfx_set_clip_region (1, 1, 510, 383);
@@ -1174,7 +1174,7 @@ static void run_first_intro_screen(void)
 {
 	current_screen = SCR_INTRO_ONE;
 
-	snd_play_midi (SND_ELITE_THEME, TRUE);
+	snd_play_midi(SND_ELITE_THEME, TRUE);
 
 	initialise_intro1();
 
@@ -1205,7 +1205,7 @@ static void run_second_intro_screen(void)
 {
 	current_screen = SCR_INTRO_TWO;
 	
-	snd_play_midi (SND_BLUE_DANUBE, TRUE);
+	snd_play_midi(SND_BLUE_DANUBE, TRUE);
 		
 	initialise_intro2();
 
@@ -1310,12 +1310,11 @@ int main()
 	initialise_allegro();
 	read_config_file();
 
-	if (gfx_graphics_startup() == 1)
-	{
+	if (gfx_graphics_startup() != 0)
 		return 1;
-	}
-	
-	snd_sound_startup();
+	if (snd_sound_startup() != 0)
+		return 2;
+
 	kbd_keyboard_startup();
 	auto_pilot = 0;
 	

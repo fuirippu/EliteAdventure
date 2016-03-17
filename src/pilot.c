@@ -279,7 +279,7 @@ void engage_auto_pilot (void)
 		return; 
 
 	auto_pilot = 1;
-	snd_play_midi (SND_BLUE_DANUBE, 1);
+	snd_play_midi(SND_BLUE_DANUBE, 1);
 }
 
 

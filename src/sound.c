@@ -12,22 +12,26 @@
  *
  */
 
-/*
- * sound.c
- */
 
 #include <stdlib.h>
 #include <allegro.h>
+
 #include "sound.h"
-#include "alg_data.h" 
-#include "file.h"
+#include "alg_data.h"			// MIDI assets
+#include "file.h"				// DIRNAME_ASSETS
 
-#define NUM_SAMPLES 14 
 
+/////////////////////////////////////////////////////////////////////////////
+// Globals
+/////////////////////////////////////////////////////////////////////////////
 extern DATAFILE *datafile;
 
-static int sound_on;
 
+#define VOLUME		(128)
+
+static int initialised = 0;
+
+#define NUM_SAMPLES 14 
 static struct sound_sample
 {
  	SAMPLE *sample;
@@ -53,92 +57,80 @@ static struct sound_sample
 };
  
  
-void snd_sound_startup (void)
+/////////////////////////////////////////////////////////////////////////////
+// Functions
+/////////////////////////////////////////////////////////////////////////////
+int snd_sound_startup(void)
 {
-	int i;
-
- 	/* Install a sound driver.. */
-	sound_on = 1;
-	
 	if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".") != 0)
-	{
-		sound_on = 0;
-		return;
-	}
+		return 1;
+	set_volume(VOLUME, VOLUME);
 
-	/* Load the sound samples... */
-
-	for (i = 0; i < NUM_SAMPLES; i++)
-	{
+	// ToDo: check for fail loading samples
+	for (int i = 0; i < NUM_SAMPLES; i++)
 		sample_list[i].sample = load_sample(sample_list[i].filename);
-	}
+
+	initialised = 1;
+	return 0;
 }
- 
-
-void snd_sound_shutdown (void)
+void snd_sound_shutdown(void)
 {
-	int i;
-
-	if (!sound_on)
+	if (initialised == 0)
 		return;
 
-	for (i = 0; i < NUM_SAMPLES; i++)
+	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
 		if (sample_list[i].sample != NULL)
 		{
-			destroy_sample (sample_list[i].sample);
+			destroy_sample(sample_list[i].sample);
 			sample_list[i].sample = NULL;
 		}
 	}
 }
 
 
-void snd_play_sample (int sample_no)
+void snd_play_sample(int sample_no)
 {
-	if (!sound_on)
+	if (!initialised)
 		return;
 
 	if (sample_list[sample_no].timeleft != 0)
 		return;
 
 	sample_list[sample_no].timeleft = sample_list[sample_no].runtime;
-		
-	play_sample (sample_list[sample_no].sample, 255, 128, 1000, FALSE);
+	play_sample(sample_list[sample_no].sample, 255, 128, 1000, FALSE);
 }
 
-
-void snd_update_sound (void)
+void snd_play_midi(int midi_no, int repeat)
 {
-	int i;
-	
-	for (i = 0; i < NUM_SAMPLES; i++)
-	{
-		if (sample_list[i].timeleft > 0)
-			sample_list[i].timeleft--;
-	}
-}
-
-
-void snd_play_midi (int midi_no, int repeat)
-{
-	if (!sound_on)
+	if (!initialised)
 		return;
 	
 	switch (midi_no)
 	{
 		case SND_ELITE_THEME:
-			play_midi (datafile[THEME].dat, repeat);
+			play_midi(datafile[THEME].dat, repeat);
 			break;
 		
 		case SND_BLUE_DANUBE:
-			play_midi (datafile[DANUBE].dat, repeat);
+			play_midi(datafile[DANUBE].dat, repeat);
 			break;
 	}
 }
-
-
-void snd_stop_midi (void)
+void snd_stop_midi(void)
 {
-	if (sound_on);
-		play_midi (NULL, TRUE);
+	if (initialised);
+		play_midi(NULL, TRUE);
+}
+
+
+void snd_update_sound(void)
+{
+	int i;
+
+	for (i = 0; i < NUM_SAMPLES; i++)
+	{
+		if (sample_list[i].timeleft > 0)
+			sample_list[i].timeleft--;
+	}
 }
