@@ -381,7 +381,6 @@ void check_target(int un, struct univ_object *flip)
 		{
 			missile_target = un;
 			info_message("Target Locked", GFX_COL_WHITE, 1);
-			snd_play_sample(SND_BEEP);
 		}
 	
 		if (laser)
