@@ -48,6 +48,7 @@
 #include "pilot.h"
 #include "file.h"
 #include "keyboard.h"
+#include "obcomp.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -746,10 +747,12 @@ static void handle_flight_keys(void)
 			if (joy[0].button[buttonNumber].b)
 				kbd_fire_pressed = 1;
 
-			//if (joy[0].button[5].b)
-			//{
-			//	display_break_pattern();
-			//}
+			if (joy[0].button[5].b)
+			{
+				//display_break_pattern();
+
+				obc_refresh();
+			}
 
 			if (joy[0].button[1].b)
 				kbd_inc_speed_pressed = 1;
@@ -1311,13 +1314,8 @@ int main()
 		return 1;
 	}
 	
-	/* Start the sound system... */
 	snd_sound_startup();
-
-	/* Do any setup necessary for the keyboard... */
 	kbd_keyboard_startup();
-	
-	finish = 0;
 	auto_pilot = 0;
 	
 	while (!finish)
@@ -1417,6 +1415,8 @@ int main()
 					}
 					
 					draw_laser_sights();
+
+					obc_display();
 				}
 
 				if ((message_count > 0) && (message_colour != GFX_COL_BLACK))

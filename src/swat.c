@@ -18,6 +18,7 @@
  * Special Weapons And Tactics.
  */
 
+#include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +33,8 @@
 #include "sound.h"
 #include "random.h"
 #include "trade.h"
-#include "pilot.h" 
+#include "pilot.h"
+#include "obcomp.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -146,7 +148,32 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 				universe[i].missiles = ship_list[ship_type]->missiles;
 				ship_count[ship_type]++;
 			}
-			
+
+			char buf[64] = "";
+			int col;
+			int type = universe[i].type;
+			if ((type == SHIP_SUN) || (type == SHIP_PLANET) ||
+				(type == SHIP_CORIOLIS) || (type == SHIP_DODEC) ||
+				(type == SHIP_ESCAPE_CAPSULE) ||
+				(type == SHIP_SHUTTLE) || (type == SHIP_TRANSPORTER) ||
+				(type == SHIP_ALLOY) || (type == SHIP_CARGO))
+			{
+				sprintf(buf, "+[%s]", obc_ship_name(type));
+				col = GFX_COL_AA_0;
+			}
+			else if ((type == SHIP_THARGOID) || (type == SHIP_THARGLET))
+			{
+				sprintf(buf, "d-in [_ERR0r+.]");
+				col = GFX_COL_RED;
+			}
+			else if (type != SHIP_MISSILE)
+			{
+				sprintf(buf, strNewShipMsg);
+				col = GFX_COL_BAR_ALERT1;
+			}
+			if (buf[0] != 0)
+				obc_message(buf, col);
+
 			return i;
 		}
 	}

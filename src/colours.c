@@ -28,7 +28,7 @@ static const int colours_gdi[NUM_COLOURS] = {
 	235, 236, 237, 238, 239, 240, 241, 242,
 
 	150,  64, 104, 125,  85,  73,  39,  17,
-	 69
+	 69,  64
 };
 
 static const int colours_dx[NUM_COLOURS] = {
@@ -46,8 +46,8 @@ static const int colours_dx[NUM_COLOURS] = {
 		0x777777, 0x868686, 0x969696, 0xCBCBCB, 0xB2B2B2, 0xD7D7D7, 0xDDDDDD, 0xE3E3E3,
 	//GFX_COL_FUI
 		0x3EB489, 0xCC0033, 0x993366, 0x99FF66, 0x33CC33, 0x336633, 0xF0B030, 0xD09010,
-	//
-		0x901010
+	//GFX_COL_BAR_MED2
+		0x901010, 0xC41E3A
 };
 
 

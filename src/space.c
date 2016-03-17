@@ -42,6 +42,7 @@
 #include "trade.h"
 #include "stars.h"
 #include "pilot.h"
+#include "obcomp.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -564,7 +565,6 @@ void update_universe(void)
 	int i;
 	int type;
 	int bounty;
-	char str[80];
 	struct univ_object flip;
 	
 	
@@ -581,15 +581,23 @@ void update_universe(void)
 				if (type == SHIP_VIPER)
 					cmdr.legal_status |= 64;
 			
+				char buf[64];
+				int col = GFX_COL_CARDINAL;
+
 				bounty = ship_list[type]->bounty;
-				
 				if ((bounty != 0) && (!witchspace))
 				{
 					cmdr.credits += bounty;
-					sprintf (str, "%d.%d CR", cmdr.credits / 10, cmdr.credits % 10);
-					info_message(str, GFX_COL_WHITE, 0);
+					sprintf(buf, "%d.%d CR", cmdr.credits / 10, cmdr.credits % 10);
+					info_message(buf, GFX_COL_WHITE, 0);
+
+					col = GFX_COL_FUI;
 				}
-				
+				if ((type == SHIP_CARGO) || (type == SHIP_ALLOY) || (type == SHIP_MISSILE) || (type == SHIP_ROCK))
+					col = GFX_COL_AA_0;
+				sprintf(buf, " k[%02d.%dCR, %s]", bounty / 10, bounty % 10, obc_ship_name(type));
+				obc_message(buf, col);
+
 				remove_ship (i);
 				continue;
 			}
@@ -648,7 +656,13 @@ void update_universe(void)
 
 			if (universe[i].distance > 57344)
 			{
-				remove_ship (i);
+				char buf[64];
+				sprintf(buf, "-d[%s]", obc_ship_name(type));
+				obc_message(buf, GFX_COL_BAR_SAFE2);
+
+				// ToDo: ping sound for removal of mass locking object?
+
+				remove_ship(i);
 				continue;
 			}
 
@@ -969,6 +983,22 @@ void update_console(void)
 	display_fuel();
 	display_missiles();
 	
+	//if (planet_render_style == 1)
+	//{
+	//	char buf[16];
+	//	char *p = buf;
+	//	for (int mask = 128; mask > 0; mask /= 2)
+	//	{
+	//		if (mcount & mask)
+	//			*p++ = 'X';
+	//		else
+	//			*p++ = '_';
+	//	}
+	//	*p = 0;
+	//	gfx_clear_area(15, 25, 95, 45);
+	//	gfx_display_colour_text(15, 25, buf, GFX_COL_GREEN_3);
+	//}
+
 	if (docked)
 		return;
 
@@ -1112,6 +1142,8 @@ static void enter_witchspace(void)
 
 static void complete_hyperspace(void)
 {
+	obc_message("----------------", GFX_COL_GREY_3);
+
 	Matrix rotmat;
 	int px,py,pz;
 	
@@ -1191,39 +1223,45 @@ void countdown_hyperspace(void)
 
 void jump_warp(void)
 {
-	int i;
-	int type;
-	int jump;
-	
-	for (i = 0; i < MAX_UNIV_OBJECTS; i++)
+	char buf[64];
+	int min_d = INT_MAX;
+	for (int i = 2; i < MAX_UNIV_OBJECTS; i++)
 	{
-		type = universe[i].type;
-		
+		int type = universe[i].type;
+
 		if ((type > 0) && (type != SHIP_ASTEROID) && (type != SHIP_CARGO) &&
 			(type != SHIP_ALLOY) && (type != SHIP_ROCK) &&
 			(type != SHIP_BOULDER) && (type != SHIP_ESCAPE_CAPSULE))
 		{
-			info_message("Mass Locked", GFX_COL_SNES_167, 2);
-			return;
+			if (universe[i].distance < min_d)
+				min_d = universe[i].distance;
 		}
 	}
-
-	if ((universe[0].distance < 75001) || (universe[1].distance < 75001))
+	if (min_d < INT_MAX)
 	{
-		info_message("Mass Locked", GFX_COL_SNES_167, 2);
+		sprintf(buf, " .u  [-] d=%d", min_d);
+		info_message(buf, GFX_COL_SNES_167, 2);
 		return;
 	}
 
+	if (universe[0].distance < 75001)
+	{
+		info_message(".mLock - (planet)", GFX_COL_SNES_167, 2);
+		return;
+	}
+	if (universe[1].distance < 75001)
+	{
+		info_message(".mLock - (sun)", GFX_COL_SNES_167, 2);
+		return;
+	}
 
-	if (universe[0].distance < universe[1].distance)
-		jump = universe[0].distance - 75000;
-	else
-		jump = universe[1].distance - 75000;	
-
+	int jump = universe[0].distance - 75000;
+	if (universe[0].distance > universe[1].distance)
+		jump = universe[1].distance - 75000;
 	if (jump > 1024)
 		jump = 1024;
-	
-	for (i = 0; i < MAX_UNIV_OBJECTS; i++)
+
+	for (int i = 0; i < MAX_UNIV_OBJECTS; i++)
 	{
 		if (universe[i].type != 0)
 			universe[i].location.z -= jump;
@@ -1237,6 +1275,8 @@ void jump_warp(void)
 
 void launch_player(void)
 {
+	obc_message("----------------", GFX_COL_GREY_3);
+
 	Matrix rotmat;
 
 	docked = 0;

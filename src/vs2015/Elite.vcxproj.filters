@@ -81,6 +81,9 @@
     <ClCompile Include="..\colours.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\obcomp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\alg_data.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\obcomp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

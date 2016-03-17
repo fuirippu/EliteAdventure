@@ -131,6 +131,7 @@
     <ClCompile Include="..\intro.c" />
     <ClCompile Include="..\keyboard.c" />
     <ClCompile Include="..\missions.c" />
+    <ClCompile Include="..\obcomp.c" />
     <ClCompile Include="..\options.c" />
     <ClCompile Include="..\pilot.c" />
     <ClCompile Include="..\planet.c" />
@@ -155,6 +156,7 @@
     <ClInclude Include="..\keyboard.h" />
     <ClInclude Include="..\main.h" />
     <ClInclude Include="..\missions.h" />
+    <ClInclude Include="..\obcomp.h" />
     <ClInclude Include="..\options.h" />
     <ClInclude Include="..\pilot.h" />
     <ClInclude Include="..\planet.h" />
