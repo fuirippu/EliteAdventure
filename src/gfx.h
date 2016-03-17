@@ -136,16 +136,19 @@
 #define GFX_COL_AA_7		42
 
 #define GFX_COL_FUI			43
-
 #define GFX_COL_BAR_ALERT0	44
 #define GFX_COL_BAR_ALERT1	45
 #define GFX_COL_BAR_SAFE0	46
 #define GFX_COL_BAR_SAFE1	47
 #define GFX_COL_BAR_SAFE2	48
+#define GFX_COL_BAR_MED0	49
+#define GFX_COL_BAR_MED1	50
+
+#define GFX_COL_BAR_MED2	51
 
 
 // The globals pColours and setColours() are in colours.c
-#define NUM_COLOURS			49
+#define NUM_COLOURS			52
 extern const int *pColours;
 
 void setColours(int use_directx);

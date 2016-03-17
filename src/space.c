@@ -61,7 +61,7 @@ static int hyper_galactic;
 
 static const int bar_colours[3][3] = {
 	{ GFX_COL_BAR_SAFE0, GFX_COL_BAR_SAFE1,  GFX_COL_BAR_SAFE2 },	// green
-	{ GFX_COL_GOLD,      GFX_COL_YELLOW_1,   GFX_COL_DARK_RED },	// amber
+	{ GFX_COL_BAR_MED0,  GFX_COL_BAR_MED1,   GFX_COL_BAR_MED2 },	// amber
 	{ GFX_ORANGE_2,      GFX_COL_BAR_ALERT0, GFX_COL_BAR_ALERT1 }	// red
 };
 #define BAR_COL_GREEN	0

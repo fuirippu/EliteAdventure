@@ -80,12 +80,9 @@ static int finish = 0;              /// flag set to 1 Y is pressed on quit scree
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
-/*
- * Initialise the game parameters.
- */
 static void initialise_game(void)
 {
-	set_rand_seed (time(NULL));
+	set_rand_seed(time(NULL));
 	current_screen = SCR_INTRO_ONE;
 
 	restore_saved_commander();
@@ -127,9 +124,6 @@ static void finish_game(void)
 }
 
 
-/*
- * Move the planet chart cross hairs to specified position.
- */
 static void move_cross(int dx, int dy)
 {
 	cross_timer = 5;
@@ -159,9 +153,6 @@ static void move_cross(int dx, int dy)
 			cross_y = 293;
 	}
 }
-/*
- * Draw the cross hairs at the specified position.
- */
 static void draw_cross(int cx, int cy)
 {
 	if (current_screen == SCR_SHORT_RANGE)
@@ -185,7 +176,6 @@ static void draw_cross(int cx, int cy)
 		gfx_set_clip_region (1, 1, 510, 383);
 	}
 }
-
 
 static void draw_laser_sights(void)
 {
@@ -248,6 +238,48 @@ static void draw_laser_sights(void)
 		gfx_draw_colour_line (x1, y1, x2, y1, GFX_COL_WHITE);
 		gfx_draw_colour_line (x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
 	}
+}
+
+
+static void display_break_pattern(void)
+{
+	gfx_set_clip_region(1, 1, 510, 383);
+	gfx_clear_display();
+
+	int minR = 30;
+	int col = 0;
+	for (int i = 0; i < 20; i++)
+	{
+		int maxR = minR + (i * 15);
+		for (int r = maxR; r >= minR; r -= 15)
+		{
+			//gfx_draw_circle(256, 192, r + 0, GFX_COL_AA_7);
+			//gfx_draw_circle(256, 192, r + 4, GFX_COL_AA_7);
+			//gfx_draw_circle(256, 192, r + 8, GFX_COL_AA_7);
+			//gfx_draw_circle(256, 192, r + 12, GFX_COL_AA_7);
+			gfx_draw_circle(256, 192, r + 0, GFX_COL_AA_0 + col);
+			col = (col + 1) % 8;
+			gfx_draw_circle(256, 192, r + 4, GFX_COL_AA_0 + col);
+			col = (col + 1) % 8;
+			gfx_draw_circle(256, 192, r + 8, GFX_COL_AA_0 + col);
+		}
+		gfx_update_screen();
+		gfx_clear_display();
+	}
+	//for (i = 0; i < 20; i++)
+	//{
+	//	gfx_draw_circle(256, 192, 30 + i * 15, GFX_COL_WHITE);
+	//	gfx_update_screen();
+	//}
+
+	if (docked)
+	{
+		check_mission_brief();
+		display_commander_status();
+		update_console();
+	}
+	else
+		current_screen = SCR_FRONT_VIEW;
 }
 
 
@@ -708,12 +740,16 @@ static void handle_flight_keys(void)
 		}
 		else  // in flight
 		{
-			int buttonNumber = 0;
+			int buttonNumber = 0;					// Button to shoot
 			if (x360_controller == 1)
 				buttonNumber = 4;					// L bumper to shoot
-
 			if (joy[0].button[buttonNumber].b)
 				kbd_fire_pressed = 1;
+
+			//if (joy[0].button[5].b)
+			//{
+			//	display_break_pattern();
+			//}
 
 			if (joy[0].button[1].b)
 				kbd_inc_speed_pressed = 1;
@@ -1161,7 +1197,6 @@ static void run_first_intro_screen(void)
 	} 
 
 }
-
 static void run_second_intro_screen(void)
 {
 	current_screen = SCR_INTRO_TWO;
@@ -1189,10 +1224,6 @@ static void run_second_intro_screen(void)
 
 	snd_stop_midi();
 }
-
-/*
- * Draw the game over sequence. 
- */
 static void run_game_over_screen()
 {
 	int i;
@@ -1232,35 +1263,6 @@ static void run_game_over_screen()
 		gfx_display_centre_text (190, "GAME OVER", 140, GFX_COL_GOLD);
 		gfx_update_screen();
 	}
-}
-
-
-/*
- * Draw a break pattern (for launching, docking and hyperspacing).
- * Just draw a very simple one for the moment.
- */
-static void display_break_pattern(void)
-{
-	int i;
-
-	gfx_set_clip_region (1, 1, 510, 383);
-	gfx_clear_display();
-	
-	for (i = 0; i < 20; i++)
-	{
-		gfx_draw_circle (256, 192, 30 + i * 15, GFX_COL_WHITE);
-		gfx_update_screen();
-	}	
-
-
-	if (docked)
-	{
-		check_mission_brief();
-		display_commander_status();
-		update_console();
-	}
-	else
-		current_screen = SCR_FRONT_VIEW;
 }
 
 
