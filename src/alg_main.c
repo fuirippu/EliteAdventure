@@ -259,10 +259,11 @@ static void display_break_pattern(void)
 			//gfx_draw_circle(256, 192, r + 8, GFX_COL_AA_7);
 			//gfx_draw_circle(256, 192, r + 12, GFX_COL_AA_7);
 			gfx_draw_circle(256, 192, r + 0, GFX_COL_AA_0 + col);
-			col = (col + 1) % 8;
+			col = (col + 3) % 8;
 			gfx_draw_circle(256, 192, r + 4, GFX_COL_AA_0 + col);
-			col = (col + 1) % 8;
+			col = (col + 3) % 8;
 			gfx_draw_circle(256, 192, r + 8, GFX_COL_AA_0 + col);
+			col = (col + 3) % 8;
 		}
 		gfx_update_screen();
 		gfx_clear_display();

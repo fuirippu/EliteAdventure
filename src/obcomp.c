@@ -16,11 +16,10 @@
 static char messages[NUM_MESSAGES][MESSAGE_LEN];
 static int colours[NUM_MESSAGES];
 
-const char *strNewShipMsg = "+[__ship]";
+const char *strNewShipMsg = "+[uNKNwn]";
 
 static int last_message = -1;
 static int display_countdown = 0;
-//static int message_num = -1;
 
 
 #define X_START			(15)
@@ -34,15 +33,15 @@ static const char *ship_names[] = {
 	"Sun",						//"SUN",
 	"Planet",					//"PLANET",
 
-	"-UNKNWN-",					//"NULL or UNKNWON",
+	"-null-",					//"NULL or UNKNWON",
 
 	"LF Missile",				//"MISSILE",
 	"Coriolis SS",				//"CORIOLIS",
-	"Capsule",					//"ESCAPE_CAPSULE",
+	"EsCaps",					//"ESCAPE_CAPSULE",
 	"Freight",					//"ALLOY",
 	"Freight",					//"CARGO",
 	"Boulder",					//"BOULDER",
-	"Asteroid",					//"ASTEROID",
+	"Astroid",					//"ASTEROID",
 	"Rock",						//"ROCK",
 	"SK.AD Shuttle",			//"SHUTTLE",
 	"MC15 Trnsprt", 			//"TRANSPORTER",
@@ -50,9 +49,9 @@ static const char *ship_names[] = {
 	"Python",					//"PYTHON",
 	"Boa CC",					//"BOA",
 	"Anaconda",					//"ANACONDA",
-	"Rock Hermit",				//"HERMIT",
+	"rock hermit",				//"HERMIT",
 	"Viper HK",					//"VIPER",
-	"Sidewinder",				//"SIDEWINDER",
+	"Sidewndr",					//"SIDEWINDER",
 	"Mamba",					//"MAMBA",
 	"Krait ",					//"KRAIT",
 	"Adder",					//"ADDER",
@@ -62,10 +61,10 @@ static const char *ship_names[] = {
 	"Cobra Mk3",				//"COBRA3_LONE",
 	"Asp Mk.2",					//"ASP2",
 	"Python",					//"PYTHON_LONE",
-	"Fer_deLance",				//"FER_DE_LANCE",
+	"Fer_deLnce",				//"FER_DE_LANCE",
 	"Moray *Bt",				//"MORAY",
 	"T#aRg0i.",					//"THARGOID",
-	"T#argO1o",					//"THARGLET",
+	"T#arg1Et",					//"THARGLET",
 	"Le Cnstrictr",				//"CONSTRICTOR",
 	"Cougar?",					//"COUGAR",
 	"Dodo Station", 			//"DODEC"

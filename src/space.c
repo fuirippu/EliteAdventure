@@ -595,7 +595,7 @@ void update_universe(void)
 				}
 				if ((type == SHIP_CARGO) || (type == SHIP_ALLOY) || (type == SHIP_MISSILE) || (type == SHIP_ROCK))
 					col = GFX_COL_AA_0;
-				sprintf(buf, " k[%02d.%dCR, %s]", bounty / 10, bounty % 10, obc_ship_name(type));
+				sprintf(buf, " k[%s, %02d.%d CR]", obc_ship_name(type), bounty / 10, bounty % 10);
 				obc_message(buf, col);
 
 				remove_ship (i);
@@ -1034,6 +1034,7 @@ void decrease_flight_climb(void)
 }
 
 
+#pragma region Hyperspace
 void start_hyperspace(void)
 {
 	if (hyper_ready)
@@ -1219,6 +1220,7 @@ void countdown_hyperspace(void)
 
 	hyper_countdown--;
 }
+#pragma endregion
 
 
 void jump_warp(void)
