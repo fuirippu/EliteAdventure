@@ -67,7 +67,7 @@
 #define MAX_UNIV_OBJECTS	20
 
 
-#define VERSION_STRING		"Version: alpha 003"
+#define VERSION_STRING		"Version: a-04"
 
 /////////////////////////////////////////////////////////////////////////////
 // struct definitions

@@ -1,9 +1,10 @@
 
 
-    Elite Adventurous - game in development
-    =======================================
-
-14/3/16 London
+    Elite Adventurous - in development
+    ==================================
+17/03/16 London
+	prepare alpha release (branch rc_a4)
+14/03/16 London
 	dx branch for directx fix (win8.1)
 	
 
