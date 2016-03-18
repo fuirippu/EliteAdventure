@@ -13,21 +13,21 @@
  */
 
 
-#include <stdlib.h>
+#include <stdio.h>
 #include <allegro.h>
 
 #include "sound.h"
 #include "alg_data.h"			// MIDI assets
-#include "file.h"				// DIRNAME_ASSETS
 
 
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-extern DATAFILE *datafile;
+extern DATAFILE *datafile;		// alg_gfx.c
 
 
-#define VOLUME		(128)
+#define SAMPLE_VOLUME		(128)
+#define MIDI_VOLUME			 (96)
 
 static int initialised = 0;
 
@@ -40,40 +40,46 @@ static struct sound_sample
 	int timeleft;
 } sample_list[NUM_SAMPLES] =
 {
-	{NULL, DIRNAME_ASSETS "launch.wav",	32, 0},
-	{NULL, DIRNAME_ASSETS "crash.wav",		 7, 0},
-	{NULL, DIRNAME_ASSETS "dock.wav",		36, 0},
-	{NULL, DIRNAME_ASSETS "gameover.wav",	24, 0},
-	{NULL, DIRNAME_ASSETS "pulse.wav",		 4, 0},
-	{NULL, DIRNAME_ASSETS "hitem.wav",		 4, 0},
-	{NULL, DIRNAME_ASSETS "explode.wav",	23, 0},
-	{NULL, DIRNAME_ASSETS "ecm.wav",		23, 0},
-	{NULL, DIRNAME_ASSETS "missile.wav",	25, 0},
-	{NULL, DIRNAME_ASSETS "hyper.wav",		37, 0},
-	{NULL, DIRNAME_ASSETS "incom1.wav",	 4, 0},
-	{NULL, DIRNAME_ASSETS "incom2.wav",	 5, 0},
-	{NULL, DIRNAME_ASSETS "beep.wav",		 2, 0},
-	{NULL, DIRNAME_ASSETS "boop.wav",		 7, 0},
+	{NULL, "launch.wav",	32, 0},
+	{NULL, "crash.wav",		 7, 0},
+	{NULL, "dock.wav",		36, 0},
+	{NULL, "gameover.wav",	24, 0},
+	{NULL, "pulse.wav",		 4, 0},
+	{NULL, "hitem.wav",		 4, 0},
+	{NULL, "explode.wav",	23, 0},
+	{NULL, "ecm.wav",		23, 0},
+	{NULL, "missile.wav",	25, 0},
+	{NULL, "hyper.wav",		37, 0},
+	{NULL, "incom1.wav",	 4, 0},
+	{NULL, "incom2.wav",	 5, 0},
+	{NULL, "beep.wav",		 2, 0},
+	{NULL, "boop.wav",		 7, 0},
 };
  
  
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
-int snd_sound_startup(void)
+int snd_sound_startup(const char *path)
 {
 	if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".") != 0)
 		return 1;
-	set_volume(VOLUME, VOLUME);
+	set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
 
-	// TODO: check for fail loading samples
-
+	char buf[128];
 	for (int i = 0; i < NUM_SAMPLES; i++)
-		sample_list[i].sample = load_sample(sample_list[i].filename);
+	{
+		sprintf(buf, "%s%s", path, sample_list[i].filename);
 
+		sample_list[i].sample = load_sample(buf);
+
+		if (sample_list[i].sample == NULL)
+			return i + 1;
+	}
 	initialised = 1;
 	return 0;
 }
+
 void snd_sound_shutdown(void)
 {
 	if (initialised == 0)
@@ -106,7 +112,7 @@ void snd_play_midi(int midi_no, int repeat)
 {
 	if (!initialised)
 		return;
-	
+
 	switch (midi_no)
 	{
 		case SND_ELITE_THEME:

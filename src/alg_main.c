@@ -69,7 +69,7 @@ static char message_string[80];		/// displays the text.
 static int rolling;
 static int climbing;
 static int game_paused;
-static int have_joystick;
+static int have_joystick = 0;
 
 static int find_input;
 static char find_name[20];
@@ -251,24 +251,44 @@ static void display_break_pattern(void)
 	//const int break_base_colour = GFX_COL_AA_0;	// boring... zzzz..
 	//const int break_base_colour = GFX_COL_GREEN_3;	// psychedlic
 	const int break_base_colour = GFX_COL_BRK_00;	// Cycle :)
-	const int minR = 30;
+
+	const int numCircles = 15;
+	const int step = 20;
 
 	int col = 0;
-	for (int i = 0; i < 20; i++)
+	int minR = 30;
+	int maxR = 30;
+	for (int i = 0; i < numCircles; i++)
 	{
-		int maxR = minR + (i * 15);
-		for (int r = maxR; r >= minR; r -= 15)
+		maxR = 30 + (i * step);
+		for (int r = maxR; r >= minR; r -= step)
 		{
 			gfx_draw_circle(256, 192, r + 0, break_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 4, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 6, break_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 8, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 12, break_base_colour + col);
 			col = (col + 3) % 8;
 		}
 		gfx_update_screen();
 		gfx_clear_display();
 	}
+	for (int i = 0; i < numCircles; i++)
+	{
+		minR = 30 + (i * step);
+		for (int r = minR; r <= maxR; r += step)
+		{
+			gfx_draw_circle(256, 192, r + 0, break_base_colour + col);
+			col = (col + 3) % 8;
+			gfx_draw_circle(256, 192, r + 6, break_base_colour + col);
+			col = (col + 3) % 8;
+			gfx_draw_circle(256, 192, r + 12, break_base_colour + col);
+			col = (col + 3) % 8;
+		}
+		gfx_update_screen();
+		gfx_clear_display();
+	}
+
 	//// Original code. gfx_draw_circle() detects white circles and anti-aliases.
 	//for (i = 0; i < 20; i++)
 	//{
@@ -946,7 +966,7 @@ static void handle_flight_keys(void)
 		if (!docked && cmdr.docking_computer)
 		{
 			if (instant_dock)
-				engage_docking_computer();
+				engage_instant_dock();
 			else
 				engage_auto_pilot();
 		}
@@ -1293,33 +1313,46 @@ void info_message(const char *message, int col, int beep)
 }
 
 
-static void initialise_allegro(void)
+static int system_initialise()
 {
-	allegro_init();
-	install_keyboard(); 
-	install_timer();
-	install_mouse();
+	int rv = allegro_init();
+	if (rv != 0)
+		return 0xA5A5A5A5;	// Catastophic failure, no allegro, no error message
 
-	have_joystick = 0;
-	
+	install_keyboard();		// "very unlikely to fail" [Allegro manual]
+	install_timer();		// "very unlikely to fail" [Allegro manual]
+	install_mouse();									// mouse is optional
 	if (install_joystick(JOY_TYPE_AUTODETECT) == 0)
+		have_joystick = (num_joysticks > 0);			// joystick is optional
+
+	/// Read cfg file before starting gfx, in case no directx is specified
+	if ((rv = read_config_file()) != 0)
 	{
-		have_joystick = (num_joysticks > 0);
+		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+		if (rv == -1)
+			allegro_message("Failed to open cfg");
+		else
+			allegro_message("Failed to read cfg\nCheck line %d", rv);
 	}
+
+	if ((rv = gfx_graphics_startup()) != 0)
+		return rv;			// Catastrophic failure, no graphics
+
+	if ((rv = snd_sound_startup(DIRNAME_ASSETS)) != 0)
+	{
+		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+		allegro_message("Error sample %d\nCheck %s (wavs)", rv, DIRNAME_ASSETS);
+	}
+
+	return 0;
 }
+
 int main()
 {
-	initialise_allegro();
-	read_config_file();
+	int rv = system_initialise();
+	if (rv != 0)
+		return rv;
 
-	if (gfx_graphics_startup() != 0)
-		return 1;
-	if (snd_sound_startup() != 0)
-		return 2;
-
-	kbd_keyboard_startup();
-	auto_pilot = 0;
-	
 	while (!finish)
 	{
 		game_over = 0;	
@@ -1494,8 +1527,7 @@ int main()
 	}
 
 	snd_sound_shutdown();
-	
-	gfx_graphics_shutdown ();
+	gfx_graphics_shutdown();
 	
 	return 0;
 }

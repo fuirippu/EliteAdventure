@@ -41,7 +41,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-int snd_sound_startup(void);
+int snd_sound_startup(const char *path);
 void snd_sound_shutdown(void);
 
 void snd_play_sample(int sample_no);

@@ -42,11 +42,11 @@ int hoopy_casinos = 0;
 int speed_cap = 75;
 int instant_dock = 0;
 
-char scanner_filename[256];
-int scanner_cx;
-int scanner_cy;
-int compass_centre_x;
-int compass_centre_y;
+char scanner_filename[256] = "assets\\scanner.bmp";
+int scanner_cx = 253;
+int scanner_cy = 448;
+int compass_centre_x = 382;
+int compass_centre_y = 407;
 
 int planet_render_style = 0;
 

@@ -25,36 +25,40 @@
 #include "file.h"
 
 
-#define DIRNAME_CONFIG		"config\\"
-#define FILENAME_CONFIG		"newkind.cfg"
+static const char *configFile = "config\\newkind.cfg";
 
 
-void write_config_file (void)
+int write_config_file()
 {
-	FILE *fp;
-	
-	fp = fopen(DIRNAME_CONFIG FILENAME_CONFIG, "w");
+	FILE *fp = fopen(configFile, "w");
 	if (fp == NULL)
-		return;
+		return -1;
 
-	fprintf(fp, "%d\t\t\t# Game Speed, the lower the number the faster the game.\n", speed_cap);
-	fprintf(fp, "%d\t\t\t# Graphics: 0 = Solid, 1 = Wireframe\n", wireframe);
-	fprintf(fp, "%d\t\t\t# Anti-Alias Wireframe: 0 = Normal, 1 = Anti-Aliased\n", anti_alias_gfx);
-	fprintf(fp, "%d\t\t\t# Planet style: 0 = Wireframe, 1 = Green, 2 = SNES, 3 = Fractal\n", planet_render_style);
-	fprintf(fp, "%d\t\t\t# Planet Descriptions: 0 = Tree Grubs, 1 = Hoopy Casinos\n", hoopy_casinos);
-	fprintf(fp, "%d\t\t\t# Instant dock: 0 = off, 1 = on\n", instant_dock);
-	fprintf(fp, "%d\t\t\t# DirectX: 0 = off (use GDI), 1 = on\n", directx);
-	fprintf(fp, "%d\t\t\t# x360 controller: 0 = no, 1 = yes - extra controls :)\n", x360_controller);
-	fprintf(fp, "newscan.cfg\t# Name of scanner config file to use.\n");
+	int warn = 0;
+
+	if (fprintf(fp, "%d\t\t\t# Game Speed, the lower the number the faster the game.\n", speed_cap) < 0)
+		warn = (warn == 0) ? 1 : warn;
+	if (fprintf(fp, "%d\t\t\t# Graphics: 0 = Solid, 1 = Wireframe\n", wireframe))
+		warn = (warn == 0) ? 2 : warn;
+	if (fprintf(fp, "%d\t\t\t# Anti-Alias Wireframe: 0 = Normal, 1 = Anti-Aliased\n", anti_alias_gfx))
+		warn = (warn == 0) ? 3 : warn;
+	if (fprintf(fp, "%d\t\t\t# Planet style: 0 = Wireframe, 1 = Green, 2 = SNES, 3 = Fractal\n", planet_render_style))
+		warn = (warn == 0) ? 4 : warn;
+	if (fprintf(fp, "%d\t\t\t# Planet Descriptions: 0 = Tree Grubs, 1 = Hoopy Casinos\n", hoopy_casinos))
+		warn = (warn == 0) ? 5 : warn;
+	if (fprintf(fp, "%d\t\t\t# Instant dock: 0 = off, 1 = on\n", instant_dock))
+		warn = (warn == 0) ? 6 : warn;
+	if (fprintf(fp, "%d\t\t\t# DirectX: 0 = off (use GDI), 1 = on\n", directx))
+		warn = (warn == 0) ? 7 : warn;
+	if (fprintf(fp, "%d\t\t\t# x360 controller: 0 = no, 1 = yes - extra controls :)\n", x360_controller))
+		warn = (warn == 0) ? 8 : warn;
 
 	fclose(fp);
+
+	return warn;
 }
 
-
-/*
- * Read a line from a .cfg file.
- * Ignore blanks, comments and strip white space.
- */
+/// Read a line; ignore blanks and comments, and strip white space.
 static void read_cfg_line(char *str, int max_size, FILE *fp)
 {
 	char *s;
@@ -87,75 +91,52 @@ static void read_cfg_line(char *str, int max_size, FILE *fp)
 	} while (*str == '\0');
 }
 
-/*
- * Read in the scanner .cfg file.
- */
-static void read_scanner_config_file(char *filename)
+int read_config_file()
 {
 	FILE *fp;
 	char str[128];
 	
-	fp = fopen(filename, "r");
+	fp = fopen (configFile, "r");
 	if (fp == NULL)
-		return;
+		return -1;
 
-	read_cfg_line (str, sizeof(str), fp);
-	sprintf(scanner_filename, DIRNAME_ASSETS "%s", str);
-	//strcpy (scanner_filename, str);
+	int warn = 0;
 
 	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d,%d", &scanner_cx, &scanner_cy);
-	scanner_cy += 385;
+	if (sscanf(str, "%d", &speed_cap) != 1)
+		warn = (warn == 0) ? 1 : warn;
 
 	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d,%d", &compass_centre_x, &compass_centre_y);
-	compass_centre_y += 385;
+	if (sscanf(str, "%d", &wireframe) != 1)
+		warn = (warn == 0) ? 2 : warn;
+
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &anti_alias_gfx) != 1)
+		warn = (warn == 0) ? 3 : warn;
+
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &planet_render_style) != 1)
+		warn = (warn == 0) ? 4 : warn;
 	
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &hoopy_casinos) != 1)
+		warn = (warn == 0) ? 5 : warn;
+
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &instant_dock) != 1)
+		warn = (warn == 0) ? 6 : warn;
+
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &directx) != 1)
+		warn = (warn == 0) ? 7 : warn;
+
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &x360_controller) != 1)
+		warn = (warn == 0) ? 8 : warn;
+
 	fclose(fp);
-}
 
-/*
- * Read in the newkind .cfg file.
- */
-void read_config_file(void)
-{
-	FILE *fp;
-	char str[128];
-	
-	fp = fopen (DIRNAME_CONFIG FILENAME_CONFIG, "r");
-	if (fp == NULL)
-		return;
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &speed_cap);
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &wireframe);
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &anti_alias_gfx);
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &planet_render_style);
-	
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &hoopy_casinos);
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &instant_dock);
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &directx);
-
-	read_cfg_line(str, sizeof(str), fp);
-	sscanf(str, "%d", &x360_controller);
-
-	read_cfg_line(str, sizeof(str), fp);
-	char scannerConfigFileName[256];
-	sprintf(scannerConfigFileName, DIRNAME_CONFIG "%s", str);
-	read_scanner_config_file(scannerConfigFileName);
-		
-	fclose(fp);
+	return warn;
 }
 
 

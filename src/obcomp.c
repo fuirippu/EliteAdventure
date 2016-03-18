@@ -65,7 +65,7 @@ static const char *ship_names[] = {
 	"Asp Mk.2",					//"ASP2",
 	"Python",					//"PYTHON_LONE",
 	"Fer deLnce",				//"FER_DE_LANCE",
-	"Moray *Bt",				//"MORAY",
+	"Moray*bt",					//"MORAY",
 	"T#aRg0i.",					//"THARGOID",
 	"T#arg1Et",					//"THARGLET",
 	"Le Cnstrictr",				//"CONSTRICTOR",

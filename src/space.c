@@ -1293,7 +1293,7 @@ void launch_player(void)
 }
 
 
-void engage_docking_computer(void)
+void engage_instant_dock(void)
 {
 	if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
 	{

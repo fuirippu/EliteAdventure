@@ -61,33 +61,33 @@ extern int hyper_ready;
 /////////////////////////////////////////////////////////////////////////////
 // Prototypes
 /////////////////////////////////////////////////////////////////////////////
-void update_universe (void);
+void update_universe(void);
 
-void update_console (void);
+void update_console(void);
 
-void update_altitude (void);
-void update_cabin_temp (void);
-void regenerate_shields (void);
+void update_altitude(void);
+void update_cabin_temp(void);
+void regenerate_shields(void);
 
-void increase_flight_roll (void);
-void decrease_flight_roll (void);
-void increase_flight_climb (void);
-void decrease_flight_climb (void);
-void dock_player (void);
+void increase_flight_roll(void);
+void decrease_flight_roll(void);
+void increase_flight_climb(void);
+void decrease_flight_climb(void);
+void dock_player(void);
 
-void damage_ship (int damage, int front);
-void decrease_energy (int amount);
+void damage_ship(int damage, int front);
+void decrease_energy(int amount);
 
 
 
-void start_hyperspace (void);
-void start_galactic_hyperspace (void);
-void display_hyper_status (void);
-void countdown_hyperspace (void);
-void jump_warp (void);
-void launch_player (void);
+void start_hyperspace(void);
+void start_galactic_hyperspace(void);
+void display_hyper_status(void);
+void countdown_hyperspace(void);
+void jump_warp(void);
+void launch_player(void);
 
-void engage_docking_computer (void);
+void engage_instant_dock(void);
 
 
 #endif		// #ifndef SPACE_H
