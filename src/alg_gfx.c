@@ -113,9 +113,9 @@ static int patch_bmp_for_directx(const char *strFileName, BITMAP *sprite)
 }
 static int patch_for_directx(DATAFILE *datafile)
 {
-	int rv = 0;
+	// TODO: DANUBE and THEME (midi), ELITE_1 and ELITE_2 (fonts)
 
-	// ToDo: DANUBE and THEME (midi), ELITE_1 and ELITE_2 (fonts)
+	int rv = 0;
 
 #pragma region Patch BMPs (.fui files)
 	rv = patch_bmp_for_directx(DIRNAME_DX_ASSETS "blake32-v3.fui", datafile[BLAKE].dat);

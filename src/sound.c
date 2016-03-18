@@ -66,7 +66,8 @@ int snd_sound_startup(void)
 		return 1;
 	set_volume(VOLUME, VOLUME);
 
-	// ToDo: check for fail loading samples
+	// TODO: check for fail loading samples
+
 	for (int i = 0; i < NUM_SAMPLES; i++)
 		sample_list[i].sample = load_sample(sample_list[i].filename);
 

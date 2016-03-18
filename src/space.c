@@ -109,9 +109,8 @@ static void rotate_vec(struct vector *vec, double alpha, double beta)
 	vec->z = z;
 }
 
-/*
- * Update an objects location in the universe.
- */
+
+/// Update an objects location in the universe.
 static void move_univ_object(struct univ_object *obj)
 {
 	double x,y,z;
@@ -210,9 +209,7 @@ static void move_univ_object(struct univ_object *obj)
 }
 
 
-/*
- * Dock the player into the space station.
- */
+/// Dock the player into the space station.
 void dock_player(void)
 {
 	disengage_auto_pilot();
@@ -228,9 +225,7 @@ void dock_player(void)
 	reset_weapons();
 }
 
-/*
- * Check if we are correctly aligned to dock.
- */
+/// Check if we are correctly aligned to dock.
 static int is_docking(int sn)
 {
 	struct vector vec;
@@ -363,9 +358,7 @@ void update_cabin_temp(void)
 }
 
 
-/*
- * Regenerate the shields and the energy banks.
- */
+/// Regenerate the shields and the energy banks
 void regenerate_shields(void)
 {
 	if (energy > 127)
@@ -395,9 +388,7 @@ void decrease_energy(int amount)
 	if (energy <= 0)
 		do_game_over();
 }
-/*
- * Deplete the shields.  Drain the energy banks if the shields fail.
- */
+/// Deplete the shields.  Drain the energy banks if the shields fail
 void damage_ship(int damage, int front)
 {
 	int shield;
@@ -554,9 +545,7 @@ static void switch_to_view(struct univ_object *flip)
 }
 
 
-/*
- * Update all the objects in the universe and render them.
- */
+/// Update all the objects in the universe and render them
 void update_universe(void)
 {
 	int i;
@@ -593,7 +582,7 @@ void update_universe(void)
 				if ((type == SHIP_CARGO) || (type == SHIP_ALLOY) || (type == SHIP_MISSILE) || (type == SHIP_ROCK))
 					col = GFX_COL_AA_0;
 				sprintf(buf, " k[%s, %02d.%d CR]", obc_ship_name(type), bounty / 10, bounty % 10);
-				obc_message(buf, col);
+				obc_message(buf, col);		/// Display bounty and ship type
 
 				remove_ship (i);
 				continue;
@@ -655,11 +644,12 @@ void update_universe(void)
 			{
 				char buf[64];
 				sprintf(buf, "-d[%s]", obc_ship_name(type));
-				obc_message(buf, GFX_COL_BAR_SAFE2);
-
-				// ToDo: ping sound for removal of mass locking object?
+				obc_message(buf, GFX_COL_BAR_SAFE2);		/// Display out-of-range and ship type
 
 				remove_ship(i);
+
+				// TODO: ping sound for removal of mass locking object?
+
 				continue;
 			}
 
@@ -683,9 +673,7 @@ void update_universe(void)
 }
 
 
-/*
- * Update the scanner and draw all the lollipops.
- */
+/// Update the scanner and draw all the lollipops
 static void update_scanner(void)
 {
 	int i;
@@ -745,9 +733,8 @@ static void update_scanner(void)
 		gfx_draw_colour_line (x1+2, y1, x1+2, y2, colour);
 	}
 }
-/*
- * Update the compass which tracks the space station / planet.
- */
+
+/// Update the compass which tracks the space station / planet
 static void update_compass(void)
 {
 	struct vector dest;
@@ -1031,6 +1018,17 @@ void decrease_flight_climb(void)
 }
 
 
+/// Convenience function to call add_new_ship(PLANET) and display an obc message
+static void add_planet(int x, int y, int z, Matrix rot)
+{
+	add_new_ship(SHIP_PLANET, x, y, z, rot, 0, 0);
+	char buf[32];
+	name_planet(buf, docked_planet);
+	capitalise_name(buf);
+	obc_reset(buf);
+}
+
+
 #pragma region Hyperspace
 void start_hyperspace(void)
 {
@@ -1140,14 +1138,12 @@ static void enter_witchspace(void)
 
 static void complete_hyperspace(void)
 {
-	obc_message("----------------", GFX_COL_GREY_3);
-
 	Matrix rotmat;
-	int px,py,pz;
-	
+	int px, py, pz;
+
 	hyper_ready = 0;
 	witchspace = 0;
-	
+
 	if (hyper_galactic)
 	{
 		cmdr.galactic_hyperdrive = 0;
@@ -1165,13 +1161,13 @@ static void complete_hyperspace(void)
 			return;
 		}
 
-		docked_planet = destination_planet; 
+		docked_planet = destination_planet;
 	}
 
 	cmdr.market_rnd = rand255();
-	generate_planet_data (&current_planet_data, docked_planet);
-	generate_stock_market ();
-	
+	generate_planet_data(&current_planet_data, docked_planet);
+	generate_stock_market();
+
 	flight_speed = 12;
 	flight_roll = 0;
 	flight_climb = 0;
@@ -1179,7 +1175,7 @@ static void complete_hyperspace(void)
 	clear_universe();
 
 	generate_landscape(docked_planet.a * 251 + docked_planet.b);
-	set_init_matrix (rotmat);
+	set_init_matrix(rotmat);
 
 	pz = (((docked_planet.b) & 7) + 7) / 2;
 	px = pz / 2;
@@ -1188,20 +1184,19 @@ static void complete_hyperspace(void)
 	px <<= 16;
 	py <<= 16;
 	pz <<= 16;
-	
+
 	if ((docked_planet.b & 1) == 0)
 	{
 		px = -px;
 		py = -py;
 	}
 
-	add_new_ship (SHIP_PLANET, px, py, pz, rotmat, 0, 0);
-
+	add_planet(px, py, pz, rotmat);
 
 	pz = -(((docked_planet.d & 7) | 1) << 16);
 	px = ((docked_planet.f & 3) << 16) | ((docked_planet.f & 3) << 8);
 
-	add_new_ship (SHIP_SUN, px, py, pz, rotmat, 0, 0);
+	add_new_ship(SHIP_SUN, px, py, pz, rotmat, 0, 0);
 
 	current_screen = SCR_BREAK_PATTERN;
 	snd_play_sample(SND_HYPERSPACE);
@@ -1274,8 +1269,6 @@ void jump_warp(void)
 
 void launch_player(void)
 {
-	obc_message("----------------", GFX_COL_GREY_3);
-
 	Matrix rotmat;
 
 	docked = 0;
@@ -1287,7 +1280,8 @@ void launch_player(void)
 	clear_universe();
 	generate_landscape(docked_planet.a * 251 + docked_planet.b);
 	set_init_matrix (rotmat);
-	add_new_ship (SHIP_PLANET, 0, 0, 65536, rotmat, 0, 0);
+
+	add_planet(0, 0, 65536, rotmat);
 
 	rotmat[2].x = -rotmat[2].x;
 	rotmat[2].y = -rotmat[2].y;
@@ -1299,10 +1293,6 @@ void launch_player(void)
 }
 
 
-/*
- * Engage the docking computer.
- * For the moment we just do an instant dock if we are in the safe zone.
- */
 void engage_docking_computer(void)
 {
 	if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])

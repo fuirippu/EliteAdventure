@@ -40,19 +40,22 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
+struct univ_object universe[MAX_UNIV_OBJECTS];
+int ship_count[NO_OF_SHIPS + 1];  /* many */
+
+
+int in_battle;
+int missile_target;
+int ecm_active;
+
+
+static int ecm_ours;
+
 static int laser_counter;
 static int laser;
 static int laser2;
 static int laser_x;
 static int laser_y;
-
-int ecm_active;
-int missile_target;
-static int ecm_ours;
-int in_battle;
-
-struct univ_object universe[MAX_UNIV_OBJECTS];
-int ship_count[NO_OF_SHIPS + 1];  /* many */
 
 static int initial_flags[NO_OF_SHIPS + 1] =
 {
@@ -152,8 +155,7 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 			char buf[64] = "";
 			int col;
 			int type = universe[i].type;
-			if ((type == SHIP_SUN) || (type == SHIP_PLANET) ||
-				(type == SHIP_CORIOLIS) || (type == SHIP_DODEC) ||
+			if ((type == SHIP_CORIOLIS) || (type == SHIP_DODEC) ||
 				(type == SHIP_ESCAPE_CAPSULE) ||
 				(type == SHIP_SHUTTLE) || (type == SHIP_TRANSPORTER) ||
 				(type == SHIP_ALLOY) || (type == SHIP_CARGO))
@@ -163,7 +165,7 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 			}
 			else if ((type == SHIP_THARGOID) || (type == SHIP_THARGLET))
 			{
-				sprintf(buf, "d-in [_ERR0r+.]");
+				sprintf(buf, "d-in[_eRR0+.]");
 				col = GFX_COL_RED;
 			}
 			else if (type != SHIP_MISSILE)
@@ -171,8 +173,9 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 				sprintf(buf, strNewShipMsg);
 				col = GFX_COL_BAR_ALERT1;
 			}
+			/// No message for SHIP_SUN or SHIP_PLANET (obc reset)
 			if (buf[0] != 0)
-				obc_message(buf, col);
+				obc_message(buf, col);		/// Display new object message
 
 			return i;
 		}
@@ -181,12 +184,22 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 	return -1;
 }
 
+void add_new_station(double sx, double sy, double sz, Matrix rotmat)
+{
+	int station;
 
-static void check_missiles(int un)
+	station = (current_planet_data.techlevel >= 10) ? SHIP_DODEC : SHIP_CORIOLIS;
+	universe[1].type = 0;
+	add_new_ship(station, (int)sx, (int)sy, (int)sz, rotmat, 0, -127);
+}
+
+
+/// Untarget/explode missiles aimed at removed ship
+static void check_missiles(int removed)
 {
 	int i;
-	
-	if (missile_target == un)
+
+	if (missile_target == removed)
 	{
 		missile_target = MISSILE_UNARMED;
 		info_message("Target Lost", GFX_COL_WHITE, 2);
@@ -194,54 +207,43 @@ static void check_missiles(int un)
 
 	for (i = 0; i < MAX_UNIV_OBJECTS; i++)
 	{
-		if ((universe[i].type == SHIP_MISSILE) && (universe[i].target == un))
+		if ((universe[i].type == SHIP_MISSILE) && (universe[i].target == removed))
 			universe[i].flags |= FLG_DEAD;
 	}
 }
 
-
-void remove_ship(int un)
+/// Update the universe[] remove an entry by index, check missiles, replace entry if it's SS
+void remove_ship(int removed)
 {
-	int type;
-	Matrix rotmat;
-	int px,py,pz;
-	
-	type = universe[un].type;
-	
+	int type = universe[removed].type;
 	if (type == 0)
 		return;
 
 	if (type > 0)
 		ship_count[type]--;
 
-	universe[un].type = 0;		
+	universe[removed].type = 0;
 
-	check_missiles(un);
+	check_missiles(removed);
 
 	if ((type == SHIP_CORIOLIS) || (type == SHIP_DODEC))
 	{
-		set_init_matrix (rotmat);
-		px = (int)universe[un].location.x;
-		py = (int)universe[un].location.y;
-		pz = (int)universe[un].location.z;
+		Matrix rot;
+		set_init_matrix (rot);
+
+		int px = (int)universe[removed].location.x;
+		int py = (int)universe[removed].location.y;
+		int pz = (int)universe[removed].location.z;
 		
 		py &= 0xFFFF;
 		py |= 0x60000;
 		
-		add_new_ship(SHIP_SUN, px, py, pz, rotmat, 0, 0);
+		add_new_ship(SHIP_SUN, px, py, pz, rot, 0, 0);
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
-void add_new_station(double sx, double sy, double sz, Matrix rotmat)
-{
-	int station;
-	
-	station = (current_planet_data.techlevel >= 10) ? SHIP_DODEC : SHIP_CORIOLIS;
-	universe[1].type = 0;
-	add_new_ship(station, (int)sx, (int)sy, (int)sz, rotmat, 0, -127);
-}
-	
 void reset_weapons(void)
 {
 	laser_temp = 0;

@@ -28,7 +28,9 @@ static const int colours_gdi[NUM_COLOURS] = {
 	235, 236, 237, 238, 239, 240, 241, 242,
 
 	150,  64, 104, 125,  85,  73,  39,  17,
-	 69,  64
+	 69,  64,
+
+	 86, 183, 213,   0,   0,  122,   0,   0
 };
 
 static const int colours_dx[NUM_COLOURS] = {
@@ -42,12 +44,16 @@ static const int colours_dx[NUM_COLOURS] = {
 		0xFFCC66, 0x008000, 0x63AD00, 0x66CC33, 0xFF99CC, 0x333366, 0x333399, 0x3333CC,
 	//GFX_COL_SNES_213
 		0x6699FF, 0xFF9933, 0xFF0000,
-	//GFX_COL_AA_0
+	//GFX_COL_AA_0				    colours 3 and 4 reversed
 		0x777777, 0x868686, 0x969696, 0xCBCBCB, 0xB2B2B2, 0xD7D7D7, 0xDDDDDD, 0xE3E3E3,
+
 	//GFX_COL_FUI
 		0x3EB489, 0xCC0033, 0x993366, 0x99FF66, 0x33CC33, 0x336633, 0xF0B030, 0xD09010,
 	//GFX_COL_BAR_MED2
-		0x901010, 0xC41E3A
+		0x901010, 0xC41E3A,
+
+	//GFX_COL_BRK_00
+		0x66CC33, 0xFF99CC, 0x6699FF, 0x000000, 0x000000, 0xFFCC66, 0x000000, 0x000000
 };
 
 

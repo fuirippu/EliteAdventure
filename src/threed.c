@@ -492,11 +492,11 @@ void generate_landscape(int rnd_seed)
 			break;
 		
 		case 1:
-			// ToDo: generate_green_landscape();
+			// TODO: generate_green_landscape();
 			break;
 		
 		case 2:
-			// ToDo: randomise landscape
+			// TODO: randomise landscape
 			generate_snes_landscape();
 			break;
 		

@@ -11,12 +11,15 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
+const char *strNewShipMsg = "+[uNKNwn]";
+
+
 #define MESSAGE_LEN		(64)
 #define NUM_MESSAGES	(15)
 static char messages[NUM_MESSAGES][MESSAGE_LEN];
 static int colours[NUM_MESSAGES];
 
-const char *strNewShipMsg = "+[uNKNwn]";
+static const char *strObcReset = "____________";
 
 static int last_message = -1;
 static int display_countdown = 0;
@@ -49,7 +52,7 @@ static const char *ship_names[] = {
 	"Python",					//"PYTHON",
 	"Boa CC",					//"BOA",
 	"Anaconda",					//"ANACONDA",
-	"rock hermit",				//"HERMIT",
+	"rocK HERmit",				//"HERMIT",
 	"Viper HK",					//"VIPER",
 	"Sidewndr",					//"SIDEWINDER",
 	"Mamba",					//"MAMBA",
@@ -61,7 +64,7 @@ static const char *ship_names[] = {
 	"Cobra Mk3",				//"COBRA3_LONE",
 	"Asp Mk.2",					//"ASP2",
 	"Python",					//"PYTHON_LONE",
-	"Fer_deLnce",				//"FER_DE_LANCE",
+	"Fer deLnce",				//"FER_DE_LANCE",
 	"Moray *Bt",				//"MORAY",
 	"T#aRg0i.",					//"THARGOID",
 	"T#arg1Et",					//"THARGLET",
@@ -93,6 +96,11 @@ void obc_message(const char *msg, int col)
 		colours[last_message] = col;
 	}
 	display_countdown = DURATION;
+}
+void obc_reset(const char *planet)
+{
+	obc_message(strObcReset, GFX_COL_AA_0);
+	obc_message(planet, GFX_COL_AA_0);
 }
 
 void obc_display()

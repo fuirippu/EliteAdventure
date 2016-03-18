@@ -247,27 +247,29 @@ static void display_break_pattern(void)
 	gfx_set_clip_region(1, 1, 510, 383);
 	gfx_clear_display();
 
-	int minR = 30;
+	//// All-new color break pattern for Elite Adventures
+	//const int break_base_colour = GFX_COL_AA_0;	// boring... zzzz..
+	//const int break_base_colour = GFX_COL_GREEN_3;	// psychedlic
+	const int break_base_colour = GFX_COL_BRK_00;	// Cycle :)
+	const int minR = 30;
+
 	int col = 0;
 	for (int i = 0; i < 20; i++)
 	{
 		int maxR = minR + (i * 15);
 		for (int r = maxR; r >= minR; r -= 15)
 		{
-			//gfx_draw_circle(256, 192, r + 0, GFX_COL_AA_7);
-			//gfx_draw_circle(256, 192, r + 4, GFX_COL_AA_7);
-			//gfx_draw_circle(256, 192, r + 8, GFX_COL_AA_7);
-			//gfx_draw_circle(256, 192, r + 12, GFX_COL_AA_7);
-			gfx_draw_circle(256, 192, r + 0, GFX_COL_AA_0 + col);
+			gfx_draw_circle(256, 192, r + 0, break_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 4, GFX_COL_AA_0 + col);
+			gfx_draw_circle(256, 192, r + 4, break_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 8, GFX_COL_AA_0 + col);
+			gfx_draw_circle(256, 192, r + 8, break_base_colour + col);
 			col = (col + 3) % 8;
 		}
 		gfx_update_screen();
 		gfx_clear_display();
 	}
+	//// Original code. gfx_draw_circle() detects white circles and anti-aliases.
 	//for (i = 0; i < 20; i++)
 	//{
 	//	gfx_draw_circle(256, 192, 30 + i * 15, GFX_COL_WHITE);
@@ -1272,7 +1274,7 @@ static void run_game_over_screen()
 
 void info_message(const char *message, int col, int beep)
 {
-	if (message_count > 0)			// ToDo: implement message queue
+	if (message_count > 0)			// TODO: implement message queue
 		return;
 
 	if (col == GFX_COL_BLACK)		/// Indicates a pause between messages

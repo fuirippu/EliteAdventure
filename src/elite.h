@@ -64,10 +64,8 @@
 #define FLG_POLICE			(8192)
 
 
-#define MAX_UNIV_OBJECTS	20
-
-
 #define VERSION_STRING		"Version: a-04"
+#define CREDIT_FUI			"Further adventures by fuirippu 2016"
 
 /////////////////////////////////////////////////////////////////////////////
 // struct definitions

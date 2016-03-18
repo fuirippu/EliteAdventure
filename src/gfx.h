@@ -127,13 +127,7 @@
 #define GFX_COL_SNES_249	34
 
 #define GFX_COL_AA_0		35
-#define GFX_COL_AA_1		36
-#define GFX_COL_AA_2		37
-#define GFX_COL_AA_3		38
-#define GFX_COL_AA_4		39
-#define GFX_COL_AA_5		40
-#define GFX_COL_AA_6		41
-#define GFX_COL_AA_7		42
+// Eight entries for anti-aliasing GFX_COL_AA_0-7...
 
 #define GFX_COL_FUI			43
 #define GFX_COL_BAR_ALERT0	44
@@ -147,10 +141,15 @@
 #define GFX_COL_BAR_MED2	51
 #define GFX_COL_CARDINAL	52
 
+#define GFX_COL_BRK_00		53
+// Eight entries for break pattern GFX_COL_BRK_00-7...
+//		GFX_COL_BRK_07		60
+//efine GFX_COL_NEXT		61
 
 // The globals pColours and setColours() are in colours.c
-#define NUM_COLOURS			53
+#define NUM_COLOURS			61
 extern const int *pColours;
+
 
 void setColours(int use_directx);
 #pragma endregion

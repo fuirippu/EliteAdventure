@@ -12,6 +12,7 @@ extern const char *strNewShipMsg;
 
 
 void obc_message(const char *msg, int col);
+void obc_reset(const char *planet);
 
 void obc_display();
 void obc_refresh();

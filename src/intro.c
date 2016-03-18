@@ -90,7 +90,7 @@ void update_intro1(void)
 
 	gfx_display_centre_text(290, "Original Game (C) I.Bell & D.Braben", 120, GFX_COL_WHITE);
 	gfx_display_centre_text(310, "Re-engineered by C.J.Pinder", 120, GFX_COL_WHITE);
-	gfx_display_centre_text(330, "Further works by fuirippu", 120, GFX_COL_FUI);
+	gfx_display_centre_text(330, CREDIT_FUI, 120, GFX_COL_FUI);
 	gfx_display_centre_text(360, "Load New Commander (Y/N)?", 140, GFX_COL_GOLD);
 }
 

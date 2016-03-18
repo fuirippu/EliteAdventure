@@ -328,7 +328,10 @@ static void thargoid_mission_debrief(void)
 /// calls mission_planet_desc() to retrieve the planet description.
 /// explode_object() [swat.c] advances the flag to 2 if the CONSTRICTOR is
 /// destroyed. create_lone_hunter() [swat.c] checks the flag to conditionally
-/// create the CONSTRICTOR. {ToDo: other missions}
+/// create the CONSTRICTOR.
+
+// TODO: document other missions
+
 void check_mission_brief(void)
 {
 	if ((cmdr.mission == 0) && (cmdr.score >= 256) && (cmdr.galaxy_number < 2))
