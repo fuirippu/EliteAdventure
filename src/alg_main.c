@@ -31,7 +31,6 @@
 #include "gfx.h"
 #include "main.h"
 #include "vector.h"
-#include "alg_data.h"
 #include "elite.h"
 #include "docked.h"
 #include "intro.h"
@@ -49,6 +48,7 @@
 #include "file.h"
 #include "keyboard.h"
 #include "obcomp.h"
+#include "assets.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -186,22 +186,22 @@ static void draw_laser_sights(void)
 	switch (current_screen)
 	{
 		case SCR_FRONT_VIEW:
-			gfx_display_centre_text (32, "Front View", 120, GFX_COL_WHITE);
+			gfx_display_centre_text(32, "Front View", 120, GFX_COL_WHITE);
 			laser = cmdr.front_laser;
 			break;
 		
 		case SCR_REAR_VIEW:
-			gfx_display_centre_text (32, "Rear View", 120, GFX_COL_WHITE);
+			gfx_display_centre_text(32, "Rear View", 120, GFX_COL_WHITE);
 			laser = cmdr.rear_laser;
 			break;
 
 		case SCR_LEFT_VIEW:
-			gfx_display_centre_text (32, "Left View", 120, GFX_COL_WHITE);
+			gfx_display_centre_text(32, "Left View", 120, GFX_COL_WHITE);
 			laser = cmdr.left_laser;
 			break;
 
 		case SCR_RIGHT_VIEW:
-			gfx_display_centre_text (32, "Right View", 120, GFX_COL_WHITE);
+			gfx_display_centre_text(32, "Right View", 120, GFX_COL_WHITE);
 			laser = cmdr.right_laser;
 			break;
 	}
@@ -213,31 +213,31 @@ static void draw_laser_sights(void)
 		y1 = (96-8) * GFX_SCALE;
 		y2 = (96-16) * GFX_SCALE;
    
-		gfx_draw_colour_line (x1-1, y1, x1-1, y2, GFX_COL_GREY_1); 
-		gfx_draw_colour_line (x1, y1, x1, y2, GFX_COL_WHITE);
-		gfx_draw_colour_line (x1+1, y1, x1+1, y2, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1-1, y1, x1-1, y2, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1, y1, x1, y2, GFX_COL_WHITE);
+		gfx_draw_colour_line(x1+1, y1, x1+1, y2, GFX_COL_GREY_1); 
 
 		y1 = (96+8) * GFX_SCALE;
 		y2 = (96+16) * GFX_SCALE;
 		
-		gfx_draw_colour_line (x1-1, y1, x1-1, y2, GFX_COL_GREY_1); 
-		gfx_draw_colour_line (x1, y1, x1, y2, GFX_COL_WHITE);
-		gfx_draw_colour_line (x1+1, y1, x1+1, y2, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1-1, y1, x1-1, y2, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1, y1, x1, y2, GFX_COL_WHITE);
+		gfx_draw_colour_line(x1+1, y1, x1+1, y2, GFX_COL_GREY_1); 
 
 		x1 = (128-8) * GFX_SCALE;
 		y1 = 96 * GFX_SCALE;
 		x2 = (128-16) * GFX_SCALE;
 		   
-		gfx_draw_colour_line (x1, y1-1, x2, y1-1, GFX_COL_GREY_1); 
-		gfx_draw_colour_line (x1, y1, x2, y1, GFX_COL_WHITE);
-		gfx_draw_colour_line (x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1, y1-1, x2, y1-1, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1, y1, x2, y1, GFX_COL_WHITE);
+		gfx_draw_colour_line(x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
 
 		x1 = (128+8) * GFX_SCALE;
 		x2 = (128+16) * GFX_SCALE;
 
-		gfx_draw_colour_line (x1, y1-1, x2, y1-1, GFX_COL_GREY_1); 
-		gfx_draw_colour_line (x1, y1, x2, y1, GFX_COL_WHITE);
-		gfx_draw_colour_line (x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1, y1-1, x2, y1-1, GFX_COL_GREY_1); 
+		gfx_draw_colour_line(x1, y1, x2, y1, GFX_COL_WHITE);
+		gfx_draw_colour_line(x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
 	}
 }
 
@@ -355,7 +355,7 @@ static void arrow_left(void)
 		
 		case SCR_SHORT_RANGE:
 		case SCR_GALACTIC_CHART:
-			move_cross (-1, 0);
+			move_cross(-1, 0);
 			break;
 
 		case SCR_FRONT_VIEW:
@@ -396,7 +396,7 @@ static void arrow_up(void)
 		
 		case SCR_SHORT_RANGE:
 		case SCR_GALACTIC_CHART:
-			move_cross (0, -1);
+			move_cross(0, -1);
 			break;
 
 		case SCR_FRONT_VIEW:
@@ -436,7 +436,7 @@ static void arrow_down(void)
 		
 		case SCR_SHORT_RANGE:
 		case SCR_GALACTIC_CHART:
-			move_cross (0, 1);
+			move_cross(0, 1);
 			break;
 
 		case SCR_FRONT_VIEW:
@@ -523,7 +523,7 @@ static void f_pressed(void)
 		find_input = 1;
 		*find_name = '\0';
 		gfx_clear_text_area();
-		gfx_display_text (16, 340, "Planet Name?");
+		gfx_display_text(16, 340, "Planet Name?");
 	}
 }
 
@@ -580,7 +580,7 @@ static void auto_dock(void)
 	ship.location.y = 0;
 	ship.location.z = 0;
 	
-	set_init_matrix (ship.rotmat);
+	set_init_matrix(ship.rotmat);
 	ship.rotmat[2].z = 1;
 	ship.rotmat[0].x = -1;
 	ship.type = -96;
@@ -590,7 +590,7 @@ static void auto_dock(void)
 	ship.rotz = 0;
 	ship.rotx = 0;
 
-	auto_pilot_ship (&ship);
+	auto_pilot_ship(&ship);
 
 	if (ship.velocity > 22)
 		flight_speed = 22;
@@ -668,10 +668,10 @@ static void run_escape_sequence(void)
 	flight_roll = 0;
 	flight_climb = 0;
 
-	set_init_matrix (rotmat);
+	set_init_matrix(rotmat);
 	rotmat[2].z = 1.0;
 	
-	newship = add_new_ship (SHIP_COBRA3, 0, 0, 200, rotmat, -127, -127);
+	newship = add_new_ship(SHIP_COBRA3, 0, 0, 200, rotmat, -127, -127);
 	universe[newship].velocity = 7;
 	snd_play_sample(SND_LAUNCH);
 
@@ -683,7 +683,7 @@ static void run_escape_sequence(void)
 			snd_play_sample(SND_EXPLODE);
 		}
 
-		gfx_set_clip_region (1, 1, 510, 383);
+		gfx_set_clip_region(1, 1, 510, 383);
 		gfx_clear_display();
 		update_starfield();
 		update_universe();
@@ -692,7 +692,7 @@ static void run_escape_sequence(void)
 		universe[newship].location.y = 0;
 		universe[newship].location.z += 2;
 
-		gfx_display_centre_text (358, "Escape pod launched - Ship auto-destuct initiated.", 120, GFX_COL_WHITE);
+		gfx_display_centre_text(358, "Escape pod launched - Ship auto-destuct initiated.", 120, GFX_COL_WHITE);
 		
 		update_console();
 		gfx_update_screen();
@@ -715,7 +715,7 @@ static void run_escape_sequence(void)
 		}
 
 		warp_stars = 1;
-		gfx_set_clip_region (1, 1, 510, 383);
+		gfx_set_clip_region(1, 1, 510, 383);
 		gfx_clear_display();
 		update_starfield();
 		update_universe();
@@ -933,7 +933,7 @@ static void handle_flight_keys(void)
 		if (kbd_enter_pressed)
 		{
 			find_input = 0;
-			find_planet_by_name (find_name);
+			find_planet_by_name(find_name);
 			return;
 		}
 
@@ -944,7 +944,7 @@ static void handle_flight_keys(void)
 		}
 
 		if (isalpha(keyasc))
-			add_find_char (keyasc);
+			add_find_char(keyasc);
 
 		return;		
 	}
@@ -982,7 +982,7 @@ static void handle_flight_keys(void)
 	}
 
 	if (kbd_find_pressed)
-		f_pressed ();
+		f_pressed();
 	
 	if (kbd_hyperspace_pressed && (!docked))
 	{
@@ -1076,7 +1076,7 @@ static void set_commander_name(char *path)
 	char *fname, *cname;
 	int i;
 	
-	fname = get_filename (path);
+	fname = get_filename(path);
 	cname = cmdr.name;
 
 	for (i = 0; i < 31; i++)
@@ -1098,14 +1098,14 @@ void save_commander_screen(void)
 	current_screen = SCR_SAVE_CMDR;
 
 	gfx_clear_display();
-	gfx_display_centre_text (10, "SAVE COMMANDER", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "SAVE COMMANDER", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 	gfx_update_screen();
 	
-	strcpy (path, cmdr.name);
-	strcat (path, ".nkc");
+	strcpy(path, cmdr.name);
+	strcat(path, ".nkc");
 	
-	okay = gfx_request_file ("Save Commander", path, "nkc");
+	okay = gfx_request_file("Save Commander", path, "nkc");
 	
 	if (!okay)
 	{
@@ -1113,17 +1113,17 @@ void save_commander_screen(void)
 		return;
 	}
 
-	rv = save_commander_file (path);
+	rv = save_commander_file(path);
 
 	if (rv)
 	{
-		gfx_display_centre_text (175, "Error Saving Commander!", 140, GFX_COL_GOLD);
+		gfx_display_centre_text(175, "Error Saving Commander!", 140, GFX_COL_GOLD);
 		return;
 	}
 	
-	gfx_display_centre_text (175, "Commander Saved.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(175, "Commander Saved.", 140, GFX_COL_GOLD);
 
-	set_commander_name (path);
+	set_commander_name(path);
 	saved_cmdr = cmdr;
 	saved_cmdr.ship_x = docked_planet.d;
 	saved_cmdr.ship_y = docked_planet.b;
@@ -1134,32 +1134,32 @@ void load_commander_screen(void)
 	int rv;
 
 	gfx_clear_display();
-	gfx_display_centre_text (10, "LOAD COMMANDER", 140, GFX_COL_GOLD);
-	gfx_draw_line (0, 36, 511, 36);
+	gfx_display_centre_text(10, "LOAD COMMANDER", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
 	gfx_update_screen();
 	
 	
-	strcpy (path, "jameson.nkc");
+	strcpy(path, "jameson.nkc");
 	
-	rv = gfx_request_file ("Load Commander", path, "nkc");
+	rv = gfx_request_file("Load Commander", path, "nkc");
 
 	if (rv == 0)
 		return;
 
-	rv = load_commander_file (path);
+	rv = load_commander_file(path);
 
 	if (rv)
 	{
 		saved_cmdr = cmdr;
-		gfx_display_centre_text (175, "Error Loading Commander!", 140, GFX_COL_GOLD);
-		gfx_display_centre_text (200, "Press any key to continue.", 140, GFX_COL_GOLD);
+		gfx_display_centre_text(175, "Error Loading Commander!", 140, GFX_COL_GOLD);
+		gfx_display_centre_text(200, "Press any key to continue.", 140, GFX_COL_GOLD);
 		gfx_update_screen();
 		readkey();
 		return;
 	}
 	
 	restore_saved_commander();
-	set_commander_name (path);
+	set_commander_name(path);
 	saved_cmdr = cmdr;
 	update_console();
 }
@@ -1196,7 +1196,7 @@ static void run_first_intro_screen(void)
 {
 	current_screen = SCR_INTRO_ONE;
 
-	snd_play_midi(SND_ELITE_THEME, TRUE);
+	snd_play_midi(ass_mid_theme, TRUE);
 
 	initialise_intro1();
 
@@ -1227,7 +1227,7 @@ static void run_second_intro_screen(void)
 {
 	current_screen = SCR_INTRO_TWO;
 	
-	snd_play_midi(SND_BLUE_DANUBE, TRUE);
+	snd_play_midi(ass_mid_dnube, TRUE);
 		
 	initialise_intro2();
 
@@ -1258,22 +1258,22 @@ static void run_game_over_screen()
 	int type;
 	
 	current_screen = SCR_GAME_OVER;
-	gfx_set_clip_region (1, 1, 510, 383);
+	gfx_set_clip_region(1, 1, 510, 383);
 	
 	flight_speed = 6;
 	flight_roll = 0;
 	flight_climb = 0;
 	clear_universe();
 
-	set_init_matrix (rotmat);
+	set_init_matrix(rotmat);
 
-	newship = add_new_ship (SHIP_COBRA3, 0, 0, -400, rotmat, 0, 0);
+	newship = add_new_ship(SHIP_COBRA3, 0, 0, -400, rotmat, 0, 0);
 	universe[newship].flags |= FLG_DEAD;
 
 	for (i = 0; i < 5; i++)
 	{
 		type = (rand255() & 1) ? SHIP_CARGO : SHIP_ALLOY;
-		newship = add_new_ship (type, (rand255() & 63) - 32,
+		newship = add_new_ship(type, (rand255() & 63) - 32,
 								(rand255() & 63) - 32, -400, rotmat, 0, 0);
 		universe[newship].rotz = ((rand255() * 2) & 255) - 128;
 		universe[newship].rotx = ((rand255() * 2) & 255) - 128;
@@ -1286,7 +1286,7 @@ static void run_game_over_screen()
 		gfx_clear_display();
 		update_starfield();
 		update_universe();
-		gfx_display_centre_text (190, "GAME OVER", 140, GFX_COL_GOLD);
+		gfx_display_centre_text(190, "GAME OVER", 140, GFX_COL_GOLD);
 		gfx_update_screen();
 	}
 }
@@ -1325,7 +1325,7 @@ static int system_initialise()
 	if (install_joystick(JOY_TYPE_AUTODETECT) == 0)
 		have_joystick = (num_joysticks > 0);			// joystick is optional
 
-	/// Read cfg file before starting gfx, in case no directx is specified
+	/// Read cfg file before loading assets, in case directx is specified
 	if ((rv = read_config_file()) != 0)
 	{
 		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
@@ -1335,13 +1335,20 @@ static int system_initialise()
 			allegro_message("Failed to read cfg\nCheck line %d", rv);
 	}
 
-	if ((rv = gfx_graphics_startup()) != 0)
+	if ((rv = gfx_graphics_startup_1()) != 0)
 		return rv;			// Catastrophic failure, no graphics
 
-	if ((rv = snd_sound_startup(DIRNAME_ASSETS)) != 0)
+	/// Allegro bitmaps, fonts and midi are combined in .\assets\elite.dat
+	if ((rv = load_assets(directx)) != 0)
+		return rv;			// Catastrophic failure, no assets
+
+	if ((rv = gfx_graphics_startup_2()) != 0)
+		return rv;			// Catastrophic failure, no graphics again
+
+	if ((rv = snd_sound_startup()) > 0)
 	{
 		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-		allegro_message("Error sample %d\nCheck %s (wavs)", rv, DIRNAME_ASSETS);
+		allegro_message("Error wav %d", rv);
 	}
 
 	return 0;
@@ -1368,19 +1375,19 @@ int main()
 		old_cross_x = -1;
 		old_cross_y = -1;
 
-		dock_player ();
-		display_commander_status ();
+		dock_player();
+		display_commander_status();
 		
 		while (!game_over)
 		{
 			snd_update_sound();
 			gfx_update_screen();
-			gfx_set_clip_region (1, 1, 510, 383);
+			gfx_set_clip_region(1, 1, 510, 383);
 
 			rolling = 0;
 			climbing = 0;
 
-			handle_flight_keys ();
+			handle_flight_keys();
 
 			if (game_paused)
 				continue;
@@ -1431,7 +1438,7 @@ int main()
 						info_message("Docking Computers On", GFX_COL_WHITE, 1);
 				}
 
-				update_universe ();
+				update_universe();
 
 				if (docked)
 				{
@@ -1513,12 +1520,12 @@ int main()
 				(cross_y != old_cross_y))
 			{
 				if (old_cross_x != -1)
-					draw_cross (old_cross_x, old_cross_y);
+					draw_cross(old_cross_x, old_cross_y);
 
 				old_cross_x = cross_x;
 				old_cross_y = cross_y;
 
-				draw_cross (old_cross_x, old_cross_y);
+				draw_cross(old_cross_x, old_cross_y);
 			}
 		}
 

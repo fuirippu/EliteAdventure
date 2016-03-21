@@ -36,12 +36,9 @@
 #define SND_BEEP				12
 #define SND_BOOP				13
 
-#define SND_ELITE_THEME			 0
-#define SND_BLUE_DANUBE			 1
-
 /////////////////////////////////////////////////////////////////////////////
 
-int snd_sound_startup(const char *path);
+int snd_sound_startup();
 void snd_sound_shutdown(void);
 
 void snd_play_sample(int sample_no);

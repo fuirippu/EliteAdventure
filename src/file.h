@@ -20,8 +20,6 @@
 #define FILE_H
 
 
-#define DIRNAME_ASSETS	"assets\\"
-
 int write_config_file();
 int read_config_file();
 

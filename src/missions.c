@@ -30,6 +30,7 @@
 #include "main.h"
 #include "missions.h" 
 #include "keyboard.h"
+#include "assets.h"
  
 
 /////////////////////////////////////////////////////////////////////////////
@@ -282,7 +283,7 @@ static void thargoid_mission_second_brief(void)
 	gfx_display_pretty_text(16, 50, 300, 384, mission2_brief_b);
 	gfx_display_pretty_text(16, 200, 470, 384, mission2_brief_c);
 
-	gfx_draw_sprite(IMG_BLAKE, 352, 46);
+	gfx_draw_sprite(ass_bmp_blake, 352, 46);
 	
 	gfx_display_centre_text(330, "Press space to continue.", 140, GFX_COL_GOLD);
 

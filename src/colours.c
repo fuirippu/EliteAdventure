@@ -27,7 +27,7 @@ static const int colours_gdi[NUM_COLOURS] = {
 // Anti-aliasing entries...
 	235, 236, 237, 238, 239, 240, 241, 242,
 
-	150,  64, 104, 125,  85,  73,  39,  17,
+	150,  64, 104, 125,  85,  73,  39,  82,
 	 69,  64,
 
 	 86, 183, 213,   0,   0,  122,   0,   0
@@ -56,8 +56,8 @@ static const int colours_dx[NUM_COLOURS] = {
 		0x66CC33, 0xFF99CC, 0x6699FF, 0x000000, 0x000000, 0xFFCC66, 0x000000, 0x000000
 };
 
-
-// Palette used by GDI, from scanner.bmp...
+/// Palette - the palette in scanner.bmp is used as a global palette (GDI)
+///			- col[103] ($67) has been edited to accomodate font2.bmp (RGB: 663366 -> E08040)
 /*
 [000] 00 00 00  [016] 63 31 00  [032] B5 84 00  [048] DB 6D 00  [064] CC 00 33  [080] 66 99 33  [096] 33 00 66  [112] 00 99 66
 [001] 80 00 00  [017] 63 AD 00  [033] BD 8C 00  [049] CE 00 00  [065] FF 00 33  [081] 99 99 33  [097] 66 00 66  [113] 33 99 66

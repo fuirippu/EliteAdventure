@@ -143,14 +143,15 @@ extern int x360_controller;	/// 1 == yes, 0 == no
 extern int directx;			/// 1 == Use directx, 0 == Use GDI
 extern int wireframe;
 extern int anti_alias_gfx;
-extern char scanner_filename[256];
 extern int hoopy_casinos;
 extern int instant_dock;
 extern int speed_cap;
-extern int scanner_cx;
-extern int scanner_cy;
-extern int compass_centre_x;
-extern int compass_centre_y;
+
+extern const char scanner_filename[256];
+extern const int scanner_cx;
+extern const int scanner_cy;
+extern const int compass_centre_x;
+extern const int compass_centre_y;
 
 extern int planet_render_style;
 

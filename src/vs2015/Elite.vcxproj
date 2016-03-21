@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="..\alg_gfx.c" />
     <ClCompile Include="..\alg_main.c" />
+    <ClCompile Include="..\assets.c" />
     <ClCompile Include="..\colours.c" />
     <ClCompile Include="..\docked.c" />
     <ClCompile Include="..\elite.c" />
@@ -147,7 +148,7 @@
     <ClCompile Include="..\vector.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\alg_data.h" />
+    <ClInclude Include="..\assets.h" />
     <ClInclude Include="..\docked.h" />
     <ClInclude Include="..\elite.h" />
     <ClInclude Include="..\file.h" />

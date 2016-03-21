@@ -25,8 +25,6 @@
 
 #include "vector.h"
 
-#include "alg_data.h"
-
 #include "elite.h"
 #include "gfx.h"
 #include "docked.h"
@@ -43,6 +41,7 @@
 #include "stars.h"
 #include "pilot.h"
 #include "obcomp.h"
+#include "assets.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -582,7 +581,10 @@ void update_universe(void)
 				if ((type == SHIP_CARGO) || (type == SHIP_ALLOY) || (type == SHIP_MISSILE) || (type == SHIP_ROCK))
 					col = GFX_COL_AA_0;
 				sprintf(buf, " k[%s, %02d.%d CR]", obc_ship_name(type), bounty / 10, bounty % 10);
-				obc_message(buf, col);		/// Display bounty and ship type
+				if (type != SHIP_MISSILE)
+					obc_message(buf, col);		/// Display bounty and ship type
+				else if ((!ecm_active) && (!detonate_bomb))
+					obc_message(buf, col);		/// Missile shot (or collided?)
 
 				remove_ship (i);
 				continue;
@@ -755,11 +757,11 @@ static void update_compass(void)
 	
 	if (dest.z < 0)
 	{
-		gfx_draw_sprite (IMG_RED_DOT, compass_x, compass_y);
+		gfx_draw_sprite(ass_bmp_reddot, compass_x, compass_y);
 	}
 	else
 	{
-		gfx_draw_sprite (IMG_GREEN_DOT, compass_x, compass_y);
+		gfx_draw_sprite(ass_bmp_grndot, compass_x, compass_y);
 	}
 				
 }
@@ -936,15 +938,15 @@ static void display_missiles(void)
 	
 	if (missile_target != MISSILE_UNARMED)
 	{
-		gfx_draw_sprite ((missile_target < 0) ? IMG_MISSILE_YELLOW :
-											    IMG_MISSILE_RED, x, y);
+		gfx_draw_sprite((missile_target < 0) ? ass_bmp_missy :
+                                               ass_bmp_missr, x, y);
 		x += 16;
 		nomiss--;
 	}
 
 	for (; nomiss > 0; nomiss--)
 	{
-		gfx_draw_sprite (IMG_MISSILE_GREEN, x, y);
+		gfx_draw_sprite(ass_bmp_missg, x, y);
 		x += 16;
 	}
 }
@@ -990,10 +992,10 @@ void update_console(void)
 	update_compass();
 
 	if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
-		gfx_draw_sprite (IMG_BIG_S, 387, 490);
+		gfx_draw_sprite(ass_bmp_safe, 387, 490);
 
 	if (ecm_active)
-		gfx_draw_sprite (IMG_BIG_E, 115, 490);
+		gfx_draw_sprite(ass_bmp_ecm, 115, 490);
 }
 
 void increase_flight_roll(void)

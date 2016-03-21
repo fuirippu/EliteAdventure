@@ -33,6 +33,7 @@
 #include "space.h"
 #include "stars.h"
 #include "swat.h"
+#include "assets.h"
 
 
  /////////////////////////////////////////////////////////////////////////////
@@ -86,7 +87,7 @@ void update_intro1(void)
 	flight_roll = 1;
 	update_universe();
 	
-	gfx_draw_sprite(IMG_ELITE_TXT, -1, 10);
+	gfx_draw_sprite(ass_bmp_elite, -1, 10);
 
 	gfx_display_centre_text(290, "Original Game (C) I.Bell & D.Braben", 120, GFX_COL_WHITE);
 	gfx_display_centre_text(310, "Re-engineered by C.J.Pinder", 120, GFX_COL_WHITE);
@@ -129,7 +130,7 @@ void update_intro2(void)
 	update_starfield();
 	update_universe();
 
-	gfx_draw_sprite(IMG_ELITE_TXT, -1, 10);
+	gfx_draw_sprite(ass_bmp_elite, -1, 10);
 
 	gfx_display_centre_text(360, "Press Fire or Space, Commander.", 140, GFX_COL_GOLD);
 	gfx_display_centre_text(330, ship_list[ship_no]->name, 120, GFX_COL_WHITE);

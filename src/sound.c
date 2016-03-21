@@ -17,19 +17,18 @@
 #include <allegro.h>
 
 #include "sound.h"
-#include "alg_data.h"			// MIDI assets
+#include "assets.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-extern DATAFILE *datafile;		// alg_gfx.c
-
-
 #define SAMPLE_VOLUME		(128)
 #define MIDI_VOLUME			 (96)
 
 static int initialised = 0;
+
+static const char *sampleExt = ".wav";
 
 #define NUM_SAMPLES 14 
 static struct sound_sample
@@ -40,43 +39,49 @@ static struct sound_sample
 	int timeleft;
 } sample_list[NUM_SAMPLES] =
 {
-	{NULL, "launch.wav",	32, 0},
-	{NULL, "crash.wav",		 7, 0},
-	{NULL, "dock.wav",		36, 0},
-	{NULL, "gameover.wav",	24, 0},
-	{NULL, "pulse.wav",		 4, 0},
-	{NULL, "hitem.wav",		 4, 0},
-	{NULL, "explode.wav",	23, 0},
-	{NULL, "ecm.wav",		23, 0},
-	{NULL, "missile.wav",	25, 0},
-	{NULL, "hyper.wav",		37, 0},
-	{NULL, "incom1.wav",	 4, 0},
-	{NULL, "incom2.wav",	 5, 0},
-	{NULL, "beep.wav",		 2, 0},
-	{NULL, "boop.wav",		 7, 0},
+	{NULL, "launch",	32, 0},
+	{NULL, "crash",		 7, 0},
+	{NULL, "dock",		36, 0},
+	{NULL, "gameover",	24, 0},
+	{NULL, "pulse",		 4, 0},
+	{NULL, "hitem",		 4, 0},
+	{NULL, "explode",	23, 0},
+	{NULL, "ecm",		23, 0},
+	{NULL, "missile",	25, 0},
+	{NULL, "hyper",		37, 0},
+	{NULL, "incom1",	 4, 0},
+	{NULL, "incom2",	 5, 0},
+	{NULL, "beep",		 2, 0},
+	{NULL, "boop",		 7, 0},
 };
  
  
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
-int snd_sound_startup(const char *path)
+int snd_sound_startup()
 {
 	if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".") != 0)
-		return 1;
-	set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
+	{
+		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+		allegro_message("Error setup sound");
+		return -1;
+	}
 
 	char buf[128];
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		sprintf(buf, "%s%s", path, sample_list[i].filename);
+		sprintf(buf, "%s%s%s", assetDir, sample_list[i].filename, sampleExt);
 
 		sample_list[i].sample = load_sample(buf);
 
 		if (sample_list[i].sample == NULL)
 			return i + 1;
 	}
+
+	set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
 	initialised = 1;
+
 	return 0;
 }
 
@@ -113,16 +118,10 @@ void snd_play_midi(int midi_no, int repeat)
 	if (!initialised)
 		return;
 
-	switch (midi_no)
-	{
-		case SND_ELITE_THEME:
-			play_midi(datafile[THEME].dat, repeat);
-			break;
-		
-		case SND_BLUE_DANUBE:
-			play_midi(datafile[DANUBE].dat, repeat);
-			break;
-	}
+	if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
+		return;
+
+	play_midi(ass_midis[midi_no], repeat);
 }
 void snd_stop_midi(void)
 {

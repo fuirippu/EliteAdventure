@@ -35,6 +35,7 @@
 #include "main.h"
 #include "space.h"
 #include "sound.h"
+#include "assets.h"
 
 
 /*
@@ -279,7 +280,7 @@ void engage_auto_pilot (void)
 		return; 
 
 	auto_pilot = 1;
-	snd_play_midi(SND_BLUE_DANUBE, 1);
+	snd_play_midi(ass_mid_dnube, 1);
 }
 
 
