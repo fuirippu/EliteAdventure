@@ -312,32 +312,29 @@ static void arrow_right(void)
 {
 	switch (current_screen)
 	{
-		case SCR_MARKET_PRICES:
-			buy_stock();
-			break;
-		
-		case SCR_SETTINGS:
-			select_right_setting();
-			break;
-
-		case SCR_SHORT_RANGE:
 		case SCR_GALACTIC_CHART:
+		case SCR_SHORT_RANGE:
 			move_cross(1, 0);
 			break;
 
-		case SCR_FRONT_VIEW:
-		case SCR_REAR_VIEW:
-		case SCR_RIGHT_VIEW:
-		case SCR_LEFT_VIEW:
-			if (flight_roll > 0)
-				flight_roll = 0;
-			else
-			{
-				decrease_flight_roll();
-				decrease_flight_roll();
-				rolling = 1;
-			}
+		case SCR_MARKET_PRICES:
+			buy_stock();
 			break;
+
+		case SCR_SETTINGS:
+			select_right_setting();
+			return;						// don't process as flight key
+	}
+	if (!docked)
+	{
+		if (flight_roll > 0)
+			flight_roll = 0;
+		else
+		{
+			decrease_flight_roll();
+			decrease_flight_roll();
+			rolling = 1;
+		}
 	}
 }
 
@@ -345,32 +342,29 @@ static void arrow_left(void)
 {
 	switch (current_screen)
 	{
+		case SCR_GALACTIC_CHART:
+		case SCR_SHORT_RANGE:
+			move_cross(-1, 0);
+			break;
+
 		case SCR_MARKET_PRICES:
 			sell_stock();
 			break;
 
 		case SCR_SETTINGS:
 			select_left_setting();
-			break;
-		
-		case SCR_SHORT_RANGE:
-		case SCR_GALACTIC_CHART:
-			move_cross(-1, 0);
-			break;
-
-		case SCR_FRONT_VIEW:
-		case SCR_REAR_VIEW:
-		case SCR_RIGHT_VIEW:
-		case SCR_LEFT_VIEW:
-			if (flight_roll < 0)
-				flight_roll = 0;
-			else
-			{
-				increase_flight_roll();
-				increase_flight_roll();
-				rolling = 1;
-			}
-			break;
+			return;						// don't process as flight key
+	}
+	if (!docked)
+	{
+		if (flight_roll < 0)
+			flight_roll = 0;
+		else
+		{
+			increase_flight_roll();
+			increase_flight_roll();
+			rolling = 1;
+		}
 	}
 }
 
@@ -378,39 +372,36 @@ static void arrow_up(void)
 {
 	switch (current_screen)
 	{
-		case SCR_MARKET_PRICES:
-			select_previous_stock();
-			break;
-
 		case SCR_EQUIP_SHIP:
 			select_previous_equip();
 			break;
 
-		case SCR_OPTIONS:
-			select_previous_option();
-			break;
-
-		case SCR_SETTINGS:
-			select_up_setting();
-			break;
-		
-		case SCR_SHORT_RANGE:
 		case SCR_GALACTIC_CHART:
+		case SCR_SHORT_RANGE:
 			move_cross(0, -1);
 			break;
 
-		case SCR_FRONT_VIEW:
-		case SCR_REAR_VIEW:
-		case SCR_RIGHT_VIEW:
-		case SCR_LEFT_VIEW:
-			if (flight_climb > 0)
-				flight_climb = 0;
-			else
-			{
-				decrease_flight_climb();
-			}
-			climbing = 1;
+		case SCR_MARKET_PRICES:
+			select_previous_stock();
 			break;
+
+		case SCR_OPTIONS:
+			select_previous_option();
+			return;						// don't process as flight key
+
+		case SCR_SETTINGS:
+			select_up_setting();
+			return;						// don't process as flight key
+	}
+	if (!docked)
+	{
+		if (flight_climb > 0)
+			flight_climb = 0;
+		else
+		{
+			decrease_flight_climb();
+		}
+		climbing = 1;
 	}
 }
 
@@ -418,40 +409,36 @@ static void arrow_down(void)
 {
 	switch (current_screen)
 	{
+		case SCR_EQUIP_SHIP:
+			select_next_equip();
+			break;
+
+		case SCR_GALACTIC_CHART:
+		case SCR_SHORT_RANGE:
+			move_cross(0, 1);
+			break;
+
 		case SCR_MARKET_PRICES:
 			select_next_stock();
 			break;
 
-		case SCR_EQUIP_SHIP:
-			select_next_equip();
-			break;
-		
 		case SCR_OPTIONS:
 			select_next_option();
-			break;
+			return;						// don't process as flight key
 
 		case SCR_SETTINGS:
 			select_down_setting();
-			break;
-		
-		case SCR_SHORT_RANGE:
-		case SCR_GALACTIC_CHART:
-			move_cross(0, 1);
-			break;
-
-		case SCR_FRONT_VIEW:
-		case SCR_REAR_VIEW:
-		case SCR_RIGHT_VIEW:
-		case SCR_LEFT_VIEW:
-			if (flight_climb < 0)
-				flight_climb = 0;
-			else
-			{
-				increase_flight_climb();
-			}
-			climbing = 1;
-			break;
-
+			return;						// don't process as flight key
+	}
+	if (!docked)
+	{
+		if (flight_climb < 0)
+			flight_climb = 0;
+		else
+		{
+			increase_flight_climb();
+		}
+		climbing = 1;
 	}
 }
 
@@ -738,13 +725,18 @@ static void handle_flight_keys(void)
 		poll_joystick();	
 
 		if (joy[0].stick[0].axis[1].d1)
-			arrow_up();
+			kbd_up_pressed = 1;
 		if (joy[0].stick[0].axis[1].d2)
-			arrow_down();
+			kbd_down_pressed = 1;
 		if (joy[0].stick[0].axis[0].d1)
-			arrow_left();
+			kbd_left_pressed = 1;;
 		if (joy[0].stick[0].axis[0].d2)
-			arrow_right();
+			kbd_right_pressed = 1;
+
+		if (joy[0].button[1].b)
+			kbd_inc_speed_pressed = 1;
+		if (joy[0].button[2].b)
+			kbd_dec_speed_pressed = 1;
 
 		// Respond to buttons
 		if (current_screen == SCR_QUIT)
@@ -754,8 +746,7 @@ static void handle_flight_keys(void)
 			if (joy[0].button[1].b)
 				kbd_n_pressed = 1;
 		}
-		else if ((current_screen == SCR_MARKET_PRICES) ||
-				 (current_screen == SCR_EQUIP_SHIP) ||
+		else if ((current_screen == SCR_EQUIP_SHIP) ||
 				 (current_screen == SCR_OPTIONS)	||
 				 (current_screen == SCR_SETTINGS)	)
 		{
@@ -769,18 +760,6 @@ static void handle_flight_keys(void)
 				buttonNumber = 4;					// L bumper to shoot
 			if (joy[0].button[buttonNumber].b)
 				kbd_fire_pressed = 1;
-
-			if (joy[0].button[5].b)
-			{
-				//display_break_pattern();
-
-				obc_refresh();
-			}
-
-			if (joy[0].button[1].b)
-				kbd_inc_speed_pressed = 1;
-			if (joy[0].button[2].b)
-				kbd_dec_speed_pressed = 1;
 		}
 
 		/// Bonus controls for x360
@@ -809,6 +788,9 @@ static void handle_flight_keys(void)
 					kbd_F3_pressed = 1;
 				if (joy[0].stick[1].axis[0].d2)
 					kbd_F4_pressed = 1;
+
+				if (joy[0].button[5].b)
+					obc_refresh();
 			}
 		}
 	}
@@ -926,6 +908,24 @@ static void handle_flight_keys(void)
 		display_options();
 	}
 
+	if (kbd_up_pressed)
+		arrow_up();
+
+	if (kbd_down_pressed)
+		arrow_down();
+
+	if (kbd_left_pressed)
+		arrow_left();
+
+	if (kbd_right_pressed)
+		arrow_right();
+
+	if (kbd_enter_pressed)
+		return_pressed();
+
+	if ((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
+		return;
+
 	if (find_input)
 	{
 		keyasc = kbd_read_key();
@@ -1006,8 +1006,14 @@ static void handle_flight_keys(void)
 	if (kbd_origin_pressed)
 		o_pressed();
 
-	if (kbd_pause_pressed)
+	if (kbd_pause_pressed && (	(current_screen == SCR_FRONT_VIEW)	||
+								(current_screen == SCR_REAR_VIEW)	||
+								(current_screen == SCR_LEFT_VIEW)	||
+								(current_screen == SCR_RIGHT_VIEW)	))
+	{
 		game_paused = 1;
+		gfx_display_centre_text(115, "PAUSED", 140, 0);
+	}
 	
 	if (kbd_target_missile_pressed)
 	{
@@ -1038,21 +1044,6 @@ static void handle_flight_keys(void)
 				flight_speed--;
 		}
 	}
-
-	if (kbd_up_pressed)
-		arrow_up();
-	
-	if (kbd_down_pressed)
-		arrow_down();
-
-	if (kbd_left_pressed)
-		arrow_left();
-		
-	if (kbd_right_pressed)
-		arrow_right();
-	
-	if (kbd_enter_pressed)
-		return_pressed();
 
 	if (kbd_energy_bomb_pressed)
 	{
@@ -1389,7 +1380,7 @@ int main()
 
 			handle_flight_keys();
 
-			if (game_paused)
+			if (game_paused || (current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
 				continue;
 				
 			if (message_count > 0)
@@ -1417,7 +1408,6 @@ int main()
 					increase_flight_climb();
 			}
 
-
 			if (!docked)
 			{
 				gfx_acquire_screen();
@@ -1439,13 +1429,6 @@ int main()
 				}
 
 				update_universe();
-
-				if (docked)
-				{
-					update_console();
-					gfx_release_screen();
-					continue;
-				}
 
 				if ((current_screen == SCR_FRONT_VIEW) || (current_screen == SCR_REAR_VIEW) ||
 					(current_screen == SCR_LEFT_VIEW) || (current_screen == SCR_RIGHT_VIEW))
