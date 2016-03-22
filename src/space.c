@@ -1202,7 +1202,12 @@ static void complete_hyperspace(void)
 	create_new_stars();
 	clear_universe();
 
+	if (planet_render_style == 2)
+		planet_render_style = 3;
+	else if (planet_render_style == 3)
+		planet_render_style = 2;
 	generate_landscape(docked_planet.a * 251 + docked_planet.b);
+
 	set_init_matrix(rotmat);
 
 	pz = (((docked_planet.b) & 7) + 7) / 2;

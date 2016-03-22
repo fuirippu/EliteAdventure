@@ -152,7 +152,8 @@
 #define GFX_COL_PURPLE_2	64
 #define GFX_COL_SCAN_RED	65
 #define GFX_COL_SCAN_YEL	66
-#define GFX_COL_NEXT		67
+#define GFX_COL_MINT		67
+#define GFX_COL_NEXT		68
 ///        ^--- GFX_COL_NEXT must be (last colour + 1)
 #pragma endregion
 

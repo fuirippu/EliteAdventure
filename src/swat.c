@@ -51,9 +51,8 @@ int ecm_active;
 
 static int ecm_ours;
 
+static int current_laser;
 static int laser_counter;
-static int laser;
-static int laser2;
 static int laser_x;
 static int laser_y;
 
@@ -248,7 +247,7 @@ void reset_weapons(void)
 {
 	laser_temp = 0;
 	laser_counter = 0;
-	laser = 0;
+	current_laser = 0;
 	ecm_active = 0;
 	missile_target = MISSILE_UNARMED;
 }
@@ -385,7 +384,7 @@ void check_target(int un, struct univ_object *flip)
 			info_message("Target Locked", GFX_COL_WHITE, 1);
 		}
 	
-		if (laser)
+		if (current_laser)
 		{
 			snd_play_sample(SND_HIT_ENEMY);
 
@@ -393,12 +392,12 @@ void check_target(int un, struct univ_object *flip)
 			{			
 				if ((univ->type == SHIP_CONSTRICTOR) || (univ->type == SHIP_COUGAR))
 				{
-					if (laser == (MILITARY_LASER & 127))
-						univ->energy -= laser / 4;
+					if (current_laser == (MILITARY_LASER & 127))
+						univ->energy -= current_laser / 4;
 				}
 				else
 				{
-					univ->energy -= laser;
+					univ->energy -= current_laser;
 				}
 			}
 
@@ -408,7 +407,7 @@ void check_target(int un, struct univ_object *flip)
 				
 				if (univ->type == SHIP_ASTEROID)
 				{
-					if (laser == (MINING_LASER & 127))
+					if (current_laser == (MINING_LASER & 127))
 					    launch_loot(un, SHIP_ROCK);
 				}
 				else
@@ -897,72 +896,61 @@ void tactics(int un)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void draw_laser_lines(void)
+/// Draws shots fired by the player
+void draw_laser_shots(int colour)
 {
-	if (wireframe)
+	if (wireframe || (colour == GFX_COL_WHITE))
 	{
-		gfx_draw_colour_line(32 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, GFX_COL_WHITE);
-		gfx_draw_colour_line(48 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, GFX_COL_WHITE);
-		gfx_draw_colour_line(208 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, GFX_COL_WHITE);
-		gfx_draw_colour_line(224 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, GFX_COL_WHITE);
+		gfx_draw_colour_line(32 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, colour);
+		gfx_draw_colour_line(48 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, colour);
+		gfx_draw_colour_line(208 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, colour);
+		gfx_draw_colour_line(224 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, colour);
 	}
 	else
 	{
-		gfx_draw_triangle(32 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y,  48 * GFX_SCALE, GFX_VIEW_BY, GFX_COL_RED);
-		gfx_draw_triangle(208 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, 224 * GFX_SCALE, GFX_VIEW_BY, GFX_COL_RED);
-	}		 
+		gfx_draw_triangle(32 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, 48 * GFX_SCALE, GFX_VIEW_BY, colour);
+		gfx_draw_triangle(208 * GFX_SCALE, GFX_VIEW_BY, laser_x, laser_y, 224 * GFX_SCALE, GFX_VIEW_BY, colour);
+	}
 }
 
-int fire_laser(void)
+
+/// requires type is a valid laser type, not 0 [elite.h])
+/// returns the number of frames for which to draw the laser
+/// (#frames before calling again to simulate repeat fire)
+int fire_laser(int type)
 {
+	int frames = 0;
 	if ((laser_counter == 0) && (laser_temp < 242))
 	{
-		switch (current_screen)
-		{
-			case SCR_FRONT_VIEW:
-				laser = cmdr.front_laser;
-				break;
-			
-			case SCR_REAR_VIEW:
-				laser = cmdr.rear_laser;
-				break;
-					
-			case SCR_RIGHT_VIEW:
-				laser = cmdr.right_laser;
-				break;
-					
-			case SCR_LEFT_VIEW:
-				laser = cmdr.left_laser;
-				break;
-				
-			default:
-				laser = 0;
-		}
+		current_laser = type;
 
-		if (laser != 0)
-		{
-			laser_counter = (laser > 127) ? 0 : (laser & 0xFA);
-			laser &= 127;
-			laser2 = laser;
+		laser_counter = (current_laser > 127) ? 0 : (current_laser & 0xFA);
+		current_laser &= 127;
 
-			snd_play_sample(SND_PULSE);
-			laser_temp += 8;
-			if (energy > 1)
-				energy--;
+		snd_play_sample(SND_PULSE);
+		laser_temp += 8;
+		if (energy > 1)
+			energy--;
 			
-			laser_x = ((rand() & 3) + 128 - 2) * GFX_SCALE;
-			laser_y = ((rand() & 3) + 96 - 2) * GFX_SCALE;
+		laser_x = ((rand() & 3) + 128 - 2) * GFX_SCALE;
+		laser_y = ((rand() & 3) + 96 - 2) * GFX_SCALE;
 			
-			return 2;
-		}
+		if (type == MILITARY_LASER)
+			frames = 2;
+		else if (type == PULSE_LASER)
+			frames = 8;
+		else if (type == BEAM_LASER)
+			frames = 4;
+		else // if (type == MINING_LASER)
+			frames = 8;
 	}
-
-	return 0;
+	return frames;
 }
+
 
 void cool_laser(void)
 {
-	laser = 0;
+	current_laser = 0;
 
 	if (laser_temp > 0)
 		laser_temp--;

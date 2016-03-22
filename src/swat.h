@@ -34,22 +34,31 @@ extern int in_battle;
 // Prototypes
 /////////////////////////////////////////////////////////////////////////////
 void clear_universe(void);
+
 int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int rotx, int rotz);
 void add_new_station(double sx, double sy, double sz, Matrix rotmat);
+
 void remove_ship(int un);
 
 void reset_weapons (void);
 void tactics(int un);
 void check_target(int un, struct univ_object *flip);
-void draw_laser_lines(void);
-int fire_laser(void);
+
+void draw_laser_shots(int colour);
+
+int fire_laser(int type);		/// returns the number of frames for which to draw the laser
+								/// requires type is a valid laser type, not 0 [elite.h]
 void cool_laser(void);
+
 void arm_missile(void);
 void unarm_missile(void);
 void fire_missile(void);
+
 void activate_ecm(int ours);
 void time_ecm(void);
+
 void random_encounter(void);
+
 void explode_object(int un);
 void abandon_ship(void);
 void create_thargoid(void);

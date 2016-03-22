@@ -445,21 +445,16 @@ void gfx_draw_circle(int cx, int cy, int radius, int circle_colour)
 void gfx_draw_line(int x1, int y1, int x2, int y2)
 {
 	if (y1 == y2)
-	{
 		hline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, pColours[GFX_COL_WHITE]);
-		return;
-	}
-
-	if (x1 == x2)
-	{
+	else if (x1 == x2)
 		vline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, y2 + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
-		return;
-	}
-
-	if (anti_alias_gfx)
-		gfx_draw_aa_line(itofix(x1), itofix(y1), itofix(x2), itofix(y2));
 	else
-		line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
+	{
+		if (anti_alias_gfx)
+			gfx_draw_aa_line(itofix(x1), itofix(y1), itofix(x2), itofix(y2));
+		else
+			line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
+	}
 }
 
 void gfx_draw_colour_line(int x1, int y1, int x2, int y2, int line_colour)

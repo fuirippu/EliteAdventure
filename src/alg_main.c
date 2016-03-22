@@ -60,7 +60,12 @@ int mcount;
 static int old_cross_x, old_cross_y;
 static int cross_timer;
 
-static int draw_lasers;
+/// Lasers are paused for n frames per shot - see fire_laser() [swat.c]
+static int laser_frames_left;
+
+/// These variables are set every game loop
+static char *view_title= NULL;		/// Set to string if flight view (eg. "Front View"), or NULL
+static int laser_type = 0;			/// Set to type of laser mounted in current view, or 0
 
 static int message_colour;			/// info_message() sets the colour, count
 static int message_count;			/// & copies the string. The main loop
@@ -95,7 +100,7 @@ static void initialise_game(void)
 	front_shield = 255;
 	aft_shield = 255;
 	energy = 255;
-	draw_lasers = 0;
+	laser_frames_left = 0;
 	mcount = 0;
 	hyper_ready = 0;
 	detonate_bomb = 0;
@@ -179,7 +184,7 @@ static void draw_cross(int cx, int cy)
 }
 
 
-#pragma region View title and laser sights
+#pragma region Lasers
 static void draw_pulse_sights(int col1, int col2)
 {
 	int x1 = 128 * GFX_SCALE;
@@ -337,51 +342,50 @@ static void draw_mining_sights()
 	draw_military_sights(GFX_COL_PURPLE_1, GFX_COL_PURPLE_2, 10);
 }
 
-/// Writes "Xxxx View" centre top, and draws laser sight (if present)
-static void draw_laser_sights(void)
+/// req(laser_type is a valid laser type, not 0 [elite.h])
+/// Draws sights and shots as appropriate to type and laser_frames_left count
+static void draw_lasers()
 {
-	int laser = 0;
-
-	switch (current_screen)
-	{
-		case SCR_FRONT_VIEW:
-			gfx_display_centre_text(32, "Front View", 120, GFX_COL_WHITE);
-			laser = cmdr.front_laser;
-			break;
-		
-		case SCR_REAR_VIEW:
-			gfx_display_centre_text(32, "Rear View", 120, GFX_COL_WHITE);
-			laser = cmdr.rear_laser;
-			break;
-
-		case SCR_LEFT_VIEW:
-			gfx_display_centre_text(32, "Left View", 120, GFX_COL_WHITE);
-			laser = cmdr.left_laser;
-			break;
-
-		case SCR_RIGHT_VIEW:
-			gfx_display_centre_text(32, "Right View", 120, GFX_COL_WHITE);
-			laser = cmdr.right_laser;
-			break;
-	}
-
-	switch (laser)
+	int shot_colour;
+	switch (laser_type)
 	{
 	case PULSE_LASER:
 		draw_pulse_sights(GFX_COL_WHITE, GFX_COL_GREY_1);
+		shot_colour = GFX_COL_WHITE;
 		break;
 	case BEAM_LASER:
-		draw_beam_sights(GFX_COL_WHITE, GFX_COL_GREY_1);
+		draw_beam_sights(GFX_COL_YELLOW_3, GFX_COL_GREY_1);
+		shot_colour = GFX_COL_YELLOW_3;
 		break;
 	case MILITARY_LASER:
 		draw_military_sights(GFX_COL_GREEN_3, GFX_COL_GREEN_1, 0);
+		shot_colour = GFX_COL_RED_4;
 		break;
 	case MINING_LASER:
 		draw_mining_sights();
+		shot_colour = GFX_COL_MINT;
 		break;
+	}
+
+	if (laser_frames_left)
+	{
+		draw_laser_shots(shot_colour);
+		laser_frames_left--;
 	}
 }
 #pragma endregion
+
+/// requires view_title is a valid string, laser_type has been set or cleared
+/// Writes "Xxxx View" centre top, displays obc, draws laser (sights and shots as appropriate to player)
+static void draw_view_hud_and_lasers()
+{
+	gfx_display_centre_text(32, view_title, 120, GFX_COL_WHITE);
+
+	obc_display();
+
+	if (laser_type != 0)
+		draw_lasers();
+}
 
 
 static void display_break_pattern(void)
@@ -875,12 +879,12 @@ static void handle_flight_keys(void)
 		if (joy[0].stick[0].axis[0].d2)
 			kbd_right_pressed = 1;
 
+		// Respond to buttons
 		if (joy[0].button[1].b)
 			kbd_inc_speed_pressed = 1;
 		if (joy[0].button[2].b)
 			kbd_dec_speed_pressed = 1;
 
-		// Respond to buttons
 		if (current_screen == SCR_QUIT)
 		{
 			if (joy[0].button[0].b)
@@ -1099,8 +1103,8 @@ static void handle_flight_keys(void)
  
 	if (kbd_fire_pressed)
 	{
-		if ((!docked) && (draw_lasers == 0))
-			draw_lasers = fire_laser();
+		if ((!docked) && (laser_frames_left == 0))
+			laser_frames_left = fire_laser(laser_type);
 	}
 
 	if (kbd_dock_pressed)
@@ -1508,6 +1512,15 @@ int main()
 		old_cross_x = -1;
 		old_cross_y = -1;
 
+		saved_cmdr.front_laser = MILITARY_LASER;
+		saved_cmdr.rear_laser = MINING_LASER;
+		saved_cmdr.left_laser = PULSE_LASER;
+		saved_cmdr.right_laser = BEAM_LASER;
+		cmdr.front_laser = MILITARY_LASER;
+		cmdr.rear_laser = MINING_LASER;
+		cmdr.left_laser = PULSE_LASER;
+		cmdr.right_laser = BEAM_LASER;
+
 		dock_player();
 		display_commander_status();
 		
@@ -1554,6 +1567,9 @@ int main()
 			{
 				gfx_acquire_screen();
 					
+				view_title= NULL;
+				laser_type = 0;
+
 				if ((current_screen == SCR_FRONT_VIEW) || (current_screen == SCR_REAR_VIEW) ||
 					(current_screen == SCR_LEFT_VIEW) || (current_screen == SCR_RIGHT_VIEW) ||
 					(current_screen == SCR_INTRO_ONE) || (current_screen == SCR_INTRO_TWO) ||
@@ -1561,6 +1577,29 @@ int main()
 				{
 					gfx_clear_display();
 					update_starfield();
+
+					switch (current_screen)
+					{
+					case SCR_FRONT_VIEW:
+						view_title= "Front View";
+						laser_type = cmdr.front_laser;
+						break;
+
+					case SCR_REAR_VIEW:
+						view_title= "Rear View";
+						laser_type = cmdr.rear_laser;
+						break;
+
+					case SCR_LEFT_VIEW:
+						view_title= "Left View";
+						laser_type = cmdr.left_laser;
+						break;
+
+					case SCR_RIGHT_VIEW:
+						view_title= "Right View";
+						laser_type = cmdr.right_laser;
+						break;
+					}
 				}
 
 				if (auto_pilot)
@@ -1572,19 +1611,8 @@ int main()
 
 				update_universe();
 
-				if ((current_screen == SCR_FRONT_VIEW) || (current_screen == SCR_REAR_VIEW) ||
-					(current_screen == SCR_LEFT_VIEW) || (current_screen == SCR_RIGHT_VIEW))
-				{
-					if (draw_lasers)
-					{
-						draw_laser_lines();
-						draw_lasers--;
-					}
-					
-					draw_laser_sights();
-
-					obc_display();
-				}
+				if (view_title)
+					draw_view_hud_and_lasers();
 
 				if ((message_count > 0) && (message_colour != GFX_COL_BLACK))
 					gfx_display_centre_text(358, message_string, 120, message_colour);
