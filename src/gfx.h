@@ -143,10 +143,17 @@
 #define GFX_COL_BRK_00		53
 // Eight entries for break pattern GFX_COL_BRK_00-7...
 //		GFX_COL_BRK_07		60
-//efine GFX_COL_NEXT		61
+
+#define GFX_COL_MISSILE		61
+#define GFX_COL_VIPER		62
+#define GFX_COL_PURPLE_1	63
+#define GFX_COL_PURPLE_2	64
+#define GFX_COL_SCAN_RED	65
+#define GFX_COL_SCAN_YEL	66
+//efine GFX_COL_NEXT		67
 
 // The globals pColours and setColours() are in colours.c
-#define NUM_COLOURS			61
+#define NUM_COLOURS			67
 extern const int *pColours;
 
 
