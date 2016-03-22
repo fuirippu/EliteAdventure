@@ -178,11 +178,170 @@ static void draw_cross(int cx, int cy)
 	}
 }
 
+
+#pragma region View title and laser sights
+static void draw_pulse_sights(int col1, int col2)
+{
+	int x1 = 128 * GFX_SCALE;
+	int y1 = (96 - 8) * GFX_SCALE;
+	int y2 = (96 - 16) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+
+	y1 = (96 + 8) * GFX_SCALE;
+	y2 = (96 + 16) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+
+	x1 = (128 - 8) * GFX_SCALE;
+	y1 = 96 * GFX_SCALE;
+	int x2 = (128 - 16) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1, y1 - 1, x2, y1 - 1, col2);
+	gfx_draw_colour_line(x1, y1, x2, y1, col1);
+	gfx_draw_colour_line(x1, y1 + 1, x2, y1 + 1, col2);
+
+	x1 = (128 + 8) * GFX_SCALE;
+	x2 = (128 + 16) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1, y1 - 1, x2, y1 - 1, col2);
+	gfx_draw_colour_line(x1, y1, x2, y1, col1);
+	gfx_draw_colour_line(x1, y1 + 1, x2, y1 + 1, col2);
+}
+
+static void draw_beam_sights(int col1, int col2)
+{
+	int x1 = 128 * GFX_SCALE;
+	int y1 = (96 - 10) * GFX_SCALE;
+	int y2 = (96 - 18) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+
+	y1 = (96 + 10) * GFX_SCALE;
+	y2 = (96 + 18) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+
+	x1 = (128 - 10) * GFX_SCALE;
+	y1 = (96 - 6) * GFX_SCALE;
+	y2 = (96 - 10) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+	x1 = (128 + 10) * GFX_SCALE;
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+
+	x1 = (128 - 10) * GFX_SCALE;
+	y1 = (96 + 10) * GFX_SCALE;
+	y2 = (96 + 6) * GFX_SCALE;
+
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+	x1 = (128 + 10) * GFX_SCALE;
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col2);
+	gfx_draw_colour_line(x1, y1, x1, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col2);
+
+
+
+	y1 = (96 + 10) * GFX_SCALE;
+	x1 = (128 - 10) * GFX_SCALE;
+	int x2 = (128 + 10) * GFX_SCALE;
+	gfx_draw_colour_line(x1 + 1, y1 - 1, x2 - 1, y1 - 1, col2);
+	gfx_draw_colour_line(x1, y1, x2, y1, col1);
+	gfx_draw_colour_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, col2);
+	y1 = (96 - 10) * GFX_SCALE;
+	gfx_draw_colour_line(x1 + 1, y1 - 1, x2 - 1, y1 - 1, col2);
+	gfx_draw_colour_line(x1, y1, x2, y1, col1);
+	gfx_draw_colour_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, col2);
+}
+
+static void draw_military_sights(int col1, int col2, int offset)
+{
+	int x1, x2, y1, y2;
+
+	y1 = (96 - 8 - offset) * GFX_SCALE;
+	x1 = (128 - 4) * GFX_SCALE;
+	x2 = (128 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x1, y1 - 1, x2, y1 - 1, col1);
+	gfx_draw_colour_line(x1, y1 - 2, x2, y1 - 2, col2);
+	x2 = 128 * GFX_SCALE;
+	y2 = (96 - 4 - offset) * GFX_SCALE;
+	gfx_draw_colour_line(x1, y1, x2, y2, col1);
+	gfx_draw_colour_line(x1, y1 + 1, x2, y2 + 1, col2);
+	x1 = (128 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x2, y2, x1, y1, col1);
+	gfx_draw_colour_line(x2, y2 + 1, x1, y1 + 1, col2);
+
+	y1 = (96 + 8 + offset) * GFX_SCALE;
+	x1 = (128 - 4) * GFX_SCALE;
+	x2 = (128 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x1, y1 + 1, x2, y1 + 1, col1);
+	gfx_draw_colour_line(x1, y1 + 2, x2, y1 + 2, col2);
+	x2 = 128 * GFX_SCALE;
+	y2 = (96 + 4 + offset) * GFX_SCALE;
+	gfx_draw_colour_line(x1, y1, x2, y2, col1);
+	gfx_draw_colour_line(x1, y1 - 1, x2, y2 - 1, col2);
+	x1 = (128 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x2, y2, x1, y1, col1);
+	gfx_draw_colour_line(x2, y2 - 1, x1, y1 - 1, col2);
+
+
+
+	x1 = (128 - 8 - offset) * GFX_SCALE;
+	y1 = (96 - 4) * GFX_SCALE;
+	y2 = (96 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x1 - 1, y1, x1 - 1, y2, col1);
+	gfx_draw_colour_line(x1 - 2, y1, x1 - 2, y2, col2);
+	x2 = (128 - 4 - offset) * GFX_SCALE;
+	y2 = 96 * GFX_SCALE;
+	gfx_draw_colour_line(x1, y1, x2, y2, col1);
+	gfx_draw_colour_line(x1 + 1, y1, x2 + 1, y2, col2);
+	y1 = (96 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x2, y2, x1, y1, col1);
+	gfx_draw_colour_line(x2 + 1, y2, x1 + 1, y1, col2);
+
+	x1 = (128 + 8 + offset) * GFX_SCALE;
+	y1 = (96 - 4) * GFX_SCALE;
+	y2 = (96 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x1 + 1, y1, x1 + 1, y2, col1);
+	gfx_draw_colour_line(x1 + 2, y1, x1 + 2, y2, col2);
+	x2 = (128 + 4 + offset) * GFX_SCALE;
+	y2 = 96 * GFX_SCALE;
+	gfx_draw_colour_line(x1, y1, x2, y2, col1);
+	gfx_draw_colour_line(x1 - 1, y1, x2 - 1, y2, col2);
+	y1 = (96 + 4) * GFX_SCALE;
+	gfx_draw_colour_line(x2, y2, x1, y1, col1);
+	gfx_draw_colour_line(x2 - 1, y2, x1 - 1, y1, col2);
+}
+
+static void draw_mining_sights()
+{
+	draw_pulse_sights(GFX_COL_PURPLE_1, GFX_COL_PURPLE_2);
+	draw_beam_sights(GFX_COL_PURPLE_1, GFX_COL_PURPLE_2);
+
+	//draw_military_sights(GFX_COL_PURPLE_1, GFX_COL_PURPLE_2, -1);
+	draw_military_sights(GFX_COL_PURPLE_1, GFX_COL_PURPLE_2, 6);
+	draw_military_sights(GFX_COL_PURPLE_1, GFX_COL_PURPLE_2, 10);
+}
+
+/// Writes "Xxxx View" centre top, and draws laser sight (if present)
 static void draw_laser_sights(void)
 {
 	int laser = 0;
-	int x1,y1,x2,y2;
-	
+
 	switch (current_screen)
 	{
 		case SCR_FRONT_VIEW:
@@ -205,41 +364,24 @@ static void draw_laser_sights(void)
 			laser = cmdr.right_laser;
 			break;
 	}
-	
 
-	if (laser)
+	switch (laser)
 	{
-		x1 = 128 * GFX_SCALE;
-		y1 = (96-8) * GFX_SCALE;
-		y2 = (96-16) * GFX_SCALE;
-   
-		gfx_draw_colour_line(x1-1, y1, x1-1, y2, GFX_COL_GREY_1); 
-		gfx_draw_colour_line(x1, y1, x1, y2, GFX_COL_WHITE);
-		gfx_draw_colour_line(x1+1, y1, x1+1, y2, GFX_COL_GREY_1); 
-
-		y1 = (96+8) * GFX_SCALE;
-		y2 = (96+16) * GFX_SCALE;
-		
-		gfx_draw_colour_line(x1-1, y1, x1-1, y2, GFX_COL_GREY_1); 
-		gfx_draw_colour_line(x1, y1, x1, y2, GFX_COL_WHITE);
-		gfx_draw_colour_line(x1+1, y1, x1+1, y2, GFX_COL_GREY_1); 
-
-		x1 = (128-8) * GFX_SCALE;
-		y1 = 96 * GFX_SCALE;
-		x2 = (128-16) * GFX_SCALE;
-		   
-		gfx_draw_colour_line(x1, y1-1, x2, y1-1, GFX_COL_GREY_1); 
-		gfx_draw_colour_line(x1, y1, x2, y1, GFX_COL_WHITE);
-		gfx_draw_colour_line(x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
-
-		x1 = (128+8) * GFX_SCALE;
-		x2 = (128+16) * GFX_SCALE;
-
-		gfx_draw_colour_line(x1, y1-1, x2, y1-1, GFX_COL_GREY_1); 
-		gfx_draw_colour_line(x1, y1, x2, y1, GFX_COL_WHITE);
-		gfx_draw_colour_line(x1, y1+1, x2, y1+1, GFX_COL_GREY_1); 
+	case PULSE_LASER:
+		draw_pulse_sights(GFX_COL_WHITE, GFX_COL_GREY_1);
+		break;
+	case BEAM_LASER:
+		draw_beam_sights(GFX_COL_WHITE, GFX_COL_GREY_1);
+		break;
+	case MILITARY_LASER:
+		draw_military_sights(GFX_COL_GREEN_3, GFX_COL_GREEN_1, 0);
+		break;
+	case MINING_LASER:
+		draw_mining_sights();
+		break;
 	}
 }
+#pragma endregion
 
 
 static void display_break_pattern(void)

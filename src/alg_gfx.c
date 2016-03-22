@@ -68,7 +68,6 @@ END_OF_FUNCTION(frame_timer);
 
 
 #pragma region Startup and shutdown
-
 /// Allegro set_gfx_mode() must be called before data files can be loaded
 /// The rest of the graphics initialisation is performed in startup_2,
 /// called after the assets are loaded.
@@ -143,7 +142,6 @@ int gfx_graphics_startup_2(void)
 	return 0;
 }
 
-
 void gfx_graphics_shutdown(void)
 {
 	destroy_bitmap(scanner_image);
@@ -177,6 +175,8 @@ void gfx_release_screen(void)
 }
 
 
+/// Draw/plot primitives (px, circ, ln, tri, txt, rect, sprite)
+#pragma region Draw/plot primitives
 void gfx_fast_plot_pixel(int x, int y, int col)
 {
 //	_putpixel(gfx_screen, x, y, col);
@@ -187,18 +187,10 @@ void gfx_fast_plot_pixel(int x, int y, int col)
 		gfx_screen->line[y][x] = pColours[col];
 }
 
-
 void gfx_plot_pixel(int x, int y, int col)
 {
 	putpixel(gfx_screen, x + GFX_X_OFFSET, y + GFX_Y_OFFSET, pColours[col]);
 }
-
-
-void gfx_draw_filled_circle(int cx, int cy, int radius, int colour)
-{
-	circlefill(gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, pColours[colour]);
-}
-
 
 #pragma region Anti-aliasing
 #define AA_BITS 3
@@ -436,6 +428,10 @@ static void gfx_draw_aa_line(int x1, int y1, int x2, int y2)
 #undef AA_AND
 #pragma endregion
 
+void gfx_draw_filled_circle(int cx, int cy, int radius, int colour)
+{
+	circlefill(gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, pColours[colour]);
+}
 
 void gfx_draw_circle(int cx, int cy, int radius, int circle_colour)
 {
@@ -444,7 +440,6 @@ void gfx_draw_circle(int cx, int cy, int radius, int circle_colour)
 	else	
 		circle(gfx_screen, cx + GFX_X_OFFSET, cy + GFX_Y_OFFSET, radius, pColours[circle_colour]);
 }
-
 
 
 void gfx_draw_line(int x1, int y1, int x2, int y2)
@@ -466,26 +461,21 @@ void gfx_draw_line(int x1, int y1, int x2, int y2)
 	else
 		line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
 }
+
 void gfx_draw_colour_line(int x1, int y1, int x2, int y2, int line_colour)
 {
 	if (y1 == y2)
-	{
 		hline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, pColours[line_colour]);
-		return;
-	}
-
-	if (x1 == x2)
-	{
+	else if (x1 == x2)
 		vline(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, y2 + GFX_Y_OFFSET, pColours[line_colour]);
-		return;
-	}
-
-	if (anti_alias_gfx && (line_colour == GFX_COL_WHITE))
-		gfx_draw_aa_line(itofix(x1), itofix(y1), itofix(x2), itofix(y2));
 	else
-		line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[line_colour]);
+	{
+		if (anti_alias_gfx && (line_colour == GFX_COL_WHITE))
+			gfx_draw_aa_line(itofix(x1), itofix(y1), itofix(x2), itofix(y2));
+		else
+			line(gfx_screen, x1 + GFX_X_OFFSET, y1 + GFX_Y_OFFSET, x2 + GFX_X_OFFSET, y2 + GFX_Y_OFFSET, pColours[line_colour]);
+	}
 }
-
 
 
 void gfx_draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int col)
@@ -495,17 +485,18 @@ void gfx_draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int col)
 }
 
 
-
 void gfx_display_text(int x, int y, char *txt)
 {
 	text_mode(-1);
 	textout(gfx_screen, ass_fonts[ass_fnt_one], txt, (x / (2 / GFX_SCALE)) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
 }
+
 void gfx_display_colour_text(int x, int y, char *txt, int col)
 {
 	text_mode (-1);
 	textout(gfx_screen, ass_fonts[ass_fnt_one], txt, (x / (2 / GFX_SCALE)) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, pColours[col]);
 }
+
 void gfx_display_centre_text(int y, char *str, int psize, int col)
 {
 	ass_fnt font;
@@ -526,6 +517,74 @@ void gfx_display_centre_text(int y, char *str, int psize, int col)
 	textout_centre(gfx_screen,  ass_fonts[font], str, (128 * GFX_SCALE) + GFX_X_OFFSET, (y / (2 / GFX_SCALE)) + GFX_Y_OFFSET, txt_colour);
 }
 
+void gfx_display_pretty_text(int tx, int ty, int bx, int by, char *txt)
+{
+	char strbuf[100];
+	char *str;
+	char *bptr;
+	int len;
+	int pos;
+	int maxlen;
+
+	maxlen = (bx - tx) / 8;
+
+	str = txt;
+	len = strlen(txt);
+
+	while (len > 0)
+	{
+		pos = maxlen;
+		if (pos > len)
+			pos = len;
+
+		while ((str[pos] != ' ') && (str[pos] != ',') &&
+			(str[pos] != '.') && (str[pos] != '\0'))
+		{
+			pos--;
+		}
+
+		len = len - pos - 1;
+
+		for (bptr = strbuf; pos >= 0; pos--)
+			*bptr++ = *str++;
+
+		*bptr = '\0';
+
+		text_mode(-1);
+		textout(gfx_screen, ass_fonts[ass_fnt_one], strbuf, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
+		ty += (8 * GFX_SCALE);
+	}
+}
+
+
+void gfx_draw_rectangle(int tx, int ty, int bx, int by, int col)
+{
+	rectfill(gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET,
+		bx + GFX_X_OFFSET, by + GFX_Y_OFFSET, pColours[col]);
+}
+
+
+void gfx_draw_sprite(int sprite_no, int x, int y)
+{
+	BITMAP *sprite_bmp;
+
+	if ((sprite_no < 0) || (sprite_no >(NUM_BITMAPS - 1)))
+		return;
+	sprite_bmp = ass_bitmaps[sprite_no];
+
+	if (x == -1)
+		x = ((256 * GFX_SCALE) - sprite_bmp->w) / 2;
+
+	draw_sprite(gfx_screen, sprite_bmp, x + GFX_X_OFFSET, y + GFX_Y_OFFSET);
+}
+#pragma endregion
+
+
+void gfx_draw_scanner(void)
+{
+	blit(scanner_image, gfx_screen, 0, 0, GFX_X_OFFSET, 385 + GFX_Y_OFFSET, scanner_image->w, scanner_image->h);
+}
+
 
 void gfx_clear_display(void)
 {
@@ -542,58 +601,6 @@ void gfx_clear_area(int tx, int ty, int bx, int by)
 }
 
 
-void gfx_draw_rectangle(int tx, int ty, int bx, int by, int col)
-{
-	rectfill(gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET,
-				   bx + GFX_X_OFFSET, by + GFX_Y_OFFSET, pColours[col]);
-}
-
-
-void gfx_display_pretty_text(int tx, int ty, int bx, int by, char *txt)
-{
-	char strbuf[100];
-	char *str;
-	char *bptr;
-	int len;
-	int pos;
-	int maxlen;
-	
-	maxlen = (bx - tx) / 8;
-
-	str = txt;	
-	len = strlen(txt);
-	
-	while (len > 0)
-	{
-		pos = maxlen;
-		if (pos > len)
-			pos = len;
-
-		while ((str[pos] != ' ') && (str[pos] != ',') &&
-			   (str[pos] != '.') && (str[pos] != '\0'))
-		{
-			pos--;
-		}
-
-		len = len - pos - 1;
-	
-		for (bptr = strbuf; pos >= 0; pos--)
-			*bptr++ = *str++;
-
-		*bptr = '\0';
-
-		text_mode(-1);
-		textout(gfx_screen, ass_fonts[ass_fnt_one], strbuf, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET, pColours[GFX_COL_WHITE]);
-		ty += (8 * GFX_SCALE);
-	}
-}
-
-
-void gfx_draw_scanner(void)
-{
-	blit(scanner_image, gfx_screen, 0, 0, GFX_X_OFFSET, 385+GFX_Y_OFFSET, scanner_image->w, scanner_image->h);
-}
-
 void gfx_set_clip_region(int tx, int ty, int bx, int by)
 {
 	set_clip(gfx_screen, tx + GFX_X_OFFSET, ty + GFX_Y_OFFSET, bx + GFX_X_OFFSET, by + GFX_Y_OFFSET);
@@ -605,7 +612,6 @@ void gfx_start_render(void)
 	start_poly = 0;
 	total_polys = 0;
 }
-
 
 void gfx_render_polygon(int num_points, int *point_list, int col, int zavg)
 {
@@ -681,7 +687,6 @@ static void gfx_polygon(int num_points, int *poly_list, int face_colour)
 	polygon(gfx_screen, num_points, poly_list, pColours[face_colour]);
 }
 
-
 void gfx_finish_render(void)
 {
 	int num_points;
@@ -709,21 +714,6 @@ void gfx_finish_render(void)
 }
 
 
-void gfx_draw_sprite(int sprite_no, int x, int y)
-{
-	BITMAP *sprite_bmp;
-
-	if ((sprite_no < 0) || (sprite_no > (NUM_BITMAPS - 1)))
-		return;
-	sprite_bmp = ass_bitmaps[sprite_no];
-
-	if (x == -1)
-		x = ((256 * GFX_SCALE) - sprite_bmp->w) / 2;
-
-	draw_sprite(gfx_screen, sprite_bmp, x + GFX_X_OFFSET, y + GFX_Y_OFFSET);
-}
-
-
 int gfx_request_file(char *title, char *path, char *ext)
 {
 	int okay;
@@ -734,4 +724,3 @@ int gfx_request_file(char *title, char *path, char *ext)
 
 	return okay;
 }
-

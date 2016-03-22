@@ -25,9 +25,11 @@
 #define GFX_H
 
 
+//#define RES_512_512
 #define RES_800_600
- // #define RES_512_512
 
+
+#pragma region Screen resolution constants
 
 #ifdef RES_512_512
 
@@ -43,7 +45,6 @@
 #define GFX_VIEW_BY		381
 
 #endif
-
 #ifdef RES_800_600
 
 #define GFX_SCALE		(2)
@@ -74,9 +75,10 @@
 
 #endif
  
+#pragma endregion
 
-/// These GFX_COL_xxx defines are now indices into the global
-/// palette pColours [colours.c, gfx.h].
+
+/// GFX_COL_xxx defines are indices into the software palette pColours [colours.c]
 #pragma region Colour defines
 #define GFX_COL_BLACK		0
 #define GFX_COL_DARK_RED	1
@@ -150,16 +152,16 @@
 #define GFX_COL_PURPLE_2	64
 #define GFX_COL_SCAN_RED	65
 #define GFX_COL_SCAN_YEL	66
-//efine GFX_COL_NEXT		67
-
-// The globals pColours and setColours() are in colours.c
-#define NUM_COLOURS			67
-extern const int *pColours;
-
-
-void setColours(int use_directx);
+#define GFX_COL_NEXT		67
+///        ^--- GFX_COL_NEXT must be (last colour + 1)
 #pragma endregion
 
+/// The software palette (entries are ARGB for dx, 8b palette index for GDI) [colours.c]
+#define NUM_COLOURS			(GFX_COL_NEXT)
+extern const int *pColours;
+void setColours(int use_directx);
+
+/////////////////////////////////////////////////////////////////////////////
 
 int gfx_graphics_startup_1(void);
 int gfx_graphics_startup_2(void);
@@ -169,28 +171,45 @@ void gfx_update_screen(void);
 void gfx_acquire_screen(void);
 void gfx_release_screen(void);
 
-void gfx_plot_pixel(int x, int y, int col);
+/////////////////////////////////////////////////////////////////////////////
 void gfx_fast_plot_pixel(int x, int y, int col);
+void gfx_plot_pixel(int x, int y, int col);
+
 void gfx_draw_filled_circle(int cx, int cy, int radius, int circle_colour);
 void gfx_draw_circle(int cx, int cy, int radius, int circle_colour);
+
 void gfx_draw_line(int x1, int y1, int x2, int y2);
 void gfx_draw_colour_line(int x1, int y1, int x2, int y2, int line_colour);
+
 void gfx_draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int col);
-void gfx_draw_rectangle(int tx, int ty, int bx, int by, int col);
+
 void gfx_display_text(int x, int y, char *txt);
 void gfx_display_colour_text(int x, int y, char *txt, int col);
 void gfx_display_centre_text(int y, char *str, int psize, int col);
+void gfx_display_pretty_text(int tx, int ty, int bx, int by, char *txt);
+
+void gfx_draw_rectangle(int tx, int ty, int bx, int by, int col);
+
+void gfx_draw_sprite(int sprite_no, int x, int y);
+/////////////////////////////////////////////////////////////////////////////
+
+void gfx_draw_scanner(void);
+
 void gfx_clear_display(void);
 void gfx_clear_text_area(void);
 void gfx_clear_area(int tx, int ty, int bx, int by);
-void gfx_display_pretty_text(int tx, int ty, int bx, int by, char *txt);
-void gfx_draw_scanner(void);
+
 void gfx_set_clip_region(int tx, int ty, int bx, int by);
-void gfx_draw_sprite(int sprite_no, int x, int y);
+
+/////////////////////////////////////////////////////////////////////////////
 void gfx_start_render(void);
+
 void gfx_render_polygon(int num_points, int *point_list, int face_colour, int zavg);
 void gfx_render_line(int x1, int y1, int x2, int y2, int dist, int col);
+
 void gfx_finish_render(void);
+/////////////////////////////////////////////////////////////////////////////
+
 int gfx_request_file(char *title, char *path, char *ext);
 
 
