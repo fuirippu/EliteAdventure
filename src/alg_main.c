@@ -60,6 +60,7 @@ int mcount;
 static int old_cross_x, old_cross_y;
 static int cross_timer;
 
+
 /// Lasers are paused for n frames per shot - see fire_laser() [swat.c]
 static int laser_frames_left;
 
@@ -67,9 +68,10 @@ static int laser_frames_left;
 static char *view_title= NULL;		/// Set to string if flight view (eg. "Front View"), or NULL
 static int laser_type = 0;			/// Set to type of laser mounted in current view, or 0
 
-static int message_colour;			/// info_message() sets the colour, count
-static int message_count;			/// & copies the string. The main loop
-static char message_string[80];		/// displays the text.
+static int message_colour;			/// info_message() sets the colour, count (#frames to disaplay
+static int message_count;			/// for) & copies the string; main game loop displays the text
+static char message_string[80];
+
 
 static int rolling;
 static int climbing;
@@ -1194,7 +1196,7 @@ void save_commander_screen(void)
 		return;
 	}
 	
-	gfx_display_centre_text(175, "Commander Saved.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(175, "Commander Saved", 140, GFX_COL_GOLD);
 
 	set_commander_name(path);
 	saved_cmdr = cmdr;
@@ -1225,7 +1227,7 @@ void load_commander_screen(void)
 	{
 		saved_cmdr = cmdr;
 		gfx_display_centre_text(175, "Error Loading Commander!", 140, GFX_COL_GOLD);
-		gfx_display_centre_text(200, "Press any key to continue.", 140, GFX_COL_GOLD);
+		gfx_display_centre_text(200, "Press any key to continue", 140, GFX_COL_GOLD);
 		gfx_update_screen();
 		readkey();
 		return;

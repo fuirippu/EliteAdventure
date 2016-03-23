@@ -57,7 +57,7 @@ static struct setting
 {
 	{"Graphics:",		{"Solid", "Wireframe", "", "", ""}},
 	{"Anti Alias:",		{"Off", "On", "", "", ""}},		
-	{"Planet Style:",	{"Wireframe", "Green", "SNES", "Fractal", ""}},
+	{"Planet Style:",	{"Wireframe", "Green", "Fancy", ""}},
 	{"Planet Desc.:",	{"BBC", "MSX", "", "", ""}},
 	{"Instant Dock:",	{"Off", "On", "", "", ""}},	
 	{"Save Settings",	{"", "", "", "", ""}}
@@ -224,7 +224,7 @@ void toggle_setting (void)
 			break;
 		
 		case 2:
-			planet_render_style = (planet_render_style + 1) % 4;
+			planet_render_style = (planet_render_style + 1) % 3;
 			break;
 		
 		case 3:
@@ -344,7 +344,7 @@ void display_options(void)
 	gfx_clear_display();
 	gfx_display_centre_text(10, "GAME OPTIONS", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
-	gfx_display_centre_text(300, VERSION_STRING, 120, GFX_COL_WHITE);
+	gfx_display_centre_text(300, VERSION_STRING, 120, GFX_COL_NAVAJO);
 	gfx_display_centre_text(320, "Elite TNK by Christian Pinder 1999-2001 www.newkind.co.uk", 120, GFX_COL_WHITE);
 	gfx_display_centre_text(340, "Based on original code by Ian Bell & David Braben", 120, GFX_COL_WHITE);
 	gfx_display_centre_text(360, CREDIT_FUI, 120, GFX_COL_FUI);

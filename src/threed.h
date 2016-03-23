@@ -17,8 +17,8 @@
 
 #include "space.h"
 
-void draw_ship (struct univ_object *ship);
-void generate_landscape (int rnd_seed);
+void draw_ship(struct univ_object *ship);
+void generate_landscape(int rnd_seed);
 
 
 #endif		// #ifndef THREED_H

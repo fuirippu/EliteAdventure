@@ -31,8 +31,10 @@ static const int colours_gdi[NUM_COLOURS] = {
 	 69,  64,
 
 	 86, 183, 213,   0,   0, 122,   0,   0,
-	221, 205, 182, 176,  65,  88, 190,
-	103, 107,  21,  20,   205, 0, 116,  11
+	221, 205, 182, 176,  65,  88, 190,  189,
+	103, 107,  21,  20, 116,   0, 205,   11,
+
+	180,  68,  74, 187,  76, 221, 154
 };
 
 static const int colours_dx[NUM_COLOURS] = {
@@ -57,9 +59,11 @@ static const int colours_dx[NUM_COLOURS] = {
 	//GFX_COL_BRK_00
 		0x66CC33, 0xFF99CC, 0x6699FF, 0x000000, 0x000000, 0xFFCC66, 0x000000, 0x000000,
 	//GFX_COL_MISSILE
-		0xC0C0F7, 0x007FFF, 0xE0B0FF, 0xB65FD8, 0xE51227, 0xDDD423, 0x00FFCC,
+		0xC0C0F7, 0x007FFF, 0xE0B0FF, 0xB65FD8, 0xE51227, 0xDDD423, 0x00FFCC, 0xFFDEAD,
 	//GFX_COL_PSMITH_00
-		0x00F4E8, 0x006D65, 0x726573, 0x7F4E34, 0x006DE8, 0x000000, 0xD38056, 0x412065
+		0x00F4E8, 0x006D65, 0x726573, 0x7F4E34, 0xD38056, 0x000000, 0x006DE8, 0x412065,
+	//GFX_COL_TRICOL_0
+		0x5388A8, 0x734733, 0x73623E, 0x81A0A5, 0xB5702B, 0xA5CDD3, 0xE08B35
 };
 
 /// Palette - the palette in scanner.bmp is used as a global palette (GDI)

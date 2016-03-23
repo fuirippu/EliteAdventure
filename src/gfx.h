@@ -153,16 +153,27 @@
 #define GFX_COL_SCAN_RED	65
 #define GFX_COL_SCAN_YEL	66
 #define GFX_COL_MINT		67
+#define GFX_COL_NAVAJO		68
 
-#define GFX_COL_PSMITH_00	68
-#define GFX_COL_PSMITH_01	69
-#define GFX_COL_PSMITH_02	70
-#define GFX_COL_PSMITH_03	71
-#define GFX_COL_PSMITH_04	72
-#define GFX_COL_PSMITH_05	73
-#define GFX_COL_PSMITH_06	74
-#define GFX_COL_PSMITH_07	75
-#define GFX_COL_NEXT		76
+#define GFX_COL_PSMITH_00	69
+#define GFX_COL_PSMITH_01	70
+#define GFX_COL_PSMITH_02	71
+#define GFX_COL_PSMITH_03	72
+#define GFX_COL_PSMITH_04	73
+#define GFX_COL_PSMITH_05	74
+#define GFX_COL_PSMITH_06	75
+#define GFX_COL_PSMITH_07	76
+
+#define GFX_COL_TRICOL_0	77
+// Three entries for tricol GFX_COL_TRICOL_0-2...
+//		GFX_COL_TRICOL_2	79
+
+#define GFX_COL_FRAC_0D		80
+#define GFX_COL_FRAC_1D		81
+#define GFX_COL_FRAC_0L		82
+#define GFX_COL_FRAC_1L		83
+
+#define GFX_COL_NEXT		84
 ///        ^--- GFX_COL_NEXT must be (last colour + 1)
 #pragma endregion
 

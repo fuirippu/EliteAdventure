@@ -19,6 +19,7 @@
 #include "trade.h"
 
 
+#pragma region Screens (SCR_XXX_XXXX)
 #define SCR_INTRO_ONE		1
 #define SCR_INTRO_TWO		2
 #define SCR_GALACTIC_CHART	3
@@ -40,6 +41,7 @@
 #define SCR_GAME_OVER		19
 #define SCR_SETTINGS		20
 #define SCR_ESCAPE_POD		21
+#pragma endregion
 
 
 #define PULSE_LASER		0x0F
@@ -65,7 +67,7 @@
 
 
 #define VERSION_STRING		"Version: a-04"
-#define CREDIT_FUI			"Further adventures by fuirippu 2016"
+#define CREDIT_FUI			"further adventures from fuirippu 2016"
 
 /////////////////////////////////////////////////////////////////////////////
 // struct definitions

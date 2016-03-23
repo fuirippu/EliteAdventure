@@ -89,9 +89,8 @@ void update_intro1(void)
 	
 	gfx_draw_sprite(ass_bmp_elite, -1, 10);
 
-	gfx_display_centre_text(290, "Original Game (C) I.Bell & D.Braben", 120, GFX_COL_WHITE);
-	gfx_display_centre_text(310, "Re-engineered by C.J.Pinder", 120, GFX_COL_WHITE);
-	gfx_display_centre_text(330, CREDIT_FUI, 120, GFX_COL_FUI);
+	gfx_display_centre_text(310, "Original Game (C) I.Bell & D.Braben.", 120, GFX_COL_WHITE);
+	gfx_display_centre_text(330, "Re-engineered by C.J.Pinder.", 120, GFX_COL_WHITE);
 	gfx_display_centre_text(360, "Load New Commander (Y/N)?", 140, GFX_COL_GOLD);
 }
 
@@ -132,6 +131,6 @@ void update_intro2(void)
 
 	gfx_draw_sprite(ass_bmp_elite, -1, 10);
 
-	gfx_display_centre_text(360, "Press Fire or Space, Commander.", 140, GFX_COL_GOLD);
+	gfx_display_centre_text(360, "Press Fire or Space, Commander", 140, GFX_COL_GOLD);
 	gfx_display_centre_text(330, ship_list[ship_no]->name, 120, GFX_COL_WHITE);
 }

@@ -33,11 +33,68 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-#define LAND_X_MAX	128
-#define LAND_Y_MAX	128
+//static int snes_rnd_seed = 0;	/// rnd_seed used as hash of landscape most recently generated
+//static int snes_pattern = 2;	/// pattern index, snes_planet_colour[patrn][y_based_col]
+
+#define NUM_SNES_PATTERNS	(3)
+/// snes patterns 0-1 produce coloured strata from this array
+static int snes_planet_colour[NUM_SNES_PATTERNS - 1][52] = {
+	{
+		GFX_COL_SNES_102, GFX_COL_SNES_102,
+		GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
+		GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
+		GFX_COL_SNES_213, GFX_COL_SNES_213,
+		GFX_COL_SNES_255,
+		GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83,
+		GFX_COL_SNES_122,
+		GFX_COL_SNES__83, GFX_COL_SNES__83,
+		GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249,
+		GFX_COL_SNES__83,
+		GFX_COL_SNES_122,
+		GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249,
+		GFX_COL_SNES__83, GFX_COL_SNES__83,
+		GFX_COL_SNES_122,
+		GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83,
+		GFX_COL_SNES_255,
+		GFX_COL_SNES_213, GFX_COL_SNES_213,
+		GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
+		GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
+		GFX_COL_SNES_102, GFX_COL_SNES_102
+	},
+	{
+		GFX_COL_PSMITH_00, GFX_COL_PSMITH_00,
+		GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01,
+		GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02,
+		GFX_COL_PSMITH_03, GFX_COL_PSMITH_03,
+		GFX_COL_PSMITH_04,
+		GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+		GFX_COL_PSMITH_06,
+		GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+		GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07,
+		GFX_COL_PSMITH_05,
+		GFX_COL_PSMITH_06,
+		GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07,
+		GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+		GFX_COL_PSMITH_06,
+		GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+		GFX_COL_PSMITH_04,
+		GFX_COL_PSMITH_03, GFX_COL_PSMITH_03,
+		GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02,
+		GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01,
+		GFX_COL_PSMITH_00, GFX_COL_PSMITH_00
+	}
+};
+
+/// snes pattern 2 is tricolore stripes
+#define NUM_TRI_STRIPES (27)
+#define NUM_TRI_COLOURS  (3)
+
 
 /// landscape is generated on exit hyperspace, or launch from SS
+#define LAND_X_MAX	128
+#define LAND_Y_MAX	128
 static unsigned char landscape[LAND_X_MAX+1][LAND_Y_MAX+1];
+
 
 static struct point point_list[100];
 
@@ -329,74 +386,42 @@ static void draw_solid_ship(struct univ_object *univ)
 
 #pragma region snes planet
 // TODO: snes is a quick hack and needs tidying up
-/// Colour map used to generate SNES style planet
-#define NUM_SNES_PATTERNS	(2)
-static int snes_planet_colour[NUM_SNES_PATTERNS][52] = {
-{
-	GFX_COL_SNES_102, GFX_COL_SNES_102,
-	GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
-	GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
-	GFX_COL_SNES_213, GFX_COL_SNES_213,
-	GFX_COL_SNES_255,
-	GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83,
-	GFX_COL_SNES_122,
-	GFX_COL_SNES__83, GFX_COL_SNES__83,
-	GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249,
-	GFX_COL_SNES__83,
-	GFX_COL_SNES_122,
-	GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249, GFX_COL_SNES_249,
-	GFX_COL_SNES__83, GFX_COL_SNES__83,
-	GFX_COL_SNES_122,
-	GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83, GFX_COL_SNES__83,
-	GFX_COL_SNES_255,
-	GFX_COL_SNES_213, GFX_COL_SNES_213,
-	GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
-	GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
-	GFX_COL_SNES_102, GFX_COL_SNES_102
-},
-{
-	GFX_COL_PSMITH_00, GFX_COL_PSMITH_00,
-	GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01,
-	GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02,
-	GFX_COL_PSMITH_03, GFX_COL_PSMITH_03,
-	GFX_COL_PSMITH_04,
-	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
-	GFX_COL_PSMITH_06,
-	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
-	GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07,
-	GFX_COL_PSMITH_05,
-	GFX_COL_PSMITH_06,
-	GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07,
-	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
-	GFX_COL_PSMITH_06,
-	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
-	GFX_COL_PSMITH_04,
-	GFX_COL_PSMITH_03, GFX_COL_PSMITH_03,
-	GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02,
-	GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01,
-	GFX_COL_PSMITH_00, GFX_COL_PSMITH_00
-}
-};
-static int snes_rnd_seed = 0;	/// rnd_seed used as hash of landscape most recently generated
-static int snes_pattern = 0;	/// pattern index, snes_planet_colour[patrn][y_based_col]
 
+/// Colour map used to generate SNES style planet
 static void generate_snes_landscape(int rnd_seed)
 {
-	if (rnd_seed != snes_rnd_seed)			// Not most recent snes, advance pattern
-	{
-		snes_rnd_seed = rnd_seed;			// store seed as hash
-		snes_pattern = (snes_pattern + 1) % NUM_SNES_PATTERNS;
-	}
+	//if ((rnd_seed != snes_rnd_seed) || ((cmdr.score & 31) == 0))
+	//{
+	//	/// Advance pattern if not most recent snes, or on the off-chance ;)
+	//	snes_rnd_seed = rnd_seed;					// store seed as hash
+	//	snes_pattern = (snes_pattern + 1) % NUM_SNES_PATTERNS;
+	//}
 
-	/// Generate snes pattern ? (assign landscape[][] a colour from snes_planet_colour)
-	for (int y = 0; y <= LAND_Y_MAX; y++)
+	int pattern = (rnd_seed % NUM_SNES_PATTERNS);
+
+	if (pattern == 2)
 	{
-		int colour = snes_planet_colour[snes_pattern][y * (sizeof(snes_planet_colour[0]) / sizeof(int)) / LAND_Y_MAX];
-		for (int x = 0; x <= LAND_X_MAX; x++)
+		for (int y = 0; y <= LAND_Y_MAX; y++)
 		{
-			landscape[x][y] = colour;
+			int colour = GFX_COL_TRICOL_0 + ((y * NUM_TRI_STRIPES / LAND_Y_MAX) % NUM_TRI_COLOURS);
+			for (int x = 0; x <= LAND_X_MAX; x++)
+			{
+				landscape[x][y] = colour;
+			}
 		}
-	}	
+	}
+	else		// (pattern == 0 or 1)
+	{
+		/// Generate snes pattern (assign landscape[][] a colour from snes_planet_colour)
+		for (int y = 0; y <= LAND_Y_MAX; y++)
+		{
+			int colour = snes_planet_colour[pattern][y * (sizeof(snes_planet_colour[0]) / sizeof(int)) / LAND_Y_MAX];
+			for (int x = 0; x <= LAND_X_MAX; x++)
+			{
+				landscape[x][y] = colour;
+			}
+		}
+	}
 }
 #pragma endregion
 
@@ -466,7 +491,7 @@ static void generate_fractal_landscape(int rnd_seed)
 	double dist;
 	int dark;
 	int old_seed;
-	
+
 	old_seed = get_rand_seed();
 	set_rand_seed(rnd_seed);
 	
@@ -480,6 +505,24 @@ static void generate_fractal_landscape(int rnd_seed)
 		for (x = 0; x < LAND_X_MAX; x += d)	
 			midpoint_square(x,y,d);
 
+
+
+
+	int col_0_dk = GFX_COL_GREEN_1;
+	int col_1_dk = GFX_COL_BLUE_2;
+	int col_0_lt = GFX_COL_GREEN_2;
+	int col_1_lt = GFX_COL_BLUE_1;
+	if (((rnd_seed >> 4) % 4) == 0)
+	{
+		col_0_dk = GFX_COL_FRAC_0D;
+		col_1_dk = GFX_COL_FRAC_1D;
+		col_0_lt = GFX_COL_FRAC_0L;
+		col_1_lt = GFX_COL_FRAC_1L;
+	}
+
+
+
+
 	for (y = 0; y <= LAND_Y_MAX; y++)
 	{
 		for (x = 0; x <= LAND_X_MAX; x++)
@@ -488,9 +531,9 @@ static void generate_fractal_landscape(int rnd_seed)
 			dark = dist > 10000;
 			h = landscape[x][y];
 			if (h > 166)
-				landscape[x][y] = dark ? GFX_COL_GREEN_1 : GFX_COL_GREEN_2;
+				landscape[x][y] = dark ? col_0_dk : col_0_lt;
 			else 
-				landscape[x][y] = dark ? GFX_COL_BLUE_2 : GFX_COL_BLUE_1;
+				landscape[x][y] = dark ? col_1_dk : col_1_lt;
 		}
 	}
 
@@ -498,20 +541,18 @@ static void generate_fractal_landscape(int rnd_seed)
 }
 #pragma endregion
 
+
 void generate_landscape(int rnd_seed)
 {
-	switch (planet_render_style)
-	{
-		case 0:		// Wireframe/solid green: no initialisation required
-		case 1:
-			break;
-		case 2:
-			generate_snes_landscape(rnd_seed);
-			break;
-		case 3:
-			generate_fractal_landscape(rnd_seed);
-			break;
-	}
+	/// Wireframe/solid green: no initialisation required
+	if ((planet_render_style == 0) || (planet_render_style == 1))
+		return;
+
+	/// One in four planets are abstract colour
+	if ((rnd_seed & 0x3) == 0x3)
+		generate_snes_landscape(rnd_seed);
+	else
+		generate_fractal_landscape(rnd_seed);
 }
 
 /// Draw a line of the planet with appropriate rotation
@@ -589,6 +630,7 @@ static void render_planet(int xo, int yo, int radius, struct vector *vec)
 	}
 }
 
+
 /// TODO: wireframe planet: add two arcs from original Elite
 static void draw_wireframe_planet(int xo, int yo, int radius, struct vector *vec)
 {
@@ -633,8 +675,7 @@ static void draw_planet(struct univ_object *planet)
 			gfx_draw_filled_circle(x, y, radius, GFX_COL_GREEN_1);
 			break;
 
-		case 2:		/// Fractal/snes landscape was generated on exit hyperspace or launch
-		case 3:
+		case 2:		/// Fancy landscape was generated on exit hyperspace or launch
 			render_planet(x, y, radius, planet->rotmat);
 			break;
 	}
@@ -916,7 +957,7 @@ static void draw_explosion(struct univ_object *univ)
 	set_rand_seed(old_seed);
 }
 
-/// Draw any? object in the universe (ship, planet, sun etc)
+/// Draw any? object in the universe (ship, planet, sun, etc)
 void draw_ship(struct univ_object *ship)
 {
 
@@ -934,32 +975,21 @@ void draw_ship(struct univ_object *ship)
 	}
 
 	if (ship->flags & FLG_EXPLOSION)
-	{
 		draw_explosion(ship);
+	else if (ship->location.z <= 0)	/* Only display ships in front of us. */
 		return;
-	}
-	
-	if (ship->location.z <= 0)	/* Only display ships in front of us. */
-		return;
-
-	if (ship->type == SHIP_PLANET)
-	{
+	else if (ship->type == SHIP_PLANET)
 		draw_planet(ship);
-		return;
-	}
-
-	if (ship->type == SHIP_SUN)
-	{
+	else if (ship->type == SHIP_SUN)
 		draw_sun(ship);
+	else if ((fabs(ship->location.x) > ship->location.z) ||	/* Check for field of vision. */
+			 (fabs(ship->location.y) > ship->location.z))
 		return;
-	}
-	
-	if ((fabs(ship->location.x) > ship->location.z) ||	/* Check for field of vision. */
-		(fabs(ship->location.y) > ship->location.z))
-		return;
-		
-	if (wireframe)
-		draw_wireframe_ship(ship);
 	else
-		draw_solid_ship(ship);
+	{
+		if (wireframe)
+			draw_wireframe_ship(ship);
+		else
+			draw_solid_ship(ship);
+	}
 }

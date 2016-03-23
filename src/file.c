@@ -42,7 +42,7 @@ int write_config_file()
 		warn = (warn == 0) ? 2 : warn;
 	if (fprintf(fp, "%d\t\t\t# Anti-Alias Wireframe: 0 = Normal, 1 = Anti-Aliased\n", anti_alias_gfx))
 		warn = (warn == 0) ? 3 : warn;
-	if (fprintf(fp, "%d\t\t\t# Planet style: 0 = Wireframe, 1 = Green, 2 = SNES, 3 = Fractal\n", planet_render_style))
+	if (fprintf(fp, "%d\t\t\t# Planet style: 0 = Wireframe, 1 = Green, 2 = Fancy\n", planet_render_style))
 		warn = (warn == 0) ? 4 : warn;
 	if (fprintf(fp, "%d\t\t\t# Planet Descriptions: 0 = Tree Grubs, 1 = Hoopy Casinos\n", hoopy_casinos))
 		warn = (warn == 0) ? 5 : warn;
