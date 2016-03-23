@@ -153,7 +153,16 @@
 #define GFX_COL_SCAN_RED	65
 #define GFX_COL_SCAN_YEL	66
 #define GFX_COL_MINT		67
-#define GFX_COL_NEXT		68
+
+#define GFX_COL_PSMITH_00	68
+#define GFX_COL_PSMITH_01	69
+#define GFX_COL_PSMITH_02	70
+#define GFX_COL_PSMITH_03	71
+#define GFX_COL_PSMITH_04	72
+#define GFX_COL_PSMITH_05	73
+#define GFX_COL_PSMITH_06	74
+#define GFX_COL_PSMITH_07	75
+#define GFX_COL_NEXT		76
 ///        ^--- GFX_COL_NEXT must be (last colour + 1)
 #pragma endregion
 

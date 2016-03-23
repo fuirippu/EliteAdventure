@@ -11,7 +11,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-const char *strNewShipMsg = "+[uNKNwn]";
+const char *strNewShipMsg = "+[uKNwn]";
 
 
 #define MESSAGE_LEN		(64)
@@ -45,18 +45,18 @@ static const char *ship_names[] = {
 	"Freight",					//"CARGO",
 	"Boulder",					//"BOULDER",
 	"Astroid",					//"ASTEROID",
-	"Rock",						//"ROCK",
+	"RocK",						//"ROCK",
 	"SK.AD Shuttle",			//"SHUTTLE",
 	"MC15 Trnsprt", 			//"TRANSPORTER",
 	"Cobra MkIII",				//"COBRA3",
 	"Python",					//"PYTHON",
 	"Boa CC",					//"BOA",
 	"Anaconda",					//"ANACONDA",
-	"rocK HERmit",				//"HERMIT",
+	"rocK Hermit",				//"HERMIT",
 	"Viper HK",					//"VIPER",
 	"Sidewndr",					//"SIDEWINDER",
 	"Mamba",					//"MAMBA",
-	"Krait ",					//"KRAIT",
+	"Krait",					//"KRAIT",
 	"Adder",					//"ADDER",
 	"Gecko",					//"GECKO",
 	"Cobra",					//"COBRA1",

@@ -36,6 +36,7 @@
 #define LAND_X_MAX	128
 #define LAND_Y_MAX	128
 
+/// landscape is generated on exit hyperspace, or launch from SS
 static unsigned char landscape[LAND_X_MAX+1][LAND_Y_MAX+1];
 
 static struct point point_list[100];
@@ -44,15 +45,11 @@ static struct point point_list[100];
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
-/*
- * The following routine is used to draw a wireframe represtation of a ship.
- *
- * caveat: it is a work in progress.
- * A number of features (such as not showing detail at distance) have not yet been implemented.
- *
- */
 static void draw_wireframe_ship(struct univ_object *univ)
 {
+	/// TODO: this is a work in progress
+	/// A number of features (such as LOD) not yet implemented
+
 	Matrix trans_mat;
 	int i;
 	int sx,sy,ex,ey;
@@ -159,14 +156,12 @@ static void draw_wireframe_ship(struct univ_object *univ)
 	}
 }
 
-/*
- * Hacked version of the draw ship routine to display solid ships...
- * This needs a lot of tidying...
- *
- * Check for hidden surface supplied by T.Harte.
- */
 static void draw_solid_ship(struct univ_object *univ)
 {
+	/// draw ship routine hacked to display solid ships
+	/// TODO: needs a lot of tidying
+	/// Check for hidden surface supplied by T.Harte
+
 	int i;
 	int sx,sy;
 	double rx,ry,rz;
@@ -332,11 +327,11 @@ static void draw_solid_ship(struct univ_object *univ)
 
 #pragma region Planet Stuff
 
-/*
- * Colour map used to generate a SNES Elite style planet.
- * This is a quick hack and needs tidying up.
- */
-static int snes_planet_colour[] =
+#pragma region snes planet
+// TODO: snes is a quick hack and needs tidying up
+/// Colour map used to generate SNES style planet
+#define NUM_SNES_PATTERNS	(2)
+static int snes_planet_colour[NUM_SNES_PATTERNS][52] = {
 {
 	GFX_COL_SNES_102, GFX_COL_SNES_102,
 	GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
@@ -358,27 +353,55 @@ static int snes_planet_colour[] =
 	GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167, GFX_COL_SNES_167,
 	GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134, GFX_COL_SNES_134,
 	GFX_COL_SNES_102, GFX_COL_SNES_102
-};
-
-static void generate_snes_landscape(void)
+},
 {
-	int x,y;
-	int colour;
-	
-	for (y = 0; y <= LAND_Y_MAX; y++)
+	GFX_COL_PSMITH_00, GFX_COL_PSMITH_00,
+	GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01,
+	GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02,
+	GFX_COL_PSMITH_03, GFX_COL_PSMITH_03,
+	GFX_COL_PSMITH_04,
+	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+	GFX_COL_PSMITH_06,
+	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+	GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07,
+	GFX_COL_PSMITH_05,
+	GFX_COL_PSMITH_06,
+	GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07, GFX_COL_PSMITH_07,
+	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+	GFX_COL_PSMITH_06,
+	GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05, GFX_COL_PSMITH_05,
+	GFX_COL_PSMITH_04,
+	GFX_COL_PSMITH_03, GFX_COL_PSMITH_03,
+	GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02, GFX_COL_PSMITH_02,
+	GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01, GFX_COL_PSMITH_01,
+	GFX_COL_PSMITH_00, GFX_COL_PSMITH_00
+}
+};
+static int snes_rnd_seed = 0;	/// rnd_seed used as hash of landscape most recently generated
+static int snes_pattern = 0;	/// pattern index, snes_planet_colour[patrn][y_based_col]
+
+static void generate_snes_landscape(int rnd_seed)
+{
+	if (rnd_seed != snes_rnd_seed)			// Not most recent snes, advance pattern
 	{
-		colour = snes_planet_colour[y * (sizeof(snes_planet_colour) / sizeof(int)) / LAND_Y_MAX];
-		for (x = 0; x <= LAND_X_MAX; x++)
+		snes_rnd_seed = rnd_seed;			// store seed as hash
+		snes_pattern = (snes_pattern + 1) % NUM_SNES_PATTERNS;
+	}
+
+	/// Generate snes pattern ? (assign landscape[][] a colour from snes_planet_colour)
+	for (int y = 0; y <= LAND_Y_MAX; y++)
+	{
+		int colour = snes_planet_colour[snes_pattern][y * (sizeof(snes_planet_colour[0]) / sizeof(int)) / LAND_Y_MAX];
+		for (int x = 0; x <= LAND_X_MAX; x++)
 		{
 			landscape[x][y] = colour;
 		}
 	}	
 }
+#pragma endregion
 
-/*
- * Guassian random number generator.
- * Returns a number between -7 and +8 with Gaussian distribution.
- */
+#pragma region fractal landscape
+/// RNG with guassian random number generator, returns a number between -7 and +8
 static int grand(void)
 {
 	int i;
@@ -394,9 +417,6 @@ static int grand(void)
 	return r;
 }
 
-/*
- * Calculate the midpoint between two given points.
- */
 static int calc_midpoint(int sx, int sy, int ex, int ey)
 {
 	int a,b,n;
@@ -412,10 +432,6 @@ static int calc_midpoint(int sx, int sy, int ex, int ey)
 	
 	return n;
 } 
-
-/*
- * Calculate a square on the midpoint map.
- */
 static void midpoint_square(int tx, int ty, int w)
 {
 	int mx,my;
@@ -443,10 +459,7 @@ static void midpoint_square(int tx, int ty, int w)
 	midpoint_square(mx,my,d);
 }
 
-/*
- * Generate a fractal landscape.
- * Uses midpoint displacement method.
- */
+///Fractal landscape, with docked_planet as seed, midpoint displacement method
 static void generate_fractal_landscape(int rnd_seed)
 {
 	int x,y,d,h;
@@ -483,32 +496,25 @@ static void generate_fractal_landscape(int rnd_seed)
 
 	set_rand_seed(old_seed);
 }
+#pragma endregion
 
 void generate_landscape(int rnd_seed)
 {
 	switch (planet_render_style)
 	{
-		case 0:		// Wireframe: no initialisation required
-			break;
-		
+		case 0:		// Wireframe/solid green: no initialisation required
 		case 1:
-			// TODO: generate_green_landscape();
 			break;
-		
 		case 2:
-			// TODO: randomise landscape
-			generate_snes_landscape();
+			generate_snes_landscape(rnd_seed);
 			break;
-		
 		case 3:
 			generate_fractal_landscape(rnd_seed);
 			break;
 	}
 }
- 
-/*
- * Draw a line of the planet with appropriate rotation.
- */
+
+/// Draw a line of the planet with appropriate rotation
 static void render_planet_line(int xo, int yo, int x, int y, int radius, int vx, int vy)
 {
 	int lx, ly;
@@ -548,10 +554,7 @@ static void render_planet_line(int xo, int yo, int x, int y, int radius, int vx,
 		ry += vy;
 	}
 }
-
-/*
- * Draw a solid planet.  Based on Doros circle drawing alogorithm.
- */
+/// Draw a solid planet.  Based on Doros circle drawing alogorithm
 static void render_planet(int xo, int yo, int radius, struct vector *vec)
 {
 	int x,y;
@@ -586,24 +589,13 @@ static void render_planet(int xo, int yo, int radius, struct vector *vec)
 	}
 }
 
-
-/*
- * Draw a wireframe planet.
- * At the moment we just draw a circle.
- * Need to add in the two arcs that the original Elite had.
- */
+/// TODO: wireframe planet: add two arcs from original Elite
 static void draw_wireframe_planet(int xo, int yo, int radius, struct vector *vec)
 {
 	gfx_draw_circle(xo, yo, radius, GFX_COL_WHITE);
 }
 
-/*
- * Draw a planet.
- * We can currently do three different types of planet...
- * - Wireframe.
- * - Fractal landscape.
- * - SNES Elite style.
- */
+
 static void draw_planet(struct univ_object *planet)
 {
 	int x,y;
@@ -641,7 +633,7 @@ static void draw_planet(struct univ_object *planet)
 			gfx_draw_filled_circle(x, y, radius, GFX_COL_GREEN_1);
 			break;
 
-		case 2:
+		case 2:		/// Fractal/snes landscape was generated on exit hyperspace or launch
 		case 3:
 			render_planet(x, y, radius, planet->rotmat);
 			break;
@@ -924,10 +916,7 @@ static void draw_explosion(struct univ_object *univ)
 	set_rand_seed(old_seed);
 }
 
-/*
- * Draws an object in the universe.
- * (Ship, Planet, Sun etc).
- */
+/// Draw any? object in the universe (ship, planet, sun etc)
 void draw_ship(struct univ_object *ship)
 {
 

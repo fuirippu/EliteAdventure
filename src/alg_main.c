@@ -468,8 +468,9 @@ static void arrow_right(void)
 			break;
 
 		case SCR_SETTINGS:
-			select_right_setting();
-			return;						// don't process as flight key
+			select_right_setting();		// fall through...
+		case SCR_OPTIONS:
+			return;						// ...don't roll (settings and options = paused)
 	}
 	if (!docked)
 	{
@@ -498,8 +499,9 @@ static void arrow_left(void)
 			break;
 
 		case SCR_SETTINGS:
-			select_left_setting();
-			return;						// don't process as flight key
+			select_left_setting();		// fall through...
+		case SCR_OPTIONS:
+			return;						// ...don't roll (settings and options = paused)
 	}
 	if (!docked)
 	{
@@ -533,11 +535,11 @@ static void arrow_up(void)
 
 		case SCR_OPTIONS:
 			select_previous_option();
-			return;						// don't process as flight key
+			return;						// don't pitch (options = paused)
 
 		case SCR_SETTINGS:
 			select_up_setting();
-			return;						// don't process as flight key
+			return;						// don't pitch (settings = paused)
 	}
 	if (!docked)
 	{
@@ -570,11 +572,11 @@ static void arrow_down(void)
 
 		case SCR_OPTIONS:
 			select_next_option();
-			return;						// don't process as flight key
+			return;						// don't pitch (options = paused)
 
 		case SCR_SETTINGS:
 			select_down_setting();
-			return;						// don't process as flight key
+			return;						// don't pitch (settings = paused)
 	}
 	if (!docked)
 	{
@@ -866,6 +868,7 @@ static void handle_flight_keys(void)
 	
 	kbd_poll_keyboard();
 
+	/// Except for obc refresh command, joystick handling simply sets kbd flags
 	if (have_joystick)
 	{	
 		poll_joystick();	
@@ -911,8 +914,13 @@ static void handle_flight_keys(void)
 		/// Bonus controls for x360
 		if (x360_controller == 1)
 		{
-			if (joy[0].button[7].b)					/// Options menu on start button
-				kbd_F11_pressed = 1;
+			if (joy[0].button[7].b)					/// Start button - options menu/resume
+			{
+				if (game_paused)
+					kbd_resume_pressed = 1;
+				else
+					kbd_F11_pressed = 1;
+			}
 
 			if (docked)
 			{
@@ -935,142 +943,120 @@ static void handle_flight_keys(void)
 				if (joy[0].stick[1].axis[0].d2)
 					kbd_F4_pressed = 1;
 
-				if (joy[0].button[5].b)
+				if (joy[0].button[5].b)				/// R bumper to refresh obc
 					obc_refresh();
 			}
 		}
 	}
-
 	
+	/// If paused, return early: don't process any keys except resume (start button)
 	if (game_paused)
 	{
 		if (kbd_resume_pressed)
 			game_paused = 0;
 		return;
 	}
-		
+
 	if (kbd_F1_pressed)
 	{
 		find_input = 0;
 		
 		if (docked)
 			launch_player();
-		else
+		else if (current_screen != SCR_FRONT_VIEW)
 		{
-			if (current_screen != SCR_FRONT_VIEW)
-			{
-				current_screen = SCR_FRONT_VIEW;
-				flip_stars();
-			}
+			current_screen = SCR_FRONT_VIEW;
+			flip_stars();
 		}
 	}
-
-	if (kbd_F2_pressed)
+	else if (kbd_F2_pressed)
 	{
 		find_input = 0;
 		
-		if (!docked)
+		if ((!docked) && (current_screen != SCR_REAR_VIEW))
 		{
-			if (current_screen != SCR_REAR_VIEW)
-			{
-				current_screen = SCR_REAR_VIEW;
-				flip_stars();
-			}
+			current_screen = SCR_REAR_VIEW;
+			flip_stars();
 		}
 	}
-
-	if (kbd_F3_pressed)
+	else if (kbd_F3_pressed)
 	{
 		find_input = 0;
 		
-		if (!docked)
+		if ((!docked) && (current_screen != SCR_LEFT_VIEW))
 		{
-			if (current_screen != SCR_LEFT_VIEW)
-			{
-				current_screen = SCR_LEFT_VIEW;
-				flip_stars();
-			}
+			current_screen = SCR_LEFT_VIEW;
+			flip_stars();
 		}
 	}
-
-	if (kbd_F4_pressed)
+	else if (kbd_F4_pressed)
 	{
 		find_input = 0;
 		
 		if (docked)
 			equip_ship();
-		else
+		else if (current_screen != SCR_RIGHT_VIEW)
 		{
-			if (current_screen != SCR_RIGHT_VIEW)
-			{
-				current_screen = SCR_RIGHT_VIEW;
-				flip_stars();
-			}
+			current_screen = SCR_RIGHT_VIEW;
+			flip_stars();
 		}
 	}
-
-	
-	if (kbd_F5_pressed)
+	else if (kbd_F5_pressed)
 	{
 		find_input = 0;
 		old_cross_x = -1;
 		display_galactic_chart();
 	}
-
-	if (kbd_F6_pressed)
+	else if (kbd_F6_pressed)
 	{
 		find_input = 0;
 		old_cross_x = -1;
 		display_short_range_chart();
 	}
-
-	if (kbd_F7_pressed)
+	else if (kbd_F7_pressed)
 	{
 		find_input = 0;
 		display_data_on_planet();
 	}
-
-	if (kbd_F8_pressed && (!witchspace))
+	else if (kbd_F8_pressed && (!witchspace))
 	{
 		find_input = 0;
 		display_market_prices();
 	}	
-
-	if (kbd_F9_pressed)
+	else if (kbd_F9_pressed)
 	{
 		find_input = 0;
 		display_commander_status();
 	}
-
-	if (kbd_F10_pressed)
+	else if (kbd_F10_pressed)
 	{
 		find_input = 0;
 		display_inventory();
 	}
-	
-	if (kbd_F11_pressed)
+	else if (kbd_F11_pressed)
 	{
 		find_input = 0;
 		display_options();
 	}
 
+	/// On pause screens (options, settings), direction key handlers only affect menu
+	/// selection. On other screens, flight controls are active if not docked.
 	if (kbd_up_pressed)
 		arrow_up();
-
-	if (kbd_down_pressed)
+	else if (kbd_down_pressed)
 		arrow_down();
-
 	if (kbd_left_pressed)
 		arrow_left();
-
-	if (kbd_right_pressed)
+	else if (kbd_right_pressed)
 		arrow_right();
 
 	if (kbd_enter_pressed)
 		return_pressed();
 
+
 	if ((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
 		return;
+	/// The following on key routines can assume not paused...
 
 	if (find_input)
 	{
@@ -1101,110 +1087,60 @@ static void handle_flight_keys(void)
 	if (kbd_n_pressed)
 		n_pressed();
  
-	if (kbd_fire_pressed)
-	{
-		if ((!docked) && (laser_frames_left == 0))
-			laser_frames_left = fire_laser(laser_type);
-	}
-
-	if (kbd_dock_pressed)
-	{
-		if (!docked && cmdr.docking_computer)
-		{
-			if (instant_dock)
-				engage_instant_dock();
-			else
-				engage_auto_pilot();
-		}
-	}
-
 	if (kbd_d_pressed)
 		d_pressed();
 	
-	if (kbd_ecm_pressed)
-	{
-		if (!docked && cmdr.ecm)
-			activate_ecm(1);
-	}
-
 	if (kbd_find_pressed)
 		f_pressed();
 	
-	if (kbd_hyperspace_pressed && (!docked))
-	{
-		if (kbd_ctrl_pressed)
-			start_galactic_hyperspace();
-		else
-			start_hyperspace();
-	}
-
-	if (kbd_jump_pressed && (!docked) && (!witchspace))
-	{
-		jump_warp();
-	}
-	
-	if (kbd_fire_missile_pressed)
-	{
-		if (!docked)
-			fire_missile();
-	}
-
 	if (kbd_origin_pressed)
 		o_pressed();
 
-	if (kbd_pause_pressed && (	(current_screen == SCR_FRONT_VIEW)	||
-								(current_screen == SCR_REAR_VIEW)	||
-								(current_screen == SCR_LEFT_VIEW)	||
-								(current_screen == SCR_RIGHT_VIEW)	))
+
+	if (docked)
+		return;
+	/// The following routines can assume not docked...
+
+	if (kbd_fire_pressed && (laser_frames_left == 0))
+		laser_frames_left = fire_laser(laser_type);
+
+	if (kbd_target_missile_pressed)
+		arm_missile();
+	else if (kbd_fire_missile_pressed)
+		fire_missile();
+	else if (kbd_unarm_missile_pressed)
+		unarm_missile();
+	else if (kbd_ecm_pressed && cmdr.ecm)
+		activate_ecm(1);
+
+	if ((kbd_inc_speed_pressed) && (flight_speed < myship.max_speed))
+		flight_speed++;
+	else if ((kbd_dec_speed_pressed) && (flight_speed > 1))
+		flight_speed--;
+
+	if (kbd_jump_pressed && (!witchspace))
+		jump_warp();
+	else if (kbd_hyperspace_pressed)
+		(kbd_ctrl_pressed) ? start_galactic_hyperspace() : start_hyperspace();
+
+	if ((kbd_escape_pressed) && (cmdr.escape_pod) && (!witchspace))
+		run_escape_sequence();
+	else if ((kbd_energy_bomb_pressed) && (cmdr.energy_bomb))
+	{
+		detonate_bomb = 1;
+		cmdr.energy_bomb = 0;
+	}
+
+	if (kbd_pause_pressed && ((current_screen == SCR_FRONT_VIEW) ||
+		(current_screen == SCR_REAR_VIEW) ||		/// Only allow pause from flight screens
+		(current_screen == SCR_LEFT_VIEW) ||
+		(current_screen == SCR_RIGHT_VIEW)))
 	{
 		game_paused = 1;
 		gfx_display_centre_text(115, "PAUSED", 140, 0);
 	}
-	
-	if (kbd_target_missile_pressed)
-	{
-		if (!docked)
-			arm_missile();		
-	}
-
-	if (kbd_unarm_missile_pressed)
-	{
-		if (!docked)
-			unarm_missile();
-	}
-	
-	if (kbd_inc_speed_pressed)
-	{
-		if (!docked)
-		{
-			if (flight_speed < myship.max_speed)
-				flight_speed++;
-		}
-	}
-
-	if (kbd_dec_speed_pressed)
-	{
-		if (!docked)
-		{
-			if (flight_speed > 1)
-				flight_speed--;
-		}
-	}
-
-	if (kbd_energy_bomb_pressed)
-	{
-		if ((!docked) && (cmdr.energy_bomb))
-		{
-			detonate_bomb = 1;
-			cmdr.energy_bomb = 0;
-		}
-	}		
-
-	if (kbd_escape_pressed)
-	{
-		if ((!docked) && (cmdr.escape_pod) && (!witchspace))
-			run_escape_sequence();
-	}
+	if (kbd_dock_pressed && cmdr.docking_computer)
+		(instant_dock) ? engage_instant_dock() : engage_auto_pilot();
 }
 
 
@@ -1512,14 +1448,16 @@ int main()
 		old_cross_x = -1;
 		old_cross_y = -1;
 
-		saved_cmdr.front_laser = MILITARY_LASER;
-		saved_cmdr.rear_laser = MINING_LASER;
-		saved_cmdr.left_laser = PULSE_LASER;
-		saved_cmdr.right_laser = BEAM_LASER;
-		cmdr.front_laser = MILITARY_LASER;
-		cmdr.rear_laser = MINING_LASER;
-		cmdr.left_laser = PULSE_LASER;
-		cmdr.right_laser = BEAM_LASER;
+#pragma region Laser testing
+		//saved_cmdr.front_laser = MILITARY_LASER;
+		//saved_cmdr.rear_laser = MINING_LASER;
+		//saved_cmdr.left_laser = PULSE_LASER;
+		//saved_cmdr.right_laser = BEAM_LASER;
+		//cmdr.front_laser = MILITARY_LASER;
+		//cmdr.rear_laser = MINING_LASER;
+		//cmdr.left_laser = PULSE_LASER;
+		//cmdr.right_laser = BEAM_LASER;
+#pragma endregion
 
 		dock_player();
 		display_commander_status();
