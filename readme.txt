@@ -2,6 +2,8 @@
 
     Elite Adventurous - in development
     ==================================
+24/03/16 London
+	alpha release rc_a4
 17/03/16 London
 	prepare alpha release (branch rc_a4)
 14/03/16 London
