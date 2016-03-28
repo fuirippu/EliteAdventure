@@ -64,7 +64,11 @@ int kbd_right_pressed;
 int kbd_enter_pressed;
 int kbd_backspace_pressed;
 int kbd_space_pressed;
+#ifdef _DEBUG
+int kbd_dbg_pressed;
+#endif
 #pragma endregion
+
 
 
 
@@ -122,6 +126,10 @@ void kbd_poll_keyboard(void)
 	kbd_enter_pressed = key[KEY_ENTER];
 	kbd_backspace_pressed = key[KEY_BACKSPACE];
 	kbd_space_pressed = key[KEY_SPACE];
+
+#ifdef _DEBUG
+	kbd_dbg_pressed = key[KEY_B];
+#endif
 
 	while (keypressed())
 		readkey();

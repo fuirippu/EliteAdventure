@@ -68,6 +68,8 @@
 
 #define VERSION_STRING		"Version: a-04"
 #define CREDIT_FUI			"further adventures from fuirippu 2016"
+#define VERSION_MAJOR		0x00
+#define VERSION_MINOR		0x00
 
 /////////////////////////////////////////////////////////////////////////////
 // struct definitions
@@ -98,8 +100,8 @@ struct commander
 	int docking_computer;
 	int galactic_hyperdrive;
 	int escape_pod;
-	int unused4;
-	int unused5;
+	int version_major;
+	int version_minor;
 	int unused6;
 	int unused7;
 	int missiles;
@@ -108,6 +110,8 @@ struct commander
 	int market_rnd;
 	int score;
 	int saved;
+	int vga_scanner;
+	int obc;
 };
 
 struct player_ship
@@ -176,5 +180,11 @@ extern int auto_pilot;
 // Functions
 /////////////////////////////////////////////////////////////////////////////
 void restore_saved_commander(void);
+
+
+#ifdef _DEBUG
+void dbg_dump_universe();
+#endif		// #ifdef _DEBUG
+
 
 #endif		// #ifndef ELITE_H

@@ -383,7 +383,8 @@ static void draw_view_hud_and_lasers()
 {
 	gfx_display_centre_text(32, view_title, 120, GFX_COL_WHITE);
 
-	obc_display();
+	if (cmdr.obc)
+		obc_display();
 
 	if (laser_type != 0)
 		draw_lasers();
@@ -869,6 +870,13 @@ static void handle_flight_keys(void)
     int keyasc;
 	
 	kbd_poll_keyboard();
+
+
+#ifdef _DEBUG
+	if (kbd_dbg_pressed)
+		dbg_dump_universe();
+#endif
+
 
 	/// Except for obc refresh command, joystick handling simply sets kbd flags
 	if (have_joystick)

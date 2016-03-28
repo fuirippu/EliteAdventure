@@ -59,6 +59,9 @@ extern int kbd_right_pressed;
 extern int kbd_enter_pressed;
 extern int kbd_backspace_pressed;
 extern int kbd_space_pressed;
+#ifdef _DEBUG
+extern int kbd_dbg_pressed;
+#endif
 #pragma endregion
 
 

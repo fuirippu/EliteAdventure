@@ -12,13 +12,15 @@
  *
  */
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <Windows.h>
 
 #include "elite.h"
 #include "vector.h"
 #include "planet.h"
 #include "space.h"
 #include "shipdata.h"
+#include "obcomp.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -95,7 +97,9 @@ struct commander saved_cmdr =
 	 0x3A, 0x07, 0x09, 0x08, 0x00},
 	0,											/* Fluctuation		*/
 	0,											/* Score			*/
-	0x80										/* Saved			*/
+	0x80,										/* Saved			*/
+	0,											/* VGA Scanner		*/
+	0											/* OBC				*/
 };
 
 struct commander cmdr;
@@ -158,3 +162,42 @@ void restore_saved_commander(void)
 	set_stock_quantities(cmdr.station_stock);
 }
 
+
+
+#ifdef _DEBUG
+/////////////////////////////////////////////////////////////////////////////
+
+static void dbg_out(const char *str)
+{
+	OutputDebugString(str);
+}
+
+
+void dbg_dump_universe()
+{
+	char buf[128];
+
+	for (int i = 0; i < MAX_UNIV_OBJECTS; i++)
+	{
+		if (universe[i].type != 0)
+		{
+			sprintf(buf, "[%02d] - %s\n", i, obc_ship_name(universe[i].type));
+			dbg_out(buf);
+			sprintf(buf, "      @ <% 11.3f, % 11.3f, % 11.3f> d=%d\n",
+				universe[i].location.x, universe[i].location.y, universe[i].location.z,
+				universe[i].distance);
+			dbg_out(buf);
+		}
+	}
+	dbg_out(" <End_of_universe>\n");
+
+	//sprintf(buf, "Fuel - %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
+	//dbg_out(buf);
+	//sprintf(buf, " Alt - %d (x100km minimum alt)\n", myship.altitude / 4);
+	//dbg_out(buf);
+	sprintf(buf, "Score- %d (mission:%d)\n", cmdr.score, cmdr.mission);
+	dbg_out(buf);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#endif

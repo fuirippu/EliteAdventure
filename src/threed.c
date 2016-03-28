@@ -33,9 +33,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-//static int snes_rnd_seed = 0;	/// rnd_seed used as hash of landscape most recently generated
-//static int snes_pattern = 2;	/// pattern index, snes_planet_colour[patrn][y_based_col]
-
 #define NUM_SNES_PATTERNS	(3)
 /// snes patterns 0-1 produce coloured strata from this array
 static int snes_planet_colour[NUM_SNES_PATTERNS - 1][52] = {
@@ -390,13 +387,6 @@ static void draw_solid_ship(struct univ_object *univ)
 /// Colour map used to generate SNES style planet
 static void generate_snes_landscape(int rnd_seed)
 {
-	//if ((rnd_seed != snes_rnd_seed) || ((cmdr.score & 31) == 0))
-	//{
-	//	/// Advance pattern if not most recent snes, or on the off-chance ;)
-	//	snes_rnd_seed = rnd_seed;					// store seed as hash
-	//	snes_pattern = (snes_pattern + 1) % NUM_SNES_PATTERNS;
-	//}
-
 	int pattern = (rnd_seed % NUM_SNES_PATTERNS);
 
 	if (pattern == 2)

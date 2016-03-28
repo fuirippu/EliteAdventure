@@ -73,7 +73,7 @@ static const char *laser_name[5] = { "Pulse", "Beam", "Military", "Mining", "Cus
 
 #define EQUIP_START_Y	202
 #define EQUIP_START_X	50
-#define EQUIP_MAX_Y		290
+#define EQUIP_MAX_Y		306
 #define EQUIP_WIDTH		200
 #define Y_INC			16
 
@@ -96,7 +96,8 @@ enum equip_types
 {
 	EQ_FUEL, EQ_MISSILE, EQ_CARGO_BAY, EQ_ECM, EQ_FUEL_SCOOPS,
 	EQ_ESCAPE_POD, EQ_ENERGY_BOMB, EQ_ENERGY_UNIT, EQ_DOCK_COMP,
-	EQ_GAL_DRIVE, EQ_PULSE_LASER, EQ_FRONT_PULSE, EQ_REAR_PULSE,
+	EQ_GAL_DRIVE, EQ_VGA_SCANNER, EQ_OBC,
+	EQ_PULSE_LASER, EQ_FRONT_PULSE, EQ_REAR_PULSE,
 	EQ_LEFT_PULSE, EQ_RIGHT_PULSE, EQ_BEAM_LASER, EQ_FRONT_BEAM,
 	EQ_REAR_BEAM, EQ_LEFT_BEAM, EQ_RIGHT_BEAM, EQ_MINING_LASER,
 	EQ_FRONT_MINING, EQ_REAR_MINING, EQ_LEFT_MINING, EQ_RIGHT_MINING,
@@ -104,7 +105,7 @@ enum equip_types
 	EQ_LEFT_MILITARY, EQ_RIGHT_MILITARY
 };
 
-#define NO_OF_EQUIP_ITEMS	34
+#define NO_OF_EQUIP_ITEMS	36
 static struct equip_item
 {
 	int canbuy;
@@ -126,6 +127,8 @@ static struct equip_item
 	{ 0, 0, 1, 8, 15000, " Extra Energy Unit",		EQ_ENERGY_UNIT },
 	{ 0, 0, 1, 9, 15000, " Docking Computers",		EQ_DOCK_COMP },
 	{ 0, 0, 1,10, 50000, " Galactic Hyperdrive",	EQ_GAL_DRIVE },
+	{ 0, 0, 1,10,750000, " VGA Scanner",			EQ_VGA_SCANNER },
+	{ 0, 0, 1,10,750000, " On-board Computer",		EQ_OBC },
 	{ 0, 0, 0, 3,  4000, "+Pulse Laser",			EQ_PULSE_LASER },
 	{ 0, 0, 1, 3,     0, "-Pulse Laser",			EQ_PULSE_LASER },
 	{ 0, 0, 1, 3,  4000, ">Front",					EQ_FRONT_PULSE },
@@ -672,10 +675,31 @@ void display_commander_status(void)
 		}
 	}
 
-	
 	if (cmdr.galactic_hyperdrive)
 	{
 		gfx_display_text(x, y, "Galactic Hyperspace");
+		y += Y_INC;
+		if (y > EQUIP_MAX_Y)
+		{
+			y = EQUIP_START_Y;
+			x += EQUIP_WIDTH;
+		}
+	}
+
+	if (cmdr.vga_scanner)
+	{
+		gfx_display_text(x, y, "VGA Scanner");
+		y += Y_INC;
+		if (y > EQUIP_MAX_Y)
+		{
+			y = EQUIP_START_Y;
+			x += EQUIP_WIDTH;
+		}
+	}
+
+	if (cmdr.obc)
+	{
+		gfx_display_text(x, y, "On-board Computer");
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -915,9 +939,10 @@ void display_inventory(void)
 #pragma endregion
 
 #pragma region Equip ship
-static int equip_present(int type)
+/// Returns true if the player's ship already has the item fitted, else 0
+static int is_equipped(int item)
 {
-	switch (type)
+	switch (item)
 	{
 		case EQ_FUEL:
 			return (cmdr.fuel >= 70);
@@ -948,7 +973,13 @@ static int equip_present(int type)
 			
 		case EQ_GAL_DRIVE:
 			return cmdr.galactic_hyperdrive;
-			
+
+		case EQ_VGA_SCANNER:
+			return cmdr.vga_scanner;
+
+		case EQ_OBC:
+			return cmdr.obc;
+
 		case EQ_FRONT_PULSE:
 			return (cmdr.front_laser == PULSE_LASER);
 		
@@ -1107,7 +1138,7 @@ static void list_equip_prices(void)
 	y = 55;
 	for (i = 0; i < NO_OF_EQUIP_ITEMS; i++)
 	{
-	    equip_stock[i].canbuy = ((equip_present (equip_stock[i].type) == 0) &&
+	    equip_stock[i].canbuy = ((is_equipped(equip_stock[i].type) == 0) &&
 								 (equip_stock[i].price <= cmdr.credits));
 	
 		if (equip_stock[i].show && (tech_level >= equip_stock[i].level))
@@ -1219,7 +1250,17 @@ void buy_equip(void)
 		case EQ_GAL_DRIVE:
 			cmdr.galactic_hyperdrive = 1;
 			break;
-			
+
+
+		case EQ_VGA_SCANNER:
+			cmdr.vga_scanner = 1;
+			break;
+
+		case EQ_OBC:
+			cmdr.obc = 1;
+			break;
+
+
 		case EQ_FRONT_PULSE:
 			cmdr.credits += laser_refund(cmdr.front_laser);
 			cmdr.front_laser = PULSE_LASER;

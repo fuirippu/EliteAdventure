@@ -720,12 +720,9 @@ static void update_scanner(void)
 		//		break;
 		//}
 			
-		int colour;
+		int colour = (universe[i].flags & FLG_HOSTILE) ? GFX_COL_SCAN_RED : GFX_COL_SCAN_YEL;
 		switch (universe[i].type)
 		{
-		case SHIP_ESCAPE_CAPSULE:
-			colour = GFX_COL_PINK_1;
-			break;
 		case SHIP_MISSILE:
 			colour = GFX_COL_MISSILE;	// Blue-grey
 			break;
@@ -736,25 +733,31 @@ static void update_scanner(void)
 		case SHIP_VIPER:				// Blue-cyan
 			colour = GFX_COL_VIPER;
 			break;
-		case SHIP_BOULDER:
-		case SHIP_ASTEROID:
-		case SHIP_ROCK:
-		case SHIP_HERMIT:					// hermit hiding in asteroid !
-			colour = GFX_COL_GREY_2;
-			break;
-		case SHIP_ALLOY:
-		case SHIP_CARGO:
-			colour = GFX_COL_SNES__83;		// Gold (orange)
-			break;
-		case SHIP_THARGOID:
-			colour = GFX_COL_PURPLE_1;		// Mauve
-			break;
-		case SHIP_THARGLET:
-			colour = GFX_COL_PURPLE_2;		// Amethyst
-			break;
-
-		default:
-			colour = (universe[i].flags & FLG_HOSTILE) ? GFX_COL_SCAN_RED : GFX_COL_SCAN_YEL;
+		}
+		if (cmdr.vga_scanner)
+		{
+			switch (universe[i].type)
+			{
+			case SHIP_ESCAPE_CAPSULE:
+				colour = GFX_COL_PINK_SHOCK;
+				break;
+			case SHIP_BOULDER:
+			case SHIP_ASTEROID:
+			case SHIP_ROCK:
+			case SHIP_HERMIT:					// hermit hiding in asteroid !
+				colour = GFX_COL_GREY_2;
+				break;
+			case SHIP_ALLOY:
+			case SHIP_CARGO:
+				colour = GFX_COL_SNES__83;		// Gold (orange)
+				break;
+			case SHIP_THARGOID:
+				colour = GFX_COL_PURPLE_1;		// Mauve
+				break;
+			case SHIP_THARGLET:
+				colour = GFX_COL_PURPLE_2;		// Amethyst
+				break;
+			}
 		}
 
 		gfx_draw_colour_line(x1+2, y2,   x1-3, y2, colour);

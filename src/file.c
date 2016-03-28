@@ -203,8 +203,8 @@ int save_commander_file(char *path)
 	block[44] = cmdr.docking_computer ? 255 : 0;
 	block[45] = cmdr.galactic_hyperdrive ? 255 : 0;
 	block[46] = cmdr.escape_pod ? 255 : 0;
-	block[47] = 0;
-	block[48] = 0;
+	block[47] = VERSION_MAJOR;
+	block[48] = VERSION_MINOR;
 	block[49] = 0;
 	block[50] = 0;
 	block[51] = cmdr.missiles;
@@ -223,7 +223,10 @@ int save_commander_file(char *path)
 	block[74] = chk ^ 0xA9;
 	block[75] = chk;
 	
-	for (i = 76; i < 256; i++)
+	block[76] = cmdr.vga_scanner;
+	block[77] = cmdr.obc;
+
+	for (i = 78; i < 256; i++)
 		block[i] = 0;
 
 	if (fwrite(block, 256, 1, fp) != 1)
@@ -291,6 +294,8 @@ int load_commander_file(char *path)
 	saved_cmdr.docking_computer = block[44];
 	saved_cmdr.galactic_hyperdrive = block[45];
 	saved_cmdr.escape_pod = block[46];
+	saved_cmdr.version_major = block[47];
+	saved_cmdr.version_minor = block[48];
 	saved_cmdr.missiles = block[51];
 	saved_cmdr.legal_status = block[52];
 	
@@ -301,6 +306,9 @@ int load_commander_file(char *path)
 
 	saved_cmdr.score = block[71];
 	saved_cmdr.score += block[72] << 8;
+
+	saved_cmdr.vga_scanner = block[76];
+	saved_cmdr.obc = block[77];
 
 	if (fclose(fp) == EOF)
 		return 1;	
