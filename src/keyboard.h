@@ -43,7 +43,7 @@ extern int kbd_jump_pressed;
 extern int kbd_escape_pressed;
 extern int kbd_dock_pressed;
 extern int kbd_d_pressed;
-extern int kbd_origin_pressed;
+extern int kbd_o_pressed;
 extern int kbd_find_pressed;
 extern int kbd_fire_missile_pressed;
 extern int kbd_target_missile_pressed;

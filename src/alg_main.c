@@ -954,7 +954,7 @@ static void handle_flight_keys(void)
 					kbd_F4_pressed = 1;
 
 				if (joy[0].button[5].b)				/// R bumper to refresh obc
-					obc_refresh();
+					kbd_o_pressed = 1;
 			}
 		}
 	}
@@ -1103,7 +1103,7 @@ static void handle_flight_keys(void)
 	if (kbd_find_pressed)
 		f_pressed();
 	
-	if (kbd_origin_pressed)
+	if (kbd_o_pressed)
 		o_pressed();
 
 
@@ -1141,16 +1141,24 @@ static void handle_flight_keys(void)
 		cmdr.energy_bomb = 0;
 	}
 
-	if (kbd_pause_pressed && ((current_screen == SCR_FRONT_VIEW) ||
-		(current_screen == SCR_REAR_VIEW) ||		/// Only allow pause from flight screens
-		(current_screen == SCR_LEFT_VIEW) ||
-		(current_screen == SCR_RIGHT_VIEW)))
+	if (kbd_dock_pressed && cmdr.docking_computer)
+		(instant_dock) ? engage_instant_dock() : engage_auto_pilot();
+
+
+	if ((current_screen != SCR_FRONT_VIEW) &&
+		(current_screen != SCR_REAR_VIEW) &&
+		(current_screen != SCR_LEFT_VIEW) &&
+		(current_screen != SCR_RIGHT_VIEW))
+		return;
+	/// The following routines can assume the key is pressed on a flight screen...
+
+	if (kbd_pause_pressed)
 	{
 		game_paused = 1;
 		gfx_display_centre_text(115, "PAUSED", 140, 0);
 	}
-	if (kbd_dock_pressed && cmdr.docking_computer)
-		(instant_dock) ? engage_instant_dock() : engage_auto_pilot();
+	if (kbd_o_pressed)
+		obc_refresh();
 }
 
 

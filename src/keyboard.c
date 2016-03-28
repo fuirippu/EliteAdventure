@@ -48,7 +48,7 @@ int kbd_jump_pressed;
 int kbd_escape_pressed;
 int kbd_dock_pressed;
 int kbd_d_pressed;
-int kbd_origin_pressed;
+int kbd_o_pressed;
 int kbd_find_pressed;
 int kbd_fire_missile_pressed;
 int kbd_target_missile_pressed;
@@ -105,7 +105,7 @@ void kbd_poll_keyboard(void)
 
     kbd_dock_pressed = key[KEY_C];
 	kbd_d_pressed = key[KEY_D];
-	kbd_origin_pressed = key[KEY_O];
+	kbd_o_pressed = key[KEY_O];
 	kbd_find_pressed = key[KEY_F];
 
 	kbd_fire_missile_pressed = key[KEY_M];
