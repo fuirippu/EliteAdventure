@@ -77,6 +77,17 @@ static const char *ship_names[] = {
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
+void obc_clear()
+{
+	for (int i = 0; i < NUM_MESSAGES; ++i)
+	{
+		messages[i][0] = 0;
+		colours[i] = GFX_COL_BLACK;
+	}
+	last_message = -1;
+	display_countdown = 0;
+}
+
 void obc_message(const char *msg, int col)
 {
 	int n = strlen(msg);
