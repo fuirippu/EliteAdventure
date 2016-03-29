@@ -158,7 +158,7 @@ static int checksum(unsigned char *block)
 	return acc;
 }
 
-int save_commander_file(char *path)
+int save_commander_file(const char *path)
 {
 	FILE *fp;
 	unsigned char block[256];
@@ -238,14 +238,13 @@ int save_commander_file(char *path)
 	return 0;
 }
 
-int load_commander_file(char *path)
+int load_commander_file(const char *path)
 {
-	FILE *fp;
 	unsigned char block[256];
 	int i;
 	int chk;
 	
-	fp = fopen(path, "rb");
+	FILE *fp = fopen(path, "rb");
 	if (fp == NULL)
 		return 1;
 

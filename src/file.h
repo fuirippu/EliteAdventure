@@ -23,8 +23,8 @@
 int write_config_file();
 int read_config_file();
 
-int save_commander_file(char *path);
-int load_commander_file(char *path);
+int save_commander_file(const char *path);
+int load_commander_file(const char *path);
 
 
 #endif		// #ifndef FILE_H

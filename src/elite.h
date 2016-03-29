@@ -66,7 +66,7 @@
 #define FLG_POLICE			(8192)
 
 
-#define VERSION_STRING		"Version: a-04"
+#define VERSION_STRING		"Version: alpha-4"
 #define CREDIT_FUI			"further adventures from fuirippu 2016"
 #define VERSION_MAJOR		0x00
 #define VERSION_MINOR		0x00
@@ -184,6 +184,7 @@ void restore_saved_commander(void);
 
 #ifdef _DEBUG
 void dbg_dump_universe();
+void dbg_out(const char *str);
 #endif		// #ifdef _DEBUG
 
 

@@ -1172,7 +1172,7 @@ static void set_commander_name(char *path)
 
 	for (i = 0; i < 31; i++)
 	{
-		if (!isalnum(*fname))
+		if (!isalnum(*fname) || isdigit(*fname))
 			break;
 		
 		*cname++ = toupper(*fname++);

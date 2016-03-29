@@ -1,7 +1,6 @@
-
-
-    Elite Adventurous - in development
-    ==================================
+   ======================================
+    _Elite_Adventurous_  version:alpha-4		29/03/16
+   ======================================
 24/03/16 London
 	alpha release rc_a4
 17/03/16 London
@@ -9,27 +8,23 @@
 14/03/16 London
 	dx branch for directx fix (win8.1)
 	
-
  +------------------------------------------------+
  | based on Elite - The New Kind                  |
  |  by Christian Pinder <christian@newkind.co.uk> |
  |                      http://www.newkind.co.uk  |
  +------------------------------------------------+
 
-
   Contents
   --------
     allegro - source and VS2015 build of Allegro
     assets  - sound and graphics
     config  - configuration files
+    docs    - documentation
     src     - source and project files
-
 
  +---------------------------------------------------
  | The following text is the original readme.txt
  | file from the newkind repository...
-
-
 
 Elite - The New Kind   Release 1.0
 --------------------   -----------

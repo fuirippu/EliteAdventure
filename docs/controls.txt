@@ -1,0 +1,68 @@
+   +===================+
+   | Elite Adventurous |	alpha-4
+   +===================+
+--------------------------
+Keyboard/Joystick Controls (x360 controller recommended)
+--------------------------
+F1  - Launch when docked, Front View when in flight			} (R Click to Launch on x360)
+F2  - Rear View												}
+F3  - Left View												} D-pad Change View on x360
+F4  - Right View when in flight, Equip Ship when docked		}
+        Use Up and Down to select an item, Return/button-0 to buy
+
+F5  - Galactic Chart
+F6  - Short Range Chart
+F7  - Planet Info
+
+F8  - Stock Market (only when docked)
+        Use Up and Down to select an item, Right to buy and Left to sell
+F9  - Status
+F10 - Inventory
+
+F11 - Options (pauses the game, press F1-F10 to resume)
+        Use Up and Down to select an item, Return/button-0 to buy
+------------------
+In-flight Controls
+------------------
+    S - Dive						}
+    X - Climb						}
+    < - Roll Left					} Arrow Keys/Joystick
+    > - Roll Right					}
+
+	/ - Slow Down					}
+SPACE - Speed Up					} Joystick buttons 1 and 2
+
+    A - Fire Lasers					} Joystick button 0 (L Bumper on x360)
+
+ J  - Warp Jump						} Y on x360
+ C  - Docking Computer
+ D  - De-activate Docking Computer
+ H  - Hyperspace, hold CTRL for Galactic Hyperspace		} R Click on x360
+
+ T  - Target Missile
+ M  - Fire Missile
+ U  - Un-target Missile
+TAB - Energy Bomb
+
+ E  - Active ECM
+ESC - Escape Capsule
+
+ P  - Pause
+ R  - Resume (from Pause, not from Options)
+
+ O  - Display On-board Computer		} R Bumper on x360
+--------------
+Chart Controls
+--------------
+D - Select a planet and show distance
+F - Find planet by name
+O - Return cursor to current planet
+
+
+ +------------------------------------------------+
+ | based on Elite - The New Kind                  |
+ |  by Christian Pinder <christian@newkind.co.uk> |
+ |                      http://www.newkind.co.uk  |
+ +------------------------------------------------+----------------+
+                                                  | fuirippu 03/16 |
+												  +----------------+

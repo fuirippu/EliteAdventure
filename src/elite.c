@@ -167,7 +167,7 @@ void restore_saved_commander(void)
 #ifdef _DEBUG
 /////////////////////////////////////////////////////////////////////////////
 
-static void dbg_out(const char *str)
+void dbg_out(const char *str)
 {
 	OutputDebugString(str);
 }
@@ -195,7 +195,11 @@ void dbg_dump_universe()
 	//dbg_out(buf);
 	//sprintf(buf, " Alt - %d (x100km minimum alt)\n", myship.altitude / 4);
 	//dbg_out(buf);
-	sprintf(buf, "Score- %d (mission:%d)\n", cmdr.score, cmdr.mission);
+	sprintf(buf, "Cmdr %s, %d.%d Cr\n", cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10));
+	dbg_out(buf);
+	sprintf(buf, "     score = %d (mission: %d)\n", cmdr.score, cmdr.mission);
+	dbg_out(buf);
+	sprintf(buf, "  NRG unit = %d\n", cmdr.energy_unit);
 	dbg_out(buf);
 }
 

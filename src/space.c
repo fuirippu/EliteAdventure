@@ -1249,7 +1249,9 @@ void countdown_hyperspace(void)
 
 void jump_warp(void)
 {
-	char buf[64];
+	if (flight_speed < myship.max_speed)
+		return;
+
 	int min_d = INT_MAX;
 	for (int i = 2; i < MAX_UNIV_OBJECTS; i++)
 	{
@@ -1263,21 +1265,27 @@ void jump_warp(void)
 				min_d = universe[i].distance;
 		}
 	}
+	char buf[64];
 	if (min_d < INT_MAX)
 	{
-		sprintf(buf, " .u  [-] d=%d", min_d);
+		if (min_d > 20000)
+			sprintf(buf, " .u[%d]", min_d);
+		else
+			strcpy(buf, " .u[--]");
 		info_message(buf, GFX_COL_SNES_167, 2);
 		return;
 	}
 
 	if (universe[0].distance < 75001)
 	{
-		info_message(".mLock - (planet)", GFX_COL_SNES_167, 2);
+		sprintf(buf, ".mLock(plnt) %d", universe[0].distance);
+		info_message(buf, GFX_COL_SNES_167, 2);
 		return;
 	}
 	if (universe[1].distance < 75001)
 	{
-		info_message(".mLock - (sun)", GFX_COL_SNES_167, 2);
+		sprintf(buf, ".mLock(star) %d", universe[1].distance);
+		info_message(buf, GFX_COL_SNES_167, 2);
 		return;
 	}
 
