@@ -29,6 +29,7 @@
 
 #include <allegro.h>
 
+#include "gamelib.h"
 #include "gfx.h"
 #include "elite.h"
 #include "file.h"
@@ -103,10 +104,8 @@ int gfx_graphics_startup_1(void)
 #endif
 
 	if (rv != 0)
-	{
-		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-		allegro_message("Unable to set graphics mode.");
-	}
+		gmlbBasicError("Unable to set graphics mode.");
+
 	return rv;
 }
 	
@@ -118,8 +117,7 @@ int gfx_graphics_startup_2(void)
 	scanner_image = load_bitmap(scanner_filename, the_palette);
 	if (!scanner_image)
 	{
-		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-		allegro_message("Error scanner bitmap");
+		gmlbBasicError("Error scanner bitmap");
 		return -1;
 	}
 

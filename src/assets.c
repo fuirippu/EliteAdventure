@@ -3,7 +3,8 @@
  */
 
 #include <stdio.h>
-#include <allegro.h>
+//#include <allegro.h>
+#include "gamelib.h"
 
 #include "assets.h"
 
@@ -51,23 +52,21 @@ static const char *font_extnsn = ".pcx";
 // Functions
 /////////////////////////////////////////////////////////////////////////////
 
-static int ass_load_bitmaps(int directx)
+static int ass_load_bitmaps()
 {
 	char buf[128];
 
 	for (int i = 0; i < NUM_BITMAPS; ++i)
 	{
 		sprintf(buf, "%s%s%s%s", assetDir, rawDataDir, bmp_files[i], bmp_extnsn);
-		ass_bitmaps[i] = load_bitmap(buf, NULL);
-
-		if (ass_bitmaps[i] == NULL)
+		if (gmlbGraphicsLoadBitmap(buf, &ass_bitmaps[i]) != 0)
 		{
-			set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-			allegro_message("Can't load %s", buf);
+			char msg[256];
+			sprintf(msg, "Can't load %s", buf);
+			gmlbBasicError(msg);
 			return -1;
 		}
 	}
-
 	return 0;
 }
 
@@ -78,16 +77,14 @@ static int ass_load_midis()
 	for (int i = 0; i < NUM_MIDIS; ++i)
 	{
 		sprintf(buf, "%s%s%s%s", assetDir, rawDataDir, midi_files[i], midi_extnsn);
-		ass_midis[i] = load_midi(buf);
-
-		if (ass_midis[i] == NULL)
+		if (gmlbSoundLoadMidi(buf, &ass_midis[i]) != 0)
 		{
-			set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-			allegro_message("Can't load %s", buf);
+			char msg[256];
+			sprintf(msg, "Can't load %s", buf);
+			gmlbBasicError(msg);
 			return -1;
 		}
 	}
-
 	return 0;
 }
 
@@ -98,24 +95,22 @@ static int ass_load_fonts()
 	for (int i = 0; i < NUM_FONTS; ++i)
 	{
 		sprintf(buf, "%s%s%s%s", assetDir, rawDataDir, font_files[i], font_extnsn);
-		ass_fonts[i] = load_font(buf, NULL, NULL);
-
-		if (ass_fonts[i] == NULL)
+		if (gmlbGraphicsLoadFont(buf, &ass_fonts[i]) != 0)
 		{
-			set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-			allegro_message("Can't load %s", buf);
+			char msg[256];
+			sprintf(msg, "Can't load %s", buf);
+			gmlbBasicError(msg);
 			return -1;
 		}
 	}
-
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-int load_assets(int directx)
+int load_assets()
 {
-	if (ass_load_bitmaps(directx) != 0)
+	if (ass_load_bitmaps() != 0)
 		return -1;
 	if (ass_load_midis() != 0)
 		return -2;

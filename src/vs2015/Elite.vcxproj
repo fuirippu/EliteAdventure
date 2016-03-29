@@ -135,6 +135,7 @@
     <ClCompile Include="..\docked.c" />
     <ClCompile Include="..\elite.c" />
     <ClCompile Include="..\file.c" />
+    <ClCompile Include="..\gamelib.c" />
     <ClCompile Include="..\intro.c" />
     <ClCompile Include="..\keyboard.c" />
     <ClCompile Include="..\missions.c" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\docked.h" />
     <ClInclude Include="..\elite.h" />
     <ClInclude Include="..\file.h" />
+    <ClInclude Include="..\gamelib.h" />
     <ClInclude Include="..\gfx.h" />
     <ClInclude Include="..\intro.h" />
     <ClInclude Include="..\keyboard.h" />

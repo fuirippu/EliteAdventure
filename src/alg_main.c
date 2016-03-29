@@ -27,6 +27,7 @@
 #include <stdlib.h>
 
 #include <allegro.h>
+#include "gamelib.h"
 
 #include "gfx.h"
 #include "main.h"
@@ -1419,11 +1420,14 @@ static int system_initialise()
 	/// Read cfg file before loading assets, in case directx is specified
 	if ((rv = read_config_file()) != 0)
 	{
-		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
 		if (rv == -1)
-			allegro_message("Failed to open cfg");
+			gmlbBasicError("Failed to open cfg");
 		else
-			allegro_message("Failed to read cfg\nCheck line %d", rv);
+		{
+			char buf[64];
+			sprintf(buf, "Failed to read cfg\nCheck line %d", rv);
+			gmlbBasicError(buf);
+		}
 	}
 
 	if ((rv = gfx_graphics_startup_1()) != 0)
@@ -1438,8 +1442,9 @@ static int system_initialise()
 
 	if ((rv = snd_sound_startup()) > 0)
 	{
-		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-		allegro_message("Error wav %d", rv);
+		char buf[64];
+		sprintf(buf, "Error wav %d", rv);
+		gmlbBasicError(buf);
 	}
 
 	return 0;

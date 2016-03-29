@@ -87,6 +87,9 @@
     <ClCompile Include="..\assets.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\gamelib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\docked.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\assets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\gamelib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

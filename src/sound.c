@@ -14,7 +14,9 @@
 
 
 #include <stdio.h>
-#include <allegro.h>
+
+ //#include <allegro.h>
+#include "gamelib.h"
 
 #include "sound.h"
 #include "assets.h"
@@ -23,8 +25,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-#define SAMPLE_VOLUME		(128)
-#define MIDI_VOLUME			 (96)
+//#define SAMPLE_VOLUME		(128)
+//#define MIDI_VOLUME			 (96)
 
 static int initialised = 0;
 
@@ -33,7 +35,8 @@ static const char *sampleExt = ".wav";
 #define NUM_SAMPLES 14 
 static struct sound_sample
 {
- 	SAMPLE *sample;
+ 	//SAMPLE *sample;
+	void *sample;
 	char filename[256];
 	int runtime;
 	int timeleft;
@@ -61,10 +64,10 @@ static struct sound_sample
 /////////////////////////////////////////////////////////////////////////////
 int snd_sound_startup()
 {
-	if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".") != 0)
+	int rv = gmlbSoundInit();
+	if (rv != 0)
 	{
-		set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-		allegro_message("Error setup sound");
+		gmlbBasicError("Error setup sound");
 		return -1;
 	}
 
@@ -73,13 +76,17 @@ int snd_sound_startup()
 	{
 		sprintf(buf, "%s%s%s", assetDir, sample_list[i].filename, sampleExt);
 
-		sample_list[i].sample = load_sample(buf);
+		//sample_list[i].sample = load_sample(buf);
 
-		if (sample_list[i].sample == NULL)
+		//if (sample_list[i].sample == NULL)
+		//	return i + 1;
+
+		rv = gmlbSoundLoadSample(buf, &(sample_list[i].sample));
+		if (rv != 0)
 			return i + 1;
 	}
 
-	set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
+	//set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
 	initialised = 1;
 
 	return 0;
@@ -94,8 +101,9 @@ void snd_sound_shutdown(void)
 	{
 		if (sample_list[i].sample != NULL)
 		{
-			destroy_sample(sample_list[i].sample);
-			sample_list[i].sample = NULL;
+			//destroy_sample(sample_list[i].sample);
+			//sample_list[i].sample = NULL;
+			gmlbSoundUnloadSample(&sample_list[i].sample);
 		}
 	}
 }
@@ -109,8 +117,8 @@ void snd_play_sample(int sample_no)
 	if (sample_list[sample_no].timeleft != 0)
 		return;
 
-	sample_list[sample_no].timeleft = sample_list[sample_no].runtime;
-	play_sample(sample_list[sample_no].sample, 255, 128, 1000, FALSE);
+	sample_list[sample_no].timeleft = sample_list[sample_no].runtime;	
+	gmlbSoundPlaySample(sample_list[sample_no].sample);
 }
 
 void snd_play_midi(int midi_no, int repeat)
@@ -121,12 +129,13 @@ void snd_play_midi(int midi_no, int repeat)
 	if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
 		return;
 
-	play_midi(ass_midis[midi_no], repeat);
+	//play_midi(ass_midis[midi_no], repeat);
+	gmlbSoundPlayMidi(ass_midis[midi_no]);
 }
 void snd_stop_midi(void)
 {
-	if (initialised);
-		play_midi(NULL, TRUE);
+	if (initialised)
+		gmlbSoundStopMidi();
 }
 
 

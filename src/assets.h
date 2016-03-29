@@ -39,7 +39,7 @@ extern void *ass_fonts[NUM_FONTS];
 
 /////////////////////////////////////////////////////////////////////////////
 
-int load_assets(int directx);
+int load_assets();
 
 
 #endif		// #ifndef ASSETS_H
