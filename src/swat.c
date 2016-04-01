@@ -167,7 +167,7 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 				sprintf(buf, "d-in[_eRR0+.]");
 				col = GFX_COL_RED;
 			}
-			else if (type != SHIP_MISSILE)
+			else if ((type != SHIP_MISSILE) && (type != SHIP_PLANET) && (type != SHIP_SUN))
 			{
 				sprintf(buf, strNewShipMsg);
 				col = GFX_COL_BAR_ALERT1;
