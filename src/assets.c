@@ -3,14 +3,9 @@
  */
 
 #include <stdio.h>
-//#include <allegro.h>
 #include "gamelib.h"
 
 #include "assets.h"
-
-
-
-//void debug_out(const char *str);		// obcomp.c
 
 
 /////////////////////////////////////////////////////////////////////////////

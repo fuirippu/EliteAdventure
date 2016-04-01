@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 
- //#include <allegro.h>
 #include "gamelib.h"
 
 #include "sound.h"

@@ -26,7 +26,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include <allegro.h>
+//#include <allegro.h>
 #include "gamelib.h"
 
 #include "gfx.h"
@@ -91,7 +91,7 @@ static int finish = 0;              /// flag set to 1 Y is pressed on quit scree
 /////////////////////////////////////////////////////////////////////////////
 static void initialise_game(void)
 {
-	set_rand_seed(time(NULL));
+	set_rand_seed((int)(time(NULL)));
 	current_screen = SCR_INTRO_ONE;
 
 	restore_saved_commander();
@@ -166,23 +166,23 @@ static void draw_cross(int cx, int cy)
 {
 	if (current_screen == SCR_SHORT_RANGE)
 	{
-		gfx_set_clip_region (1, 37, 510, 339);
-		xor_mode (TRUE);
-		gfx_draw_colour_line (cx - 16, cy, cx + 16, cy, GFX_COL_RED);
-		gfx_draw_colour_line (cx, cy - 16, cx, cy + 16, GFX_COL_RED);
-		xor_mode (FALSE);
-		gfx_set_clip_region (1, 1, 510, 383);
+		gfx_set_clip_region(1, 37, 510, 339);
+		gmlbGraphicsSetXorMode(-1);
+		gfx_draw_colour_line(cx - 16, cy, cx + 16, cy, GFX_COL_RED);
+		gfx_draw_colour_line(cx, cy - 16, cx, cy + 16, GFX_COL_RED);
+		gmlbGraphicsSetXorMode(0);
+		gfx_set_clip_region(1, 1, 510, 383);
 		return;
 	}
 	
 	if (current_screen == SCR_GALACTIC_CHART)
 	{
-		gfx_set_clip_region (1, 37, 510, 293);
-		xor_mode (TRUE);
-		gfx_draw_colour_line (cx - 8, cy, cx + 8, cy, GFX_COL_RED);
-		gfx_draw_colour_line (cx, cy - 8, cx, cy + 8, GFX_COL_RED);
-		xor_mode (FALSE);
-		gfx_set_clip_region (1, 1, 510, 383);
+		gfx_set_clip_region(1, 37, 510, 293);
+		gmlbGraphicsSetXorMode(-1);
+		gfx_draw_colour_line(cx - 8, cy, cx + 8, cy, GFX_COL_RED);
+		gfx_draw_colour_line(cx, cy - 8, cx, cy + 8, GFX_COL_RED);
+		gmlbGraphicsSetXorMode(0);
+		gfx_set_clip_region(1, 1, 510, 383);
 	}
 }
 
@@ -881,51 +881,50 @@ static void handle_flight_keys(void)
 
 	/// Except for obc refresh command, joystick handling simply sets kbd flags
 	if (have_joystick)
-	{	
-		poll_joystick();	
+	{
+		gmlbJoystickPoll();
 
-		if (joy[0].stick[0].axis[1].d1)
+		if (joystick.up)
 			kbd_up_pressed = 1;
-		if (joy[0].stick[0].axis[1].d2)
+		if (joystick.down)
 			kbd_down_pressed = 1;
-		if (joy[0].stick[0].axis[0].d1)
+		if (joystick.left)
 			kbd_left_pressed = 1;;
-		if (joy[0].stick[0].axis[0].d2)
+		if (joystick.right)
 			kbd_right_pressed = 1;
 
 		// Respond to buttons
-		if (joy[0].button[1].b)
+		if (joystick.fire1)
 			kbd_inc_speed_pressed = 1;
-		if (joy[0].button[2].b)
+		if (joystick.fire2)
 			kbd_dec_speed_pressed = 1;
 
 		if (current_screen == SCR_QUIT)
 		{
-			if (joy[0].button[0].b)
+			if (joystick.fire0)
 				kbd_y_pressed = 1;
-			if (joy[0].button[1].b)
+			if (joystick.fire1)
 				kbd_n_pressed = 1;
 		}
 		else if ((current_screen == SCR_EQUIP_SHIP) ||
-				 (current_screen == SCR_OPTIONS)	||
-				 (current_screen == SCR_SETTINGS)	)
+				 (current_screen == SCR_OPTIONS) ||
+				 (current_screen == SCR_SETTINGS))
 		{
-			if (joy[0].button[0].b)
+			if (joystick.fire0)
 				kbd_enter_pressed = 1;
 		}
 		else  // in flight
 		{
-			int buttonNumber = 0;					// Button to shoot
-			if (x360_controller == 1)
-				buttonNumber = 4;					// L bumper to shoot
-			if (joy[0].button[buttonNumber].b)
-				kbd_fire_pressed = 1;
+			if (x360_controller)
+				kbd_fire_pressed = joystick.fire4;
+			else
+				kbd_fire_pressed = joystick.fire0;
 		}
 
 		/// Bonus controls for x360
 		if (x360_controller == 1)
 		{
-			if (joy[0].button[7].b)					/// Start button - options menu/resume
+			if (joystick.fire7)					/// Start button - options menu/resume
 			{
 				if (game_paused)
 					kbd_resume_pressed = 1;
@@ -935,26 +934,26 @@ static void handle_flight_keys(void)
 
 			if (docked)
 			{
-				if (joy[0].button[9].b)				/// Launch by clicking right stick
+				if (joystick.fire9)				/// Launch by clicking right stick
 					kbd_F1_pressed = 1;
 			}
 			else // if (!docked)
 			{
-				if (joy[0].button[9].b)				/// Hyper - space by clicking right stick
+				if (joystick.fire9)					/// Hyper - space by clicking right stick
 					kbd_hyperspace_pressed = 1;
-				if (joy[0].button[3].b)				/// Y to jump
+				if (joystick.fire3)					/// Y to jump
 					kbd_jump_pressed = 1;
 
-				if (joy[0].stick[1].axis[1].d1)		/// Switch view in flight with d-pad
+				if (joystick.d_up)		/// Switch view in flight with d-pad
 					kbd_F1_pressed = 1;
-				if (joy[0].stick[1].axis[1].d2)
+				if (joystick.d_down)
 					kbd_F2_pressed = 1;
-				if (joy[0].stick[1].axis[0].d1)
+				if (joystick.d_left)
 					kbd_F3_pressed = 1;
-				if (joy[0].stick[1].axis[0].d2)
+				if (joystick.d_right)
 					kbd_F4_pressed = 1;
 
-				if (joy[0].button[5].b)				/// R bumper to refresh obc
+				if (joystick.fire5)				/// R bumper to refresh obc
 					kbd_o_pressed = 1;
 			}
 		}
@@ -1168,7 +1167,7 @@ static void set_commander_name(char *path)
 	char *fname, *cname;
 	int i;
 	
-	fname = get_filename(path);
+	fname = gmlbFileNameFromPath(path);
 	cname = cmdr.name;
 
 	for (i = 0; i < 31; i++)
@@ -1246,7 +1245,7 @@ void load_commander_screen(void)
 		gfx_display_centre_text(175, "Error Loading Commander!", 140, GFX_COL_GOLD);
 		gfx_display_centre_text(200, "Press any key to continue", 140, GFX_COL_GOLD);
 		gfx_update_screen();
-		readkey();
+		gmlbKeyboardReadKey();
 		return;
 	}
 	
@@ -1261,25 +1260,22 @@ static void joystick_poll_fire_for_space()
 {
 	if (have_joystick)
 	{
-		poll_joystick();
-
-		int buttonNumber = 0;
+		gmlbJoystickPoll();
 		if (x360_controller == 1)
-			buttonNumber = 4;
-
-		if (joy[0].button[buttonNumber].b)
-			kbd_space_pressed = 1;
+			kbd_space_pressed = joystick.fire4;
+		else
+			kbd_space_pressed = joystick.fire0;
 	}
 }
 static void joystick_poll_yes_no()
 {
 	if (have_joystick)
 	{
-		poll_joystick();
+		gmlbJoystickPoll();
 
-		if (joy[0].button[0].b)
+		if (joystick.fire0)
 			kbd_y_pressed = 1;
-		else if (joy[0].button[1].b)
+		if (joystick.fire1)
 			kbd_n_pressed = 1;
 	}
 }
@@ -1288,7 +1284,7 @@ static void run_first_intro_screen(void)
 {
 	current_screen = SCR_INTRO_ONE;
 
-	snd_play_midi(ass_mid_theme, TRUE);
+	snd_play_midi(ass_mid_theme, -1);
 
 	initialise_intro1();
 
@@ -1319,7 +1315,7 @@ static void run_second_intro_screen(void)
 {
 	current_screen = SCR_INTRO_TWO;
 	
-	snd_play_midi(ass_mid_dnube, TRUE);
+	snd_play_midi(ass_mid_dnube, -1);
 		
 	initialise_intro2();
 
@@ -1408,15 +1404,11 @@ void info_message(const char *message, int col, int beep)
 
 static int system_initialise()
 {
-	int rv = allegro_init();
+	int rv = gmlbInit();
 	if (rv != 0)
 		return 0xA5A5A5A5;	// Catastophic failure, no allegro, no error message
 
-	install_keyboard();		// "very unlikely to fail" [Allegro manual]
-	install_timer();		// "very unlikely to fail" [Allegro manual]
-	install_mouse();									// mouse is optional
-	if (install_joystick(JOY_TYPE_AUTODETECT) == 0)
-		have_joystick = (num_joysticks > 0);			// joystick is optional
+	have_joystick = gmlbJoystickInit();
 
 	/// Read cfg file before loading assets, in case directx is specified
 	if ((rv = read_config_file()) != 0)
