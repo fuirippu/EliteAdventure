@@ -190,15 +190,15 @@ void dbg_dump_universe()
 	}
 	dbg_out(" <End_of_universe>\n");
 
-	sprintf(buf, "Fuel - %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
+	sprintf(buf, "Cmdr \"%s\"  %d.%d Cr\n", cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10));
 	dbg_out(buf);
-	sprintf(buf, " Alt - %d (x100km minimum alt)\n", myship.altitude / 4);
+	sprintf(buf, "    Fuel = %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
 	dbg_out(buf);
-	sprintf(buf, "Cmdr %s, %d.%d Cr\n", cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10));
+	sprintf(buf, "     Alt = %d (x100km minimum alt)\n", myship.altitude / 4);
 	dbg_out(buf);
-	sprintf(buf, "     score = %d (mission: %d)\n", cmdr.score, cmdr.mission);
+	sprintf(buf, "   score = 0x%04X [%d] (mission: %d)\n", cmdr.score, cmdr.score, cmdr.mission);
 	dbg_out(buf);
-	sprintf(buf, "  NRG unit = %d\n", cmdr.energy_unit);
+	sprintf(buf, "NRG unit = %d\n", cmdr.energy_unit);
 	dbg_out(buf);
 }
 

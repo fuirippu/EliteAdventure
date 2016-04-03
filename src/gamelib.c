@@ -1,17 +1,21 @@
-#include <stdio.h>
+/// Interface to game library (allegro)
+///
 
+/*
+* The code in this file has not been derived from the original Elite code.
+* Based on code by C.J.Pinder 1999-2001. email: <christian@newkind.co.uk>
+* anti-aliased draw line and circle by T.Harte.
+*/
+
+#include <stdio.h>
 #include <allegro.h>
 
 #include "gamelib.h"
 
 
-/// Interface to game library (allegro)
-
-
 /////////////////////////////////////////////////////////////////////////////
 // Globals
-/////////////////////////////////////////////////////////////////////////////
-/// See individual regions below...
+// See individual regions below...
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -169,14 +173,14 @@ static const int gmlbGfxOffsetX = 144;
 static const int gmlbGfxOffsetY = 44;
 static const int gmlbGfxScale = 2;
 
+
 static volatile int frame_count;
 void frame_timer(void) { frame_count++; }
 END_OF_FUNCTION(frame_timer);
 
 
-/// Allegro set_gfx_mode() must be called before data files can be loaded
-/// The rest of the graphics initialisation is performed in gmlbGraphicsInit2,
-/// called after the assets are loaded.
+/// Allegro set_gfx_mode() must be called before assets can be loaded.
+/// More graphics init is performed in gmlbGraphicsInit2, after loading.
 int gmlbGraphicsInit(int dx)
 {
 	int rv;
@@ -239,8 +243,6 @@ void gmlbGraphicsShutdown()
 {
 	destroy_bitmap(gmlbBmpScanner);
 	destroy_bitmap(gmlbBmpScreen);
-
-	// TODO: destroy assets
 }
 
 int gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap)
@@ -255,6 +257,11 @@ int gmlbBitmapGetWidth(GmlbPBitmap pBitmap)
 {
 	return pBitmap->w;
 }
+void gmlbDestroyBitmap(GmlbPBitmap pBitmap)
+{
+	destroy_bitmap(pBitmap);
+}
+
 int  gmlbGraphicsLoadFont(const char *file, void **ppFont)
 {
 	*ppFont = load_font(file, NULL, NULL);
@@ -262,6 +269,10 @@ int  gmlbGraphicsLoadFont(const char *file, void **ppFont)
 		return 0;
 	else
 		return -1;
+}
+void gmlbDestroyFont(void *pFont)
+{
+	destroy_font(pFont);
 }
 
 void gmlbGraphicsSetXorMode(int i)
@@ -292,17 +303,18 @@ void gmlbReleaseScreen()
 	release_bitmap(gmlbBmpScreen);
 }
 
-void gmlbPlotPixelDx(int x, int y, int col)
+#pragma region Draw primitives
+void gmlbPlotPixelDx(int x, int y, int colour)
 {
-	((long *)gmlbBmpScreen->line[y])[x] = col;
+	((int *)gmlbBmpScreen->line[y])[x] = colour;
 }
-void gmlbPlotPixel(int x, int y, int col)
+void gmlbPlotPixelGdi(int x, int y, int colour)
 {
-	gmlbBmpScreen->line[y][x] = col;
+	gmlbBmpScreen->line[y][x] = colour;
 }
-void gmlbPlotPixelA(int x, int y, int col)
+void gmlbPlotPixelSafe(int x, int y, int colour)
 {
-	putpixel(gmlbBmpScreen, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, col);
+	putpixel(gmlbBmpScreen, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, colour);
 }
 
 void gmlbGraphicsCircleFill(int x, int y, int radius, int colour)
@@ -326,245 +338,6 @@ void gmlbGraphicsLine(int x1, int y1, int x2, int y2, int colour)
 {
 	line(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY, colour);
 }
-
-#pragma region Anti-aliasing
-extern const int *pColours;
-static const int gmlbAABits = 3;
-#define trunc(x) ((x) & ~65535)
-#define frac(x) ((x) & 65535)
-#define invfrac(x) (65535-frac(x))
-/// AALines drawn from xxx_starfield() [stars.c] hang if dx fast pixel plot is used
-/// ToDo: test GDI
-void gmlbGraphicsAALine(int x1, int y1, int x2, int y2, int useDx)
-{
-	fixed grad, xd, yd;
-	fixed xgap, ygap, xend, yend, xf, yf;
-	fixed brightness1, brightness2, swap;
-	
-	int x, y, ix1, ix2, iy1, iy2;
-
-	fixed x1b = itofix(x1);
-	fixed y1b = itofix(y1);
-	fixed x2b = itofix(x2);
-	fixed y2b = itofix(y2);
-
-	x1 = x1b + itofix(gmlbGfxOffsetX);
-	x2 = x2b + itofix(gmlbGfxOffsetX);
-	y1 = y1b + itofix(gmlbGfxOffsetY);
-	y2 = y2b + itofix(gmlbGfxOffsetY);
-	
-	xd = x2 - x1;
-	yd = y2 - y1;
-	
-	if (abs(xd) > abs(yd))
-	{
-		if(x1 > x2)
-		{
-			swap = x1; x1 = x2; x2 = swap;
-			swap = y1; y1 = y2; y2 = swap;
-			xd   = -xd;
-			yd   = -yd;
-		}
-	
-		grad = fdiv(yd, xd);
-	
-		//end point 1
-	
-		xend = trunc(x1 + 32768);
-		yend = y1 + fmul(grad, xend-x1);
-	
-		xgap = invfrac(x1+32768);
-	
-		ix1  = xend >> 16;
-		iy1  = yend >> 16;
-	
-		brightness1 = fmul(invfrac(yend), xgap);
-		brightness2 = fmul(frac(yend), xgap);
-	
-		if (useDx)
-		{
-			////plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
-			////plot_aa_pixel(ix1, iy1 + 1, brightness2 >> (16 - gmlbAABits));
-			//gmlbPlotPixelDx(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			//gmlbPlotPixelDx(ix1, iy1 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix1, iy1 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-		}
-		else
-		{
-			//plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
-			//plot_aa_pixel(ix1, iy1 + 1, brightness2 >> (16 - gmlbAABits));
-			gmlbPlotPixel(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			gmlbPlotPixel(ix1, iy1 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-		}
-
-		yf = yend+grad;
-	
-		//end point 2;
-	
-		xend = trunc(x2 + 32768);
-		yend = y2 + fmul(grad, xend-x2);
-	
-		xgap = invfrac(x2 - 32768);
-	
-		ix2 = xend >> 16;
-		iy2 = yend >> 16;
-	
-		brightness1 = fmul(invfrac(yend), xgap);
-		brightness2 = fmul(frac(yend), xgap);
-
-		if (useDx)
-		{
-			////plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
-			////plot_aa_pixel(ix2, iy2 + 1, brightness2 >> (16 - gmlbAABits));
-			//gmlbPlotPixelDx(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			//gmlbPlotPixelDx(ix2, iy2 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix2, iy2 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-			for (x = ix1 + 1; x <= ix2 - 1; x++)
-			{
-				brightness1 = invfrac(yf);
-				brightness2 = frac(yf);
-
-				////plot_aa_pixel(x, (yf >> 16), brightness1 >> (16 - gmlbAABits));
-				////plot_aa_pixel(x, 1 + (yf >> 16), brightness2 >> (16 - gmlbAABits));
-				//gmlbPlotPixelDx(x, (yf >> 16), pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-				//gmlbPlotPixelDx(x, 1 + (yf >> 16), pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-				putpixel(gmlbBmpScreen, x, (yf >> 16), pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-				putpixel(gmlbBmpScreen, x, 1 + (yf >> 16), pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-				yf += grad;
-			}
-		}
-		else
-		{
-			{
-				//plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
-				//plot_aa_pixel(ix2, iy2 + 1, brightness2 >> (16 - gmlbAABits));
-				gmlbPlotPixel(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-				gmlbPlotPixel(ix2, iy2 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-				for (x = ix1 + 1; x <= ix2 - 1; x++)
-				{
-					brightness1 = invfrac(yf);
-					brightness2 = frac(yf);
-
-					//plot_aa_pixel(x, (yf >> 16), brightness1 >> (16 - gmlbAABits));
-					//plot_aa_pixel(x, 1 + (yf >> 16), brightness2 >> (16 - gmlbAABits));
-					gmlbPlotPixel(x, (yf >> 16), pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-					gmlbPlotPixel(x, 1 + (yf >> 16), pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-					yf += grad;
-				}
-			}
-		}
-	}
-	else
-	{
-		if(y1 > y2)
-		{
-			swap = x1; x1 = x2; x2 = swap;
-			swap = y1; y1 = y2; y2 = swap;
-			xd   = -xd;
-			yd   = -yd;
-		}
-	
-		grad = fdiv(xd, yd);
-	
-		//end point 1
-	
-		yend = trunc(y1 + 32768);
-		xend = x1 + fmul(grad, yend-y1);
-	
-		ygap = invfrac(y1+32768);
-	
-		iy1  = yend >> 16;
-		ix1  = xend >> 16;
-	
-		brightness1 = fmul(invfrac(xend), ygap);
-		brightness2 = fmul(frac(xend), ygap);
-	
-		if (useDx)
-		{
-			////plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
-			////plot_aa_pixel(ix1 + 1, iy1, brightness2 >> (16 - gmlbAABits));
-			//gmlbPlotPixelDx(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			//gmlbPlotPixelDx(ix1 + 1, iy1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix1 + 1, iy1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-		}
-		else
-		{
-			//plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
-			//plot_aa_pixel(ix1 + 1, iy1, brightness2 >> (16 - gmlbAABits));
-			gmlbPlotPixel(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			gmlbPlotPixel(ix1 + 1, iy1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-		}
-
-		xf = xend+grad;
-	
-		//end point 2;
-	
-		yend = trunc(y2 + 32768);
-		xend = x2 + fmul(grad, yend-y2);
-	
-		ygap = invfrac(y2 - 32768);
-	
-		ix2 = xend >> 16;
-		iy2 = yend >> 16;
-	
-		brightness1 = fmul(invfrac(xend), ygap);
-		brightness2 = fmul(frac(xend), ygap);
-	      
-		if (useDx)
-		{
-			////plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
-			////plot_aa_pixel(ix2 + 1, iy2, brightness2 >> (16 - gmlbAABits));
-			//gmlbPlotPixelDx(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			//gmlbPlotPixelDx(ix2 + 1, iy2, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			putpixel(gmlbBmpScreen, ix2 + 1, iy2, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-			for (y = iy1 + 1; y <= iy2 - 1; y++)
-			{
-				brightness1 = invfrac(xf);
-				brightness2 = frac(xf);
-
-				////plot_aa_pixel((xf >> 16), y, brightness1 >> (16 - gmlbAABits));
-				////plot_aa_pixel(1 + (xf >> 16), y, brightness2 >> (16 - gmlbAABits));
-				//gmlbPlotPixelDx((xf >> 16), y, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-				//gmlbPlotPixelDx(1 + (xf >> 16), y, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-				putpixel(gmlbBmpScreen, (xf >> 16), y, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-				putpixel(gmlbBmpScreen, 1 + (xf >> 16), y, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-				xf += grad;
-			}
-		}
-		else
-		{
-			//plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
-			//plot_aa_pixel(ix2 + 1, iy2, brightness2 >> (16 - gmlbAABits));
-			gmlbPlotPixel(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-			gmlbPlotPixel(ix2 + 1, iy2, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-			for (y = iy1 + 1; y <= iy2 - 1; y++)
-			{
-				brightness1 = invfrac(xf);
-				brightness2 = frac(xf);
-
-				//plot_aa_pixel((xf >> 16), y, brightness1 >> (16 - gmlbAABits));
-				//plot_aa_pixel(1 + (xf >> 16), y, brightness2 >> (16 - gmlbAABits));
-				gmlbPlotPixel((xf >> 16), y, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
-				gmlbPlotPixel(1 + (xf >> 16), y, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
-
-				xf += grad;
-			}
-		}
-	}
-}
-#pragma endregion
 
 void gmlbGraphicsTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int colour)
 {
@@ -610,6 +383,213 @@ void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y)
 {
 	draw_sprite(gmlbBmpScreen, sprite, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY);
 }
+#pragma endregion
+
+#pragma region Anti-aliasing
+extern const int *pColours;					// colours.c
+
+#define trunc(x)   ((x)& ~65535)
+#define frac(x)    ((x)& 65535)
+#define invfrac(x) (65535 - frac(x))
+
+static const int gmlbAACol0 = 35;
+static const int gmlbAAAnd  = 7;
+static const int gmlbAABits = 3;
+
+static void gmlbGraphicsAAPixel(int x, int y, int colour)
+{
+	// The parameter colour should range from 0 .. 7. 
+	gmlbPlotPixelSafe(x, y, pColours[colour + gmlbAACol0]);
+
+	/// Fast plots can freeze if circle (draw wire planet)
+	/// or line (xxx_starfield) is drawn outside bitmap.
+	//gmlbPlotPixelDx(x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, pColours[colour + gmlbAACol0]);
+	//gmlbPlotPixelGdi(x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, pColours[colour + gmlbAACol0]);
+}
+
+void gmlbGraphicsAALine(int x1, int y1, int x2, int y2)
+{
+	fixed grad, xgap, ygap, xend, yend, xf, yf;
+	fixed brightness1, brightness2, swap;
+
+	int x, y, ix1, ix2, iy1, iy2;
+
+	x1 = itofix(x1);
+	y1 = itofix(y1);
+	x2 = itofix(x2);
+	y2 = itofix(y2);
+
+	fixed xd = x2 - x1;
+	fixed yd = y2 - y1;
+
+	if (abs(xd) > abs(yd))
+	{
+		if (x1 > x2)
+		{
+			swap = x1; x1 = x2; x2 = swap;
+			swap = y1; y1 = y2; y2 = swap;
+			xd = -xd;
+			yd = -yd;
+		}
+		grad = fdiv(yd, xd);
+
+		// end point 1
+		xend = trunc(x1 + 32768);
+		yend = y1 + fmul(grad, xend - x1);
+
+		xgap = invfrac(x1 + 32768);
+
+		ix1 = xend >> 16;
+		iy1 = yend >> 16;
+
+		brightness1 = fmul(invfrac(yend), xgap);
+		brightness2 = fmul(frac(yend), xgap);
+
+		gmlbGraphicsAAPixel(ix1, iy1, (brightness1 >> (16 - gmlbAABits)));
+		gmlbGraphicsAAPixel(ix1, iy1 + 1, (brightness2 >> (16 - gmlbAABits)));
+
+		yf = yend + grad;
+
+		// end point 2;
+		xend = trunc(x2 + 32768);
+		yend = y2 + fmul(grad, xend - x2);
+
+		xgap = invfrac(x2 - 32768);
+
+		ix2 = xend >> 16;
+		iy2 = yend >> 16;
+
+		brightness1 = fmul(invfrac(yend), xgap);
+		brightness2 = fmul(frac(yend), xgap);
+
+		gmlbGraphicsAAPixel(ix2, iy2, (brightness1 >> (16 - gmlbAABits)));
+		gmlbGraphicsAAPixel(ix2, iy2 + 1, (brightness2 >> (16 - gmlbAABits)));
+
+		for (x = ix1 + 1; x <= ix2 - 1; x++)
+		{
+			brightness1 = invfrac(yf);
+			brightness2 = frac(yf);
+
+			gmlbGraphicsAAPixel(x, (yf >> 16), (brightness1 >> (16 - gmlbAABits)));
+			gmlbGraphicsAAPixel(x, 1 + (yf >> 16), (brightness2 >> (16 - gmlbAABits)));
+
+			yf += grad;
+		}
+	}
+	else
+	{
+		if (y1 > y2)
+		{
+			swap = x1; x1 = x2; x2 = swap;
+			swap = y1; y1 = y2; y2 = swap;
+			xd = -xd;
+			yd = -yd;
+		}
+		grad = fdiv(xd, yd);
+
+		// end point 1
+		yend = trunc(y1 + 32768);
+		xend = x1 + fmul(grad, yend - y1);
+
+		ygap = invfrac(y1 + 32768);
+
+		iy1 = yend >> 16;
+		ix1 = xend >> 16;
+
+		brightness1 = fmul(invfrac(xend), ygap);
+		brightness2 = fmul(frac(xend), ygap);
+
+		gmlbGraphicsAAPixel(ix1, iy1, (brightness1 >> (16 - gmlbAABits)));
+		gmlbGraphicsAAPixel(ix1 + 1, iy1, (brightness2 >> (16 - gmlbAABits)));
+
+		xf = xend + grad;
+
+		// end point 2;
+		yend = trunc(y2 + 32768);
+		xend = x2 + fmul(grad, yend - y2);
+
+		ygap = invfrac(y2 - 32768);
+
+		ix2 = xend >> 16;
+		iy2 = yend >> 16;
+
+		brightness1 = fmul(invfrac(xend), ygap);
+		brightness2 = fmul(frac(xend), ygap);
+
+		gmlbGraphicsAAPixel(ix2, iy2, (brightness1 >> (16 - gmlbAABits)));
+		gmlbGraphicsAAPixel(ix2 + 1, iy2, (brightness2 >> (16 - gmlbAABits)));
+
+		for (y = iy1 + 1; y <= iy2 - 1; y++)
+		{
+			brightness1 = invfrac(xf);
+			brightness2 = frac(xf);
+
+			gmlbGraphicsAAPixel((xf >> 16), y, (brightness1 >> (16 - gmlbAABits)));
+			gmlbGraphicsAAPixel(1 + (xf >> 16), y, (brightness2 >> (16 - gmlbAABits)));
+
+			xf += grad;
+		}
+	}
+}
+
+void gmlbGraphicsAACircle(int cx, int cy, int radius)
+{
+	int r = itofix(radius);
+	r >>= (16 - gmlbAABits);
+
+	int x = r;
+	int s = -r;
+	int y = 0;
+
+	int sx, sy;
+	while (y <= x)
+	{
+		// wide pixels
+		sx = cx + (x >> gmlbAABits); sy = cy + (y >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx + 1, sy, x & gmlbAAAnd);
+
+		sy = cy - (y >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx + 1, sy, x & gmlbAAAnd);
+
+		sx = cx - (x >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx - 1, sy, x & gmlbAAAnd);
+
+		sy = cy + (y >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx - 1, sy, x & gmlbAAAnd);
+
+		// tall pixels
+		sx = cx + (y >> gmlbAABits); sy = cy + (x >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx, sy + 1, x & gmlbAAAnd);
+
+		sy = cy - (x >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx, sy - 1, x & gmlbAAAnd);
+
+		sx = cx - (y >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx, sy - 1, x & gmlbAAAnd);
+
+		sy = cy + (x >> gmlbAABits);
+		gmlbGraphicsAAPixel(sx, sy, gmlbAAAnd - (x & gmlbAAAnd));
+		gmlbGraphicsAAPixel(sx, sy + 1, x & gmlbAAAnd);
+
+		s += gmlbAAAnd + 1 + (y << (gmlbAABits + 1)) + ((1 << (gmlbAABits + 2)) - 2);
+		y += gmlbAAAnd + 1;
+
+		while (s >= 0)
+		{
+			s -= (x << 1) + 2;
+			x--;
+		}
+	}
+}
+#pragma endregion
+
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
@@ -666,6 +646,11 @@ void gmlbSoundPlayMidi(void *pMidi)
 void gmlbSoundStopMidi()
 {
 	play_midi(NULL, TRUE);
+}
+
+void gmlbDestroyMidi(void *pMidi)
+{
+	destroy_midi(pMidi);
 }
 #pragma endregion
 

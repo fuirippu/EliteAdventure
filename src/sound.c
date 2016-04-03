@@ -24,9 +24,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-//#define SAMPLE_VOLUME		(128)
-//#define MIDI_VOLUME			 (96)
-
 static int initialised = 0;
 
 static const char *sampleExt = ".wav";
@@ -34,7 +31,6 @@ static const char *sampleExt = ".wav";
 #define NUM_SAMPLES 14 
 static struct sound_sample
 {
- 	//SAMPLE *sample;
 	void *sample;
 	char filename[256];
 	int runtime;
@@ -75,17 +71,10 @@ int snd_sound_startup()
 	{
 		sprintf(buf, "%s%s%s", assetDir, sample_list[i].filename, sampleExt);
 
-		//sample_list[i].sample = load_sample(buf);
-
-		//if (sample_list[i].sample == NULL)
-		//	return i + 1;
-
 		rv = gmlbSoundLoadSample(buf, &(sample_list[i].sample));
 		if (rv != 0)
 			return i + 1;
 	}
-
-	//set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
 	initialised = 1;
 
 	return 0;
@@ -100,8 +89,6 @@ void snd_sound_shutdown(void)
 	{
 		if (sample_list[i].sample != NULL)
 		{
-			//destroy_sample(sample_list[i].sample);
-			//sample_list[i].sample = NULL;
 			gmlbSoundUnloadSample(&sample_list[i].sample);
 		}
 	}
@@ -128,7 +115,6 @@ void snd_play_midi(int midi_no, int repeat)
 	if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
 		return;
 
-	//play_midi(ass_midis[midi_no], repeat);
 	gmlbSoundPlayMidi(ass_midis[midi_no]);
 }
 void snd_stop_midi(void)

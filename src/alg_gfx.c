@@ -58,115 +58,24 @@ static struct poly_data
 /////////////////////////////////////////////////////////////////////////////
 
 
-/// Draw/plot primitives (px, circ, ln, tri, txt, rect, sprite)
+/// Draw/plot primitives (px, circ, ln, tri, rect, txt, sprite)
 #pragma region Draw/plot primitives
 void gfx_fast_plot_pixel(int x, int y, int colour)
 {
 	if (directx == 1)
 		gmlbPlotPixelDx(x, y, pColours[colour]);
 	else
-		gmlbPlotPixel(x, y, pColours[colour]);
+		gmlbPlotPixelGdi(x, y, pColours[colour]);
 }
-
 void gfx_plot_pixel(int x, int y, int colour)
 {
-	gmlbPlotPixelA(x, y, pColours[colour]);
+	gmlbPlotPixelSafe(x, y, pColours[colour]);
 }
-
-#pragma region Anti-aliasing
-#define AA_BITS 3
-#define AA_AND  7
-
-
-static void plot_aa_pixel(int x, int y, int aa_colour)
-{
-	// The parameter aa_colour should range from 0 .. 7.
-	gfx_fast_plot_pixel(x + GFX_X_OFFSET, y + GFX_Y_OFFSET, aa_colour + GFX_COL_AA_0);
-}
-
-/*
- * Draw anti-aliased wireframe circle.
- * By T.Harte.
- */
-static void gfx_draw_aa_circle(int cx, int cy, int radius)
-{
-	int x,y;
-	int s;
-	int sx, sy;
-
-	cx += GFX_X_OFFSET;
-	cy += GFX_Y_OFFSET;
-
-	radius >>= (16 - AA_BITS);
-
-	x = radius;
-	s = -radius;
-	y = 0;
-
-	while (y <= x)
-	{
-		//wide pixels
-		sx = cx + (x >> AA_BITS); sy = cy + (y >> AA_BITS);
-
-		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx + 1, sy, x & AA_AND);
-
-		sy = cy - (y >> AA_BITS);
-
-		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx + 1, sy, x & AA_AND);
-
-		sx = cx - (x >> AA_BITS);
-
-		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx - 1, sy, x & AA_AND);
-
-		sy = cy + (y >> AA_BITS);
-
-		plot_aa_pixel(sx,     sy, AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx - 1, sy, x & AA_AND);
-
-		//tall pixels
-		sx = cx + (y >> AA_BITS); sy = cy + (x >> AA_BITS);
-
-		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx, sy + 1, x & AA_AND);
-
-		sy = cy - (x >> AA_BITS);
-
-		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx, sy - 1, x & AA_AND);
-
-		sx = cx - (y >> AA_BITS);
-
-		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx, sy - 1, x & AA_AND);
-
-		sy = cy + (x >> AA_BITS);
-
-		plot_aa_pixel(sx, sy,     AA_AND - (x & AA_AND));
-		plot_aa_pixel(sx, sy + 1, x & AA_AND);
-
-		s += AA_AND + 1 + (y << (AA_BITS + 1)) + ((1 << (AA_BITS + 2)) - 2);
-		y += AA_AND + 1;
-
-		while(s >= 0)
-		{
-			s -= (x << 1) + 2;
-			x --;
-		}
-	}
-}
-
-
-#undef AA_BITS
-#undef AA_AND
-#pragma endregion
 
 void gfx_draw_circle(int cx, int cy, int radius, int colour)
 {
 	if (anti_alias_gfx && (colour == GFX_COL_WHITE))
-		gfx_draw_aa_circle(cx, cy, radius);
+		gmlbGraphicsAACircle(cx, cy, radius);
 	else	
 		gmlbGraphicsCircle(cx, cy, radius, pColours[colour]);
 }
@@ -184,7 +93,7 @@ void gfx_draw_colour_line(int x1, int y1, int x2, int y2, int colour)
 	else
 	{
 		if (anti_alias_gfx && (colour == GFX_COL_WHITE))
-			gmlbGraphicsAALine(x1, y1, x2, y2, directx);
+			gmlbGraphicsAALine(x1, y1, x2, y2);
 		else
 			gmlbGraphicsLine(x1, y1, x2, y2, pColours[colour]);
 	}
@@ -407,8 +316,3 @@ void gfx_finish_render(void)
 	};
 }
 
-
-int gfx_request_file(char *title, char *path, char *ext)
-{
-	return (gmlbRequestFile(title, path, ext));
-}

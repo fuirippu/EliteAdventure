@@ -1,24 +1,10 @@
-/*
- * Elite - The New Kind.
- *
- * Reverse engineered from the BBC disk version of Elite.
- * Additional material by C.J.Pinder.
- *
- * The original Elite code is (C) I.Bell & D.Braben 1984.
- * This version re-engineered in C by C.J.Pinder 1999-2001.
- *
- * email: <christian@newkind.co.uk>
- *
- *
- */
-
 /**
  *
  * Elite - The New Kind.
  *
  * The code in this file has not been derived from the original Elite code.
  * Written by C.J.Pinder 1999/2000.
- *
+ *  adapted by fuirippu 2016
  **/
 
 #ifndef GFX_H
@@ -48,6 +34,7 @@
 #ifdef RES_800_600
 
 #define GFX_SCALE		(2)
+
 #define GFX_X_OFFSET	(144)
 #define GFX_Y_OFFSET	(44)
 #define GFX_X_CENTRE	(256)
@@ -78,7 +65,8 @@
 #pragma endregion
 
 
-/// GFX_COL_xxx defines are indices into the software palette pColours [colours.c]
+/// GFX_COL_xxx defines are indices into the software palette, pColours [colours.c]
+/// pColours is set to an array of either dx ARGB values, or GDI palette indices
 #pragma region Colour defines
 #define GFX_COL_BLACK		0
 #define GFX_COL_DARK_RED	1
@@ -220,9 +208,6 @@ void gfx_render_polygon(int num_points, int *point_list, int face_colour, int za
 void gfx_render_line(int x1, int y1, int x2, int y2, int dist, int colour);
 
 void gfx_finish_render(void);
-/////////////////////////////////////////////////////////////////////////////
-
-int gfx_request_file(char *title, char *path, char *ext);
 
 
 #endif		// #ifndef GFX_H

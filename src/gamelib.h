@@ -2,7 +2,7 @@
 #define GAMELIB_H
 
 /////////////////////////////////////////////////////////////////////////////
-/// Interface to to game library (allegro)
+/// Interface to to game library (allegro 4.4.2)
 /////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
@@ -84,16 +84,17 @@ void gmlbJoystickPoll();
 // Graphics
 
 typedef struct BITMAP *GmlbPBitmap;
-// ToDo: typedef for fonts
-
 
 int gmlbGraphicsInit(int dx);
 int gmlbGraphicsInit2(int speedCap);
 void gmlbGraphicsShutdown();
 
 int  gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap);
-int gmlbBitmapGetWidth(GmlbPBitmap pBMP);
+int gmlbBitmapGetWidth(GmlbPBitmap pBitmap);
+void gmlbDestroyBitmap(GmlbPBitmap pBitmap);
+
 int  gmlbGraphicsLoadFont(const char *file, void **ppFont);
+void gmlbDestroyFont(void *pFont);
 
 void gmlbGraphicsSetXorMode(int i);
 void gmlbGraphicsSetClipRegion(int x1, int y1, int x2, int y2);
@@ -102,9 +103,9 @@ void gmlbAcquireScreen();
 void gmlbUpdateScreen();
 void gmlbReleaseScreen();
 
-void gmlbPlotPixelDx(int x, int y, int col);
-void gmlbPlotPixel(int x, int y, int col);
-void gmlbPlotPixelA(int x, int y, int col);
+void gmlbPlotPixelDx(int x, int y, int colour);
+void gmlbPlotPixelGdi(int x, int y, int colour);
+void gmlbPlotPixelSafe(int x, int y, int colour);
 
 void gmlbGraphicsCircleFill(int x, int y, int radius, int colour);
 void gmlbGraphicsCircle(int x, int y, int radius, int colour);
@@ -112,7 +113,9 @@ void gmlbGraphicsCircle(int x, int y, int radius, int colour);
 void gmlbGraphicsHLine(int x1, int x2, int y, int colour);
 void gmlbGraphicsVLine(int y1, int y2, int x, int colour);
 void gmlbGraphicsLine(int x1, int y1, int x2, int y2, int colour);
-void gmlbGraphicsAALine(int x1, int y1, int x2, int y2, int dx);
+
+void gmlbGraphicsAALine(int x1, int y1, int x2, int y2);
+void gmlbGraphicsAACircle(int cx, int cy, int radius);
 
 void gmlbGraphicsTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int colour);
 void gmlbGraphicsRectFill(int x1, int y1, int x2, int y2, int colour);
@@ -137,6 +140,7 @@ int  gmlbSoundPlaySample(void *pSample);
 int  gmlbSoundLoadMidi(const char *file, void **ppMidi);
 void gmlbSoundPlayMidi(void *pMidi);
 void gmlbSoundStopMidi();
+void gmlbDestroyMidi(void *pMidi);
 
 /////////////////////////////////////////////////////////////////////////////
 // Misc

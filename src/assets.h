@@ -41,5 +41,7 @@ extern void *ass_fonts[NUM_FONTS];
 
 int load_assets();
 
+void destroy_assets();
+
 
 #endif		// #ifndef ASSETS_H

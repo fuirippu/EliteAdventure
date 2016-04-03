@@ -1180,9 +1180,6 @@ static void set_commander_name(char *path)
 }
 void save_commander_screen(void)
 {
-	char path[255];
-	int okay;
-	int rv;
 	
 	current_screen = SCR_SAVE_CMDR;
 
@@ -1191,19 +1188,18 @@ void save_commander_screen(void)
 	gfx_draw_line(0, 36, 511, 36);
 	gmlbUpdateScreen();
 	
+	char path[255];
 	strcpy(path, cmdr.name);
 	strcat(path, ".nkc");
 	
-	okay = gfx_request_file("Save Commander", path, "nkc");
-	
-	if (!okay)
+	int clickedOkay = gmlbRequestFile("Save Commander", path, "nkc");
+	if (!clickedOkay)			/// clicked Cancel
 	{
 		display_options();
 		return;
 	}
 
-	rv = save_commander_file(path);
-
+	int rv = save_commander_file(path);
 	if (rv)
 	{
 		gfx_display_centre_text(175, "Error Saving Commander!", 140, GFX_COL_GOLD);
@@ -1219,8 +1215,6 @@ void save_commander_screen(void)
 }
 void load_commander_screen(void)
 {
-	char path[255];
-	int rv;
 
 	gfx_clear_display();
 	gfx_display_centre_text(10, "LOAD COMMANDER", 140, GFX_COL_GOLD);
@@ -1228,15 +1222,13 @@ void load_commander_screen(void)
 	gmlbUpdateScreen();
 	
 	
+	char path[255];
 	strcpy(path, "jameson.nkc");
-	
-	rv = gfx_request_file("Load Commander", path, "nkc");
-
-	if (rv == 0)
+	int clickedOkay = gmlbRequestFile("Load Commander", path, "nkc");
+	if (!clickedOkay)			/// clicked Cancel
 		return;
 
-	rv = load_commander_file(path);
-
+	int rv = load_commander_file(path);
 	if (rv)
 	{
 		saved_cmdr = cmdr;
@@ -1650,6 +1642,7 @@ int elite_main()
 	}
 
 	snd_sound_shutdown();
+	destroy_assets();
 	gmlbGraphicsShutdown();
 	
 	return 0;

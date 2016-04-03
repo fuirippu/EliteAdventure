@@ -114,3 +114,18 @@ int load_assets()
 
 	return 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+void destroy_assets()
+{
+	for (int i = 0; i < NUM_BITMAPS; ++i)
+		gmlbDestroyBitmap(ass_bitmaps[i]);
+
+	for (int i = 0; i < NUM_MIDIS; ++i)
+		gmlbDestroyMidi(ass_midis[i]);
+
+	for (int i = 0; i < NUM_FONTS; ++i)
+		gmlbDestroyFont(ass_fonts[i]);
+}
+
