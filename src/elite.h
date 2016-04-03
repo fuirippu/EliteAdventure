@@ -153,7 +153,6 @@ extern int hoopy_casinos;
 extern int instant_dock;
 extern int speed_cap;
 
-extern const char scanner_filename[256];
 extern const int scanner_cx;
 extern const int scanner_cy;
 extern const int compass_centre_x;

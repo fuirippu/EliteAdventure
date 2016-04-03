@@ -23,6 +23,7 @@
  
 #include "elite.h"
 #include "gfx.h"
+#include "gamelib.h"
 #include "vector.h"
 #include "space.h"
 #include "swat.h"
@@ -217,7 +218,7 @@ static void constrictor_mission_brief(void)
 		gfx_clear_area(310, 50, 510, 180);
 		update_universe();
 		universe[0].location.z = 600;
-		gfx_update_screen();
+		gmlbUpdateScreen();
 		kbd_poll_keyboard();
 	} while (!kbd_space_pressed);
 }	
@@ -240,7 +241,7 @@ static void constrictor_mission_debrief(void)
 
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 
-	gfx_update_screen();
+	gmlbUpdateScreen();
 	
 	do
 	{
@@ -262,7 +263,7 @@ static void thargoid_mission_first_brief(void)
 
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 
-	gfx_update_screen();
+	gmlbUpdateScreen();
 	
 	do
 	{
@@ -287,7 +288,7 @@ static void thargoid_mission_second_brief(void)
 	
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 
-	gfx_update_screen();
+	gmlbUpdateScreen();
 	
 	do
 	{
@@ -313,7 +314,7 @@ static void thargoid_mission_debrief(void)
 
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 
-	gfx_update_screen();
+	gmlbUpdateScreen();
 	
 	do
 	{

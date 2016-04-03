@@ -44,7 +44,6 @@ int hoopy_casinos = 0;
 int speed_cap = 75;
 int instant_dock = 0;
 
-const char scanner_filename[256] = "assets\\scanner.bmp";
 const int scanner_cx = 253;
 const int scanner_cy = 448;
 const int compass_centre_x = 382;
@@ -191,10 +190,10 @@ void dbg_dump_universe()
 	}
 	dbg_out(" <End_of_universe>\n");
 
-	//sprintf(buf, "Fuel - %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
-	//dbg_out(buf);
-	//sprintf(buf, " Alt - %d (x100km minimum alt)\n", myship.altitude / 4);
-	//dbg_out(buf);
+	sprintf(buf, "Fuel - %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
+	dbg_out(buf);
+	sprintf(buf, " Alt - %d (x100km minimum alt)\n", myship.altitude / 4);
+	dbg_out(buf);
 	sprintf(buf, "Cmdr %s, %d.%d Cr\n", cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10));
 	dbg_out(buf);
 	sprintf(buf, "     score = %d (mission: %d)\n", cmdr.score, cmdr.mission);

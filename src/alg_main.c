@@ -419,7 +419,7 @@ static void display_break_pattern(void)
 			gfx_draw_circle(256, 192, r + 12, break_base_colour + col);
 			col = (col + 3) % 8;
 		}
-		gfx_update_screen();
+		gmlbUpdateScreen();
 		gfx_clear_display();
 	}
 	for (int i = 0; i < numCircles; i++)
@@ -434,7 +434,7 @@ static void display_break_pattern(void)
 			gfx_draw_circle(256, 192, r + 12, break_base_colour + col);
 			col = (col + 3) % 8;
 		}
-		gfx_update_screen();
+		gmlbUpdateScreen();
 		gfx_clear_display();
 	}
 
@@ -442,7 +442,7 @@ static void display_break_pattern(void)
 	//for (i = 0; i < 20; i++)
 	//{
 	//	gfx_draw_circle(256, 192, 30 + i * 15, GFX_COL_WHITE);
-	//	gfx_update_screen();
+	//	gmlbUpdateScreen();
 	//}
 
 	if (docked)
@@ -833,7 +833,7 @@ static void run_escape_sequence(void)
 		gfx_display_centre_text(358, "Escape pod launched - Ship auto-destuct initiated.", 120, GFX_COL_WHITE);
 		
 		update_console();
-		gfx_update_screen();
+		gmlbUpdateScreen();
 	}
 
 	
@@ -858,7 +858,7 @@ static void run_escape_sequence(void)
 		update_starfield();
 		update_universe();
 		update_console();
-		gfx_update_screen();
+		gmlbUpdateScreen();
 	}
 
 	abandon_ship();
@@ -1190,7 +1190,7 @@ void save_commander_screen(void)
 	gfx_clear_display();
 	gfx_display_centre_text(10, "SAVE COMMANDER", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
-	gfx_update_screen();
+	gmlbUpdateScreen();
 	
 	strcpy(path, cmdr.name);
 	strcat(path, ".nkc");
@@ -1226,7 +1226,7 @@ void load_commander_screen(void)
 	gfx_clear_display();
 	gfx_display_centre_text(10, "LOAD COMMANDER", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
-	gfx_update_screen();
+	gmlbUpdateScreen();
 	
 	
 	strcpy(path, "jameson.nkc");
@@ -1243,7 +1243,7 @@ void load_commander_screen(void)
 		saved_cmdr = cmdr;
 		gfx_display_centre_text(175, "Error Loading Commander!", 140, GFX_COL_GOLD);
 		gfx_display_centre_text(200, "Press any key to continue", 140, GFX_COL_GOLD);
-		gfx_update_screen();
+		gmlbUpdateScreen();
 		gmlbKeyboardReadKey();
 		return;
 	}
@@ -1261,9 +1261,9 @@ static void joystick_poll_fire_for_space()
 	{
 		gmlbJoystickPoll();
 		if (x360_controller == 1)
-			kbd_space_pressed = joystick.fire4;
+			kbd_space_pressed |= joystick.fire4;
 		else
-			kbd_space_pressed = joystick.fire0;
+			kbd_space_pressed |= joystick.fire0;
 	}
 }
 static void joystick_poll_yes_no()
@@ -1291,7 +1291,7 @@ static void run_first_intro_screen(void)
 	{
 		update_intro1();
 
-		gfx_update_screen();
+		gmlbUpdateScreen();
 
 		kbd_poll_keyboard();
 		joystick_poll_yes_no();
@@ -1326,7 +1326,7 @@ static void run_second_intro_screen(void)
 	{
 		update_intro2();
 
-		gfx_update_screen();
+		gmlbUpdateScreen();
 
 		kbd_poll_keyboard();
 		joystick_poll_fire_for_space();
@@ -1375,7 +1375,7 @@ static void run_game_over_screen()
 		update_starfield();
 		update_universe();
 		gfx_display_centre_text(190, "GAME OVER", 140, GFX_COL_GOLD);
-		gfx_update_screen();
+		gmlbUpdateScreen();
 	}
 }
 
@@ -1422,15 +1422,22 @@ static int system_initialise()
 		}
 	}
 
-	if ((rv = gfx_graphics_startup_1()) != 0)
+	if ((rv = gmlbGraphicsInit(directx)) != 0)
 		return rv;			// Catastrophic failure, no graphics
 
 	/// Allegro bitmaps, fonts and midi are combined in .\assets\elite.dat
 	if ((rv = load_assets(directx)) != 0)
 		return rv;			// Catastrophic failure, no assets
 
-	if ((rv = gfx_graphics_startup_2()) != 0)
+	setColours(directx);
+	if ((rv = gmlbGraphicsInit2(speed_cap)) != 0)
 		return rv;			// Catastrophic failure, no graphics again
+
+	// Draw viewport border
+	gfx_draw_line(0, 0, 0, 384);
+	gfx_draw_line(0, 0, 511, 0);
+	gfx_draw_line(511, 0, 511, 384);
+	gfx_draw_line(0, 384, 511, 384);
 
 	if ((rv = snd_sound_startup()) > 0)
 	{
@@ -1442,7 +1449,7 @@ static int system_initialise()
 	return 0;
 }
 
-int main()
+int elite_main()
 {
 	int rv = system_initialise();
 	if (rv != 0)
@@ -1455,6 +1462,10 @@ int main()
 		dock_player();
 
 		update_console();
+
+		//char buf[80];
+		//sprintf(buf, "sizeof(int)  is %d\nsizeof(long) is %d\n", sizeof(int), sizeof(long));
+		//dbg_out(buf);
 
 		current_screen = SCR_FRONT_VIEW;
 		run_first_intro_screen();
@@ -1480,7 +1491,7 @@ int main()
 		while (!game_over)
 		{
 			snd_update_sound();
-			gfx_update_screen();
+			gmlbUpdateScreen();
 			gfx_set_clip_region(1, 1, 510, 383);
 
 			rolling = 0;
@@ -1518,7 +1529,7 @@ int main()
 
 			if (!docked)
 			{
-				gfx_acquire_screen();
+				gmlbAcquireScreen();
 					
 				view_title= NULL;
 				laser_type = 0;
@@ -1579,7 +1590,7 @@ int main()
 					}
 				}
 
-				gfx_release_screen();
+				gmlbReleaseScreen();
 			
 				mcount--;
 				if (mcount < 0)
@@ -1640,9 +1651,8 @@ int main()
 	}
 
 	snd_sound_shutdown();
-	gfx_graphics_shutdown();
+	gmlbGraphicsShutdown();
 	
 	return 0;
 }
 
-END_OF_MAIN();

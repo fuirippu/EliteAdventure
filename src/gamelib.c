@@ -13,31 +13,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
+/// See individual regions below...
 
 
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
-void gmlbBasicError(const char *str)
-{
-	set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-	allegro_message(str);
-}
 
-int gmlbInit()
-{
-	int rv = allegro_init();
-	if (rv == 0)
-	{
-		install_keyboard();		// "very unlikely to fail" [Allegro manual]
-		install_timer();		// "very unlikely to fail" [Allegro manual]
-		install_mouse();									// mouse is optional
-	}
-	return rv;
-}
-/////////////////////////////////////////////////////////////////////////////
-
-#pragma region Keyboard
+#pragma region Input
 void gmlbKeyboardPoll()
 {
 	poll_keyboard();
@@ -109,7 +92,7 @@ int gmlbKeyboardReadKey()
 
 	return keyasc;
 }
-#pragma endregion
+
 
 GmlbJoystick joystick;
 
@@ -163,10 +146,93 @@ void gmlbJoystickPoll()
 	if (joy[0].button[9].b)
 		joystick.fire9 = 1;
 }
+#pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma region Graphics
+static const char gmlbScanerFilename[256] = "assets\\scanner.bmp";
+static BITMAP *gmlbBmpScreen;
+static BITMAP *gmlbBmpScanner;
+
+static const int gmlbGfxOffsetX = 144;
+static const int gmlbGfxOffsetY = 44;
+static const int gmlbGfxScale = 2;
+
+static volatile int frame_count;
+void frame_timer(void) { frame_count++; }
+END_OF_FUNCTION(frame_timer);
+
+
+/// Allegro set_gfx_mode() must be called before data files can be loaded
+/// The rest of the graphics initialisation is performed in gmlbGraphicsInit2,
+/// called after the assets are loaded.
+int gmlbGraphicsInit(int dx)
+{
+	int rv;
+
+#ifdef ALLEGRO_WINDOWS	
+
+#ifdef RES_512_512
+	rv = set_gfx_mode(GFX_DIRECTX_OVL, 512, 512, 0, 0);
+
+	if (rv != 0)
+		rv = set_gfx_mode(GFX_DIRECTX_WIN, 512, 512, 0, 0);
+
+	if (rv != 0)
+		rv = set_gfx_mode(GFX_GDI, 512, 512, 0, 0);
+
+	if (rv == 0)
+		set_display_switch_mode(SWITCH_BACKGROUND);
+#else
+	if (dx == 1)
+	{
+		set_color_depth(32);
+		rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
+	}
+	else
+		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
+#endif
+
+#else
+	rv = set_gfx_mode(GFX_AUTODETECT, 800, 600, 0, 0);
+#endif
+
+	if (rv != 0)
+		gmlbBasicError("Unable to set graphics mode.");
+
+	return rv;
+}
+int gmlbGraphicsInit2(int speedCap)
+{
+	PALETTE the_palette;
+	gmlbBmpScanner = load_bitmap(gmlbScanerFilename, the_palette);
+	if (gmlbBmpScanner == NULL)
+	{
+		gmlbBasicError("Error scanner bitmap");
+		return -1;
+	}
+
+	set_palette(the_palette);		/// Seems to only affect GDI mode
+	gmlbBmpScreen = create_bitmap(SCREEN_W, SCREEN_H);
+	clear(gmlbBmpScreen);
+	blit(gmlbBmpScanner, gmlbBmpScreen, 0, 0, gmlbGfxOffsetX, 385 + gmlbGfxOffsetY, gmlbBmpScanner->w, gmlbBmpScanner->h);
+
+	LOCK_VARIABLE(frame_count);
+	LOCK_FUNCTION(frame_timer);
+	frame_count = 0;
+	install_int(frame_timer, speedCap);
+
+	return 0;
+}
+void gmlbGraphicsShutdown()
+{
+	destroy_bitmap(gmlbBmpScanner);
+	destroy_bitmap(gmlbBmpScreen);
+
+	// TODO: destroy assets
+}
+
 int gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap)
 {
 	*ppBitmap = load_bitmap(file, NULL);
@@ -175,7 +241,10 @@ int gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap)
 	else
 		return -1;
 }
-
+int gmlbBitmapGetWidth(GmlbPBitmap pBitmap)
+{
+	return pBitmap->w;
+}
 int  gmlbGraphicsLoadFont(const char *file, void **ppFont)
 {
 	*ppFont = load_font(file, NULL, NULL);
@@ -189,19 +258,361 @@ void gmlbGraphicsSetXorMode(int i)
 {
 	xor_mode(i);
 }
+void gmlbGraphicsSetClipRegion(int x1, int y1, int x2, int y2)
+{
+	set_clip(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY);
+}
+
+void gmlbAcquireScreen()
+{
+	acquire_bitmap(gmlbBmpScreen);
+}
+void gmlbUpdateScreen()
+{
+	while (frame_count < 1)
+		rest(10);
+	frame_count = 0;
+
+	acquire_screen();
+	blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 512);
+	release_screen();
+}
+void gmlbReleaseScreen()
+{
+	release_bitmap(gmlbBmpScreen);
+}
+
+void gmlbPlotPixelDx(int x, int y, int col)
+{
+	((long *)gmlbBmpScreen->line[y])[x] = col;
+}
+void gmlbPlotPixel(int x, int y, int col)
+{
+	gmlbBmpScreen->line[y][x] = col;
+}
+void gmlbPlotPixelA(int x, int y, int col)
+{
+	putpixel(gmlbBmpScreen, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, col);
+}
+
+void gmlbGraphicsCircleFill(int x, int y, int radius, int colour)
+{
+	circlefill(gmlbBmpScreen, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, radius, colour);
+}
+void gmlbGraphicsCircle(int x, int y, int radius, int colour)
+{
+	circle(gmlbBmpScreen, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, radius, colour);
+}
+
+void gmlbGraphicsHLine(int x1, int x2, int y, int colour)
+{
+	hline(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, colour);
+}
+void gmlbGraphicsVLine(int y1, int y2, int x, int colour)
+{
+	vline(gmlbBmpScreen, x + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, y2 + gmlbGfxOffsetY, colour);
+}
+void gmlbGraphicsLine(int x1, int y1, int x2, int y2, int colour)
+{
+	line(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY, colour);
+}
+
+#pragma region Anti-aliasing
+extern const int *pColours;
+static const int gmlbAABits = 3;
+#define trunc(x) ((x) & ~65535)
+#define frac(x) ((x) & 65535)
+#define invfrac(x) (65535-frac(x))
+/// AALines drawn from xxx_starfield() [stars.c] hang if dx fast pixel plot is used
+/// ToDo: test GDI
+void gmlbGraphicsAALine(int x1, int y1, int x2, int y2, int useDx)
+{
+	fixed grad, xd, yd;
+	fixed xgap, ygap, xend, yend, xf, yf;
+	fixed brightness1, brightness2, swap;
+	
+	int x, y, ix1, ix2, iy1, iy2;
+
+	fixed x1b = itofix(x1);
+	fixed y1b = itofix(y1);
+	fixed x2b = itofix(x2);
+	fixed y2b = itofix(y2);
+
+	x1 = x1b + itofix(gmlbGfxOffsetX);
+	x2 = x2b + itofix(gmlbGfxOffsetX);
+	y1 = y1b + itofix(gmlbGfxOffsetY);
+	y2 = y2b + itofix(gmlbGfxOffsetY);
+	
+	xd = x2 - x1;
+	yd = y2 - y1;
+	
+	if (abs(xd) > abs(yd))
+	{
+		if(x1 > x2)
+		{
+			swap = x1; x1 = x2; x2 = swap;
+			swap = y1; y1 = y2; y2 = swap;
+			xd   = -xd;
+			yd   = -yd;
+		}
+	
+		grad = fdiv(yd, xd);
+	
+		//end point 1
+	
+		xend = trunc(x1 + 32768);
+		yend = y1 + fmul(grad, xend-x1);
+	
+		xgap = invfrac(x1+32768);
+	
+		ix1  = xend >> 16;
+		iy1  = yend >> 16;
+	
+		brightness1 = fmul(invfrac(yend), xgap);
+		brightness2 = fmul(frac(yend), xgap);
+	
+		if (useDx)
+		{
+			////plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
+			////plot_aa_pixel(ix1, iy1 + 1, brightness2 >> (16 - gmlbAABits));
+			//gmlbPlotPixelDx(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			//gmlbPlotPixelDx(ix1, iy1 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix1, iy1 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+		}
+		else
+		{
+			//plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
+			//plot_aa_pixel(ix1, iy1 + 1, brightness2 >> (16 - gmlbAABits));
+			gmlbPlotPixel(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			gmlbPlotPixel(ix1, iy1 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+		}
+
+		yf = yend+grad;
+	
+		//end point 2;
+	
+		xend = trunc(x2 + 32768);
+		yend = y2 + fmul(grad, xend-x2);
+	
+		xgap = invfrac(x2 - 32768);
+	
+		ix2 = xend >> 16;
+		iy2 = yend >> 16;
+	
+		brightness1 = fmul(invfrac(yend), xgap);
+		brightness2 = fmul(frac(yend), xgap);
+
+		if (useDx)
+		{
+			////plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
+			////plot_aa_pixel(ix2, iy2 + 1, brightness2 >> (16 - gmlbAABits));
+			//gmlbPlotPixelDx(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			//gmlbPlotPixelDx(ix2, iy2 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix2, iy2 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+			for (x = ix1 + 1; x <= ix2 - 1; x++)
+			{
+				brightness1 = invfrac(yf);
+				brightness2 = frac(yf);
+
+				////plot_aa_pixel(x, (yf >> 16), brightness1 >> (16 - gmlbAABits));
+				////plot_aa_pixel(x, 1 + (yf >> 16), brightness2 >> (16 - gmlbAABits));
+				//gmlbPlotPixelDx(x, (yf >> 16), pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+				//gmlbPlotPixelDx(x, 1 + (yf >> 16), pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+				putpixel(gmlbBmpScreen, x, (yf >> 16), pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+				putpixel(gmlbBmpScreen, x, 1 + (yf >> 16), pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+				yf += grad;
+			}
+		}
+		else
+		{
+			{
+				//plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
+				//plot_aa_pixel(ix2, iy2 + 1, brightness2 >> (16 - gmlbAABits));
+				gmlbPlotPixel(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+				gmlbPlotPixel(ix2, iy2 + 1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+				for (x = ix1 + 1; x <= ix2 - 1; x++)
+				{
+					brightness1 = invfrac(yf);
+					brightness2 = frac(yf);
+
+					//plot_aa_pixel(x, (yf >> 16), brightness1 >> (16 - gmlbAABits));
+					//plot_aa_pixel(x, 1 + (yf >> 16), brightness2 >> (16 - gmlbAABits));
+					gmlbPlotPixel(x, (yf >> 16), pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+					gmlbPlotPixel(x, 1 + (yf >> 16), pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+					yf += grad;
+				}
+			}
+		}
+	}
+	else
+	{
+		if(y1 > y2)
+		{
+			swap = x1; x1 = x2; x2 = swap;
+			swap = y1; y1 = y2; y2 = swap;
+			xd   = -xd;
+			yd   = -yd;
+		}
+	
+		grad = fdiv(xd, yd);
+	
+		//end point 1
+	
+		yend = trunc(y1 + 32768);
+		xend = x1 + fmul(grad, yend-y1);
+	
+		ygap = invfrac(y1+32768);
+	
+		iy1  = yend >> 16;
+		ix1  = xend >> 16;
+	
+		brightness1 = fmul(invfrac(xend), ygap);
+		brightness2 = fmul(frac(xend), ygap);
+	
+		if (useDx)
+		{
+			////plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
+			////plot_aa_pixel(ix1 + 1, iy1, brightness2 >> (16 - gmlbAABits));
+			//gmlbPlotPixelDx(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			//gmlbPlotPixelDx(ix1 + 1, iy1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix1 + 1, iy1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+		}
+		else
+		{
+			//plot_aa_pixel(ix1, iy1, brightness1 >> (16 - gmlbAABits));
+			//plot_aa_pixel(ix1 + 1, iy1, brightness2 >> (16 - gmlbAABits));
+			gmlbPlotPixel(ix1, iy1, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			gmlbPlotPixel(ix1 + 1, iy1, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+		}
+
+		xf = xend+grad;
+	
+		//end point 2;
+	
+		yend = trunc(y2 + 32768);
+		xend = x2 + fmul(grad, yend-y2);
+	
+		ygap = invfrac(y2 - 32768);
+	
+		ix2 = xend >> 16;
+		iy2 = yend >> 16;
+	
+		brightness1 = fmul(invfrac(xend), ygap);
+		brightness2 = fmul(frac(xend), ygap);
+	      
+		if (useDx)
+		{
+			////plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
+			////plot_aa_pixel(ix2 + 1, iy2, brightness2 >> (16 - gmlbAABits));
+			//gmlbPlotPixelDx(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			//gmlbPlotPixelDx(ix2 + 1, iy2, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			putpixel(gmlbBmpScreen, ix2 + 1, iy2, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+			for (y = iy1 + 1; y <= iy2 - 1; y++)
+			{
+				brightness1 = invfrac(xf);
+				brightness2 = frac(xf);
+
+				////plot_aa_pixel((xf >> 16), y, brightness1 >> (16 - gmlbAABits));
+				////plot_aa_pixel(1 + (xf >> 16), y, brightness2 >> (16 - gmlbAABits));
+				//gmlbPlotPixelDx((xf >> 16), y, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+				//gmlbPlotPixelDx(1 + (xf >> 16), y, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+				putpixel(gmlbBmpScreen, (xf >> 16), y, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+				putpixel(gmlbBmpScreen, 1 + (xf >> 16), y, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+				xf += grad;
+			}
+		}
+		else
+		{
+			//plot_aa_pixel(ix2, iy2, brightness1 >> (16 - gmlbAABits));
+			//plot_aa_pixel(ix2 + 1, iy2, brightness2 >> (16 - gmlbAABits));
+			gmlbPlotPixel(ix2, iy2, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+			gmlbPlotPixel(ix2 + 1, iy2, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+			for (y = iy1 + 1; y <= iy2 - 1; y++)
+			{
+				brightness1 = invfrac(xf);
+				brightness2 = frac(xf);
+
+				//plot_aa_pixel((xf >> 16), y, brightness1 >> (16 - gmlbAABits));
+				//plot_aa_pixel(1 + (xf >> 16), y, brightness2 >> (16 - gmlbAABits));
+				gmlbPlotPixel((xf >> 16), y, pColours[35 + (brightness1 >> (16 - gmlbAABits))]);
+				gmlbPlotPixel(1 + (xf >> 16), y, pColours[35 + (brightness2 >> (16 - gmlbAABits))]);
+
+				xf += grad;
+			}
+		}
+	}
+}
+#pragma endregion
+
+void gmlbGraphicsTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int colour)
+{
+	triangle(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY,
+		                    x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY,
+                            x3 + gmlbGfxOffsetX, y3 + gmlbGfxOffsetY, colour);
+}
+void gmlbGraphicsRectFill(int x1, int y1, int x2, int y2, int colour)
+{
+	rectfill(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY, colour);
+}
+
+void gmlbGraphicsPoly(int numPoints, int *poly, int colour)
+{
+	int x = 0;
+	int y = 1;
+	for (int i = 0; i < numPoints; i++)
+	{
+		poly[x] += gmlbGfxOffsetX;
+		poly[y] += gmlbGfxOffsetY;
+		x += 2;
+		y += 2;
+	}
+	polygon(gmlbBmpScreen, numPoints, poly, colour);
+}
+
+void gmlbGraphicsText(void *pFont, int x, int y, char *txt, int colour)
+{
+	text_mode(-1);
+	textout(gmlbBmpScreen, pFont, txt, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, colour);
+}
+void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour)
+{
+	text_mode(-1);
+	textout_centre(gmlbBmpScreen, pFont, txt, (128 * gmlbGfxScale) + gmlbGfxOffsetX, (y / (2 / gmlbGfxScale)) + gmlbGfxOffsetY, colour);
+}
+
+void gmlbGraphicsBlitScanner()
+{
+	blit(gmlbBmpScanner, gmlbBmpScreen, 0, 0, gmlbGfxOffsetX, 385 + gmlbGfxOffsetY, gmlbBmpScanner->w, gmlbBmpScanner->h);
+}
+void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y)
+{
+	draw_sprite(gmlbBmpScreen, sprite, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY);
+}
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma region Audio
-#define SAMPLE_VOLUME		(128)
-#define MIDI_VOLUME			 (96)
+static const int gmlbVolumeSamples = 128;
+static const int gmlbVolumeMidi = 96;
 
 int gmlbSoundInit()
 {
 	int rv = install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
 	if (rv == 0)
-		set_volume(SAMPLE_VOLUME, MIDI_VOLUME);
+		set_volume(gmlbVolumeSamples, gmlbVolumeMidi);
 
 	return rv;
 }
@@ -250,12 +661,46 @@ void gmlbSoundStopMidi()
 
 /////////////////////////////////////////////////////////////////////////////
 
+#pragma region Misc
+int gmlbInit()
+{
+	int rv = allegro_init();
+	if (rv == 0)
+	{
+		install_keyboard();		// "very unlikely to fail" [Allegro manual]
+		install_timer();		// "very unlikely to fail" [Allegro manual]
+		install_mouse();									// mouse is optional
+	}
+	return rv;
+}
+
 char *gmlbFileNameFromPath(const char *path)
 {
 	return get_filename(path);
 }
+int gmlbRequestFile(char *title, char *path, char *ext)
+{
+	show_mouse(screen);
+	int fileLoaded = file_select(title, path, ext);
+	show_mouse(NULL);
+
+	return fileLoaded;
+}
+
+void gmlbBasicError(const char *str)
+{
+	set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+	allegro_message(str);
+}
+#pragma endregion
+
+/////////////////////////////////////////////////////////////////////////////
 
 #ifdef _DEBUG
+
+// Using OutputDebugString() requires windows.h, this defines BITMAP
+// and clashes with allegro.h. For now, debug functions are in elite.c
+
 /////////////////////////////////////////////////////////////////////////////
 
 //void gmlbDumpString(const char *str)
@@ -296,3 +741,10 @@ char *gmlbFileNameFromPath(const char *path)
 
 /////////////////////////////////////////////////////////////////////////////
 #endif
+
+int elite_main();			/// [alg_main.c]
+int main()
+{
+	return elite_main();
+}
+END_OF_MAIN()
