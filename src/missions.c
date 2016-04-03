@@ -30,7 +30,6 @@
 #include "planet.h"
 #include "main.h"
 #include "missions.h" 
-#include "keyboard.h"
 #include "assets.h"
  
 
@@ -219,8 +218,8 @@ static void constrictor_mission_brief(void)
 		update_universe();
 		universe[0].location.z = 600;
 		gmlbUpdateScreen();
-		kbd_poll_keyboard();
-	} while (!kbd_space_pressed);
+		gmlbKeyboardPoll();
+	} while (!gmlbKeyboard.kbd_space_pressed);
 }	
 
 static void constrictor_mission_debrief(void)
@@ -245,7 +244,7 @@ static void constrictor_mission_debrief(void)
 	
 	do
 	{
-		keyasc = kbd_read_key();
+		keyasc = gmlbKeyboardReadKey();
 	} while (keyasc != ' ');
 }
 
@@ -267,7 +266,7 @@ static void thargoid_mission_first_brief(void)
 	
 	do
 	{
-		keyasc = kbd_read_key();
+		keyasc = gmlbKeyboardReadKey();
 	} while (keyasc != ' ');
 }
 
@@ -292,7 +291,7 @@ static void thargoid_mission_second_brief(void)
 	
 	do
 	{
-		keyasc = kbd_read_key();
+		keyasc = gmlbKeyboardReadKey();
 	} while (keyasc != ' ');
 }
 
@@ -318,7 +317,7 @@ static void thargoid_mission_debrief(void)
 	
 	do
 	{
-		keyasc = kbd_read_key();
+		keyasc = gmlbKeyboardReadKey();
 	} while (keyasc != ' ');
 }
 

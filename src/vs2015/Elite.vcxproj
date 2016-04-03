@@ -137,7 +137,6 @@
     <ClCompile Include="..\file.c" />
     <ClCompile Include="..\gamelib.c" />
     <ClCompile Include="..\intro.c" />
-    <ClCompile Include="..\keyboard.c" />
     <ClCompile Include="..\missions.c" />
     <ClCompile Include="..\obcomp.c" />
     <ClCompile Include="..\options.c" />
@@ -162,7 +161,6 @@
     <ClInclude Include="..\gamelib.h" />
     <ClInclude Include="..\gfx.h" />
     <ClInclude Include="..\intro.h" />
-    <ClInclude Include="..\keyboard.h" />
     <ClInclude Include="..\main.h" />
     <ClInclude Include="..\missions.h" />
     <ClInclude Include="..\obcomp.h" />

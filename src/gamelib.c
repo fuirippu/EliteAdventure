@@ -4,8 +4,6 @@
 
 #include "gamelib.h"
 
-#include "keyboard.h"
-
 
 /// Interface to game library (allegro)
 
@@ -21,80 +19,93 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma region Input
+GmlbKeyboard gmlbKeyboard;
+GmlbJoystick gmlbJoystick;
+
+
 void gmlbKeyboardPoll()
 {
 	poll_keyboard();
 
-	kbd_F1_pressed = key[KEY_F1];
-	kbd_F2_pressed = key[KEY_F2];
-	kbd_F3_pressed = key[KEY_F3];
-	kbd_F4_pressed = key[KEY_F4];
-	kbd_F5_pressed = key[KEY_F5];
-	kbd_F6_pressed = key[KEY_F6];
-	kbd_F7_pressed = key[KEY_F7];
-	kbd_F8_pressed = key[KEY_F8];
-	kbd_F9_pressed = key[KEY_F9];
-	kbd_F10_pressed = key[KEY_F10];
-	kbd_F11_pressed = key[KEY_F11];
-	kbd_F12_pressed = key[KEY_F12];
+	gmlbKeyboard.kbd_F1_pressed = key[KEY_F1];
+	gmlbKeyboard.kbd_F2_pressed = key[KEY_F2];
+	gmlbKeyboard.kbd_F3_pressed = key[KEY_F3];
+	gmlbKeyboard.kbd_F4_pressed = key[KEY_F4];
+	gmlbKeyboard.kbd_F5_pressed = key[KEY_F5];
+	gmlbKeyboard.kbd_F6_pressed = key[KEY_F6];
+	gmlbKeyboard.kbd_F7_pressed = key[KEY_F7];
+	gmlbKeyboard.kbd_F8_pressed = key[KEY_F8];
+	gmlbKeyboard.kbd_F9_pressed = key[KEY_F9];
+	gmlbKeyboard.kbd_F10_pressed = key[KEY_F10];
+	gmlbKeyboard.kbd_F11_pressed = key[KEY_F11];
+	gmlbKeyboard.kbd_F12_pressed = key[KEY_F12];
 
-	kbd_y_pressed = key[KEY_Y];
-	kbd_n_pressed = key[KEY_N];
+	gmlbKeyboard.kbd_y_pressed = key[KEY_Y];
+	gmlbKeyboard.kbd_n_pressed = key[KEY_N];
 
-	kbd_fire_pressed = key[KEY_A];
-	kbd_ecm_pressed = key[KEY_E];
-	kbd_energy_bomb_pressed = key[KEY_TAB];
-	kbd_hyperspace_pressed = key[KEY_H];
-	kbd_ctrl_pressed = (key[KEY_LCONTROL]) || (key[KEY_RCONTROL]);
-	kbd_jump_pressed = key[KEY_J];
-	kbd_escape_pressed = key[KEY_ESC];
+	gmlbKeyboard.kbd_fire_pressed = key[KEY_A];
+	gmlbKeyboard.kbd_ecm_pressed = key[KEY_E];
+	gmlbKeyboard.kbd_energy_bomb_pressed = key[KEY_TAB];
+	gmlbKeyboard.kbd_hyperspace_pressed = key[KEY_H];
+	gmlbKeyboard.kbd_ctrl_pressed = (key[KEY_LCONTROL]) || (key[KEY_RCONTROL]);
+	gmlbKeyboard.kbd_jump_pressed = key[KEY_J];
+	gmlbKeyboard.kbd_escape_pressed = key[KEY_ESC];
 
-	kbd_dock_pressed = key[KEY_C];
-	kbd_d_pressed = key[KEY_D];
-	kbd_o_pressed = key[KEY_O];
-	kbd_find_pressed = key[KEY_F];
+	gmlbKeyboard.kbd_dock_pressed = key[KEY_C];
+	gmlbKeyboard.kbd_d_pressed = key[KEY_D];
+	gmlbKeyboard.kbd_o_pressed = key[KEY_O];
+	gmlbKeyboard.kbd_find_pressed = key[KEY_F];
 
-	kbd_fire_missile_pressed = key[KEY_M];
-	kbd_target_missile_pressed = key[KEY_T];
-	kbd_unarm_missile_pressed = key[KEY_U];
+	gmlbKeyboard.kbd_fire_missile_pressed = key[KEY_M];
+	gmlbKeyboard.kbd_target_missile_pressed = key[KEY_T];
+	gmlbKeyboard.kbd_unarm_missile_pressed = key[KEY_U];
 
-	kbd_pause_pressed = key[KEY_P];
-	kbd_resume_pressed = key[KEY_R];
+	gmlbKeyboard.kbd_pause_pressed = key[KEY_P];
+	gmlbKeyboard.kbd_resume_pressed = key[KEY_R];
 
-	kbd_inc_speed_pressed = key[KEY_SPACE];
-	kbd_dec_speed_pressed = key[KEY_SLASH];
+	gmlbKeyboard.kbd_inc_speed_pressed = key[KEY_SPACE];
+	gmlbKeyboard.kbd_dec_speed_pressed = key[KEY_SLASH];
 
-	kbd_up_pressed = key[KEY_S] || key[KEY_UP];
-	kbd_down_pressed = key[KEY_X] || key[KEY_DOWN];
-	kbd_left_pressed = key[KEY_COMMA] || key[KEY_LEFT];
-	kbd_right_pressed = key[KEY_STOP] || key[KEY_RIGHT];
+	gmlbKeyboard.kbd_up_pressed = key[KEY_S] || key[KEY_UP];
+	gmlbKeyboard.kbd_down_pressed = key[KEY_X] || key[KEY_DOWN];
+	gmlbKeyboard.kbd_left_pressed = key[KEY_COMMA] || key[KEY_LEFT];
+	gmlbKeyboard.kbd_right_pressed = key[KEY_STOP] || key[KEY_RIGHT];
 
-	kbd_enter_pressed = key[KEY_ENTER];
-	kbd_backspace_pressed = key[KEY_BACKSPACE];
-	kbd_space_pressed = key[KEY_SPACE];
+	gmlbKeyboard.kbd_enter_pressed = key[KEY_ENTER];
+	gmlbKeyboard.kbd_backspace_pressed = key[KEY_BACKSPACE];
+	gmlbKeyboard.kbd_space_pressed = key[KEY_SPACE];
 
 #ifdef _DEBUG
-	kbd_dbg_pressed = key[KEY_B];
+	gmlbKeyboard.kbd_dbg_pressed = key[KEY_B];
 #endif
 
 	while (keypressed())
 		readkey();
 }
-
 int gmlbKeyboardReadKey()
 {
+	gmlbKeyboard.kbd_enter_pressed = 0;
+	gmlbKeyboard.kbd_backspace_pressed = 0;
+
 	int keynum = readkey();
 	int keycode = keynum >> 8;
 	int keyasc = keynum & 255;
 
 	if (keycode == KEY_ENTER)
+	{
 		keyasc = 0x0A;
+		gmlbKeyboard.kbd_enter_pressed = 1;
+		keyasc = 0;
+	}
+	else if (keyasc == 0x08)
+	{
+		gmlbKeyboard.kbd_backspace_pressed = 1;
+		keyasc = 0;
+	}
 
 	return keyasc;
 }
 
-
-GmlbJoystick joystick;
 
 int gmlbJoystickInit()
 {
@@ -104,47 +115,46 @@ int gmlbJoystickInit()
 
 	return rv;
 }
-
 void gmlbJoystickPoll()
 {
-	memset(&joystick, 0, sizeof(GmlbJoystick));
+	memset(&gmlbJoystick, 0, sizeof(GmlbJoystick));
 
 	poll_joystick();
 
 	if (joy[0].stick[0].axis[1].d1)
-		joystick.up = 1;
+		gmlbJoystick.up = 1;
 	if (joy[0].stick[0].axis[1].d2)
-		joystick.down = 1;
+		gmlbJoystick.down = 1;
 	if (joy[0].stick[0].axis[0].d1)
-		joystick.left = 1;;
+		gmlbJoystick.left = 1;;
 	if (joy[0].stick[0].axis[0].d2)
-		joystick.right = 1;
+		gmlbJoystick.right = 1;
 
 	if (joy[0].stick[1].axis[1].d1)
-		joystick.d_up = 1;
+		gmlbJoystick.d_up = 1;
 	if (joy[0].stick[1].axis[1].d2)
-		joystick.d_down = 1;
+		gmlbJoystick.d_down = 1;
 	if (joy[0].stick[1].axis[0].d1)
-		joystick.d_left = 1;
+		gmlbJoystick.d_left = 1;
 	if (joy[0].stick[1].axis[0].d2)
-		joystick.d_right = 1;
+		gmlbJoystick.d_right = 1;
 
 	if (joy[0].button[0].b)
-		joystick.fire0 = 1;
+		gmlbJoystick.fire0 = 1;
 	if (joy[0].button[1].b)
-		joystick.fire1 = 1;
+		gmlbJoystick.fire1 = 1;
 	if (joy[0].button[2].b)
-		joystick.fire2 = 1;
+		gmlbJoystick.fire2 = 1;
 	if (joy[0].button[3].b)
-		joystick.fire3 = 1;
+		gmlbJoystick.fire3 = 1;
 	if (joy[0].button[4].b)
-		joystick.fire4 = 1;
+		gmlbJoystick.fire4 = 1;
 	if (joy[0].button[5].b)
-		joystick.fire5 = 1;
+		gmlbJoystick.fire5 = 1;
 	if (joy[0].button[7].b)
-		joystick.fire7 = 1;
+		gmlbJoystick.fire7 = 1;
 	if (joy[0].button[9].b)
-		joystick.fire9 = 1;
+		gmlbJoystick.fire9 = 1;
 }
 #pragma endregion
 
@@ -697,12 +707,10 @@ void gmlbBasicError(const char *str)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef _DEBUG
-
 // Using OutputDebugString() requires windows.h, this defines BITMAP
 // and clashes with allegro.h. For now, debug functions are in elite.c
 
 /////////////////////////////////////////////////////////////////////////////
-
 //void gmlbDumpString(const char *str)
 //{
 //	OutputDebugString(str);
@@ -738,9 +746,10 @@ void gmlbBasicError(const char *str)
 //	sprintf(buf, "  NRG unit = %d\n", cmdr.energy_unit);
 //	dbg_out(buf);
 //}
-
 /////////////////////////////////////////////////////////////////////////////
 #endif
+
+/////////////////////////////////////////////////////////////////////////////
 
 int elite_main();			/// [alg_main.c]
 int main()

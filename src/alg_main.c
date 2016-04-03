@@ -46,7 +46,6 @@
 #include "missions.h"
 #include "pilot.h"
 #include "file.h"
-#include "keyboard.h"
 #include "obcomp.h"
 #include "assets.h"
 
@@ -869,11 +868,11 @@ static void handle_flight_keys(void)
 {
     int keyasc;
 	
-	kbd_poll_keyboard();
+	gmlbKeyboardPoll();
 
 
 #ifdef _DEBUG
-	if (kbd_dbg_pressed)
+	if (gmlbKeyboard.kbd_dbg_pressed)
 		dbg_dump_universe();
 #endif
 
@@ -883,77 +882,77 @@ static void handle_flight_keys(void)
 	{
 		gmlbJoystickPoll();
 
-		if (joystick.up)
-			kbd_up_pressed = 1;
-		if (joystick.down)
-			kbd_down_pressed = 1;
-		if (joystick.left)
-			kbd_left_pressed = 1;;
-		if (joystick.right)
-			kbd_right_pressed = 1;
+		if (gmlbJoystick.up)
+			gmlbKeyboard.kbd_up_pressed = 1;
+		if (gmlbJoystick.down)
+			gmlbKeyboard.kbd_down_pressed = 1;
+		if (gmlbJoystick.left)
+			gmlbKeyboard.kbd_left_pressed = 1;;
+		if (gmlbJoystick.right)
+			gmlbKeyboard.kbd_right_pressed = 1;
 
 		// Respond to buttons
-		if (joystick.fire1)
-			kbd_inc_speed_pressed = 1;
-		if (joystick.fire2)
-			kbd_dec_speed_pressed = 1;
+		if (gmlbJoystick.fire1)
+			gmlbKeyboard.kbd_inc_speed_pressed = 1;
+		if (gmlbJoystick.fire2)
+			gmlbKeyboard.kbd_dec_speed_pressed = 1;
 
 		if (current_screen == SCR_QUIT)
 		{
-			if (joystick.fire0)
-				kbd_y_pressed = 1;
-			if (joystick.fire1)
-				kbd_n_pressed = 1;
+			if (gmlbJoystick.fire0)
+				gmlbKeyboard.kbd_y_pressed = 1;
+			if (gmlbJoystick.fire1)
+				gmlbKeyboard.kbd_n_pressed = 1;
 		}
 		else if ((current_screen == SCR_EQUIP_SHIP) ||
 				 (current_screen == SCR_OPTIONS) ||
 				 (current_screen == SCR_SETTINGS))
 		{
-			if (joystick.fire0)
-				kbd_enter_pressed = 1;
+			if (gmlbJoystick.fire0)
+				gmlbKeyboard.kbd_enter_pressed = 1;
 		}
 		else  // in flight
 		{
 			if (x360_controller)
-				kbd_fire_pressed = joystick.fire4;
+				gmlbKeyboard.kbd_fire_pressed |= gmlbJoystick.fire4;
 			else
-				kbd_fire_pressed = joystick.fire0;
+				gmlbKeyboard.kbd_fire_pressed |= gmlbJoystick.fire0;
 		}
 
 		/// Bonus controls for x360
 		if (x360_controller == 1)
 		{
-			if (joystick.fire7)					/// Start button - options menu/resume
+			if (gmlbJoystick.fire7)					/// Start button - options menu/resume
 			{
 				if (game_paused)
-					kbd_resume_pressed = 1;
+					gmlbKeyboard.kbd_resume_pressed = 1;
 				else
-					kbd_F11_pressed = 1;
+					gmlbKeyboard.kbd_F11_pressed = 1;
 			}
 
 			if (docked)
 			{
-				if (joystick.fire9)				/// Launch by clicking right stick
-					kbd_F1_pressed = 1;
+				if (gmlbJoystick.fire9)				/// Launch by clicking right stick
+					gmlbKeyboard.kbd_F1_pressed = 1;
 			}
 			else // if (!docked)
 			{
-				if (joystick.fire9)					/// Hyper - space by clicking right stick
-					kbd_hyperspace_pressed = 1;
-				if (joystick.fire3)					/// Y to jump
-					kbd_jump_pressed = 1;
+				if (gmlbJoystick.fire9)					/// Hyper - space by clicking right stick
+					gmlbKeyboard.kbd_hyperspace_pressed = 1;
+				if (gmlbJoystick.fire3)					/// Y to jump
+					gmlbKeyboard.kbd_jump_pressed = 1;
 
-				if (joystick.d_up)		/// Switch view in flight with d-pad
-					kbd_F1_pressed = 1;
-				if (joystick.d_down)
-					kbd_F2_pressed = 1;
-				if (joystick.d_left)
-					kbd_F3_pressed = 1;
-				if (joystick.d_right)
-					kbd_F4_pressed = 1;
+				if (gmlbJoystick.d_up)		/// Switch view in flight with d-pad
+					gmlbKeyboard.kbd_F1_pressed = 1;
+				if (gmlbJoystick.d_down)
+					gmlbKeyboard.kbd_F2_pressed = 1;
+				if (gmlbJoystick.d_left)
+					gmlbKeyboard.kbd_F3_pressed = 1;
+				if (gmlbJoystick.d_right)
+					gmlbKeyboard.kbd_F4_pressed = 1;
 
-				if (joystick.fire5)				/// R bumper to refresh obc
-					kbd_o_pressed = 1;
+				if (gmlbJoystick.fire5)				/// R bumper to refresh obc
+					gmlbKeyboard.kbd_o_pressed = 1;
 			}
 		}
 	}
@@ -961,12 +960,12 @@ static void handle_flight_keys(void)
 	/// If paused, return early: don't process any keys except resume (start button)
 	if (game_paused)
 	{
-		if (kbd_resume_pressed)
+		if (gmlbKeyboard.kbd_resume_pressed)
 			game_paused = 0;
 		return;
 	}
 
-	if (kbd_F1_pressed)
+	if (gmlbKeyboard.kbd_F1_pressed)
 	{
 		find_input = 0;
 		
@@ -978,7 +977,7 @@ static void handle_flight_keys(void)
 			flip_stars();
 		}
 	}
-	else if (kbd_F2_pressed)
+	else if (gmlbKeyboard.kbd_F2_pressed)
 	{
 		find_input = 0;
 		
@@ -988,7 +987,7 @@ static void handle_flight_keys(void)
 			flip_stars();
 		}
 	}
-	else if (kbd_F3_pressed)
+	else if (gmlbKeyboard.kbd_F3_pressed)
 	{
 		find_input = 0;
 		
@@ -998,7 +997,7 @@ static void handle_flight_keys(void)
 			flip_stars();
 		}
 	}
-	else if (kbd_F4_pressed)
+	else if (gmlbKeyboard.kbd_F4_pressed)
 	{
 		find_input = 0;
 		
@@ -1010,39 +1009,39 @@ static void handle_flight_keys(void)
 			flip_stars();
 		}
 	}
-	else if (kbd_F5_pressed)
+	else if (gmlbKeyboard.kbd_F5_pressed)
 	{
 		find_input = 0;
 		old_cross_x = -1;
 		display_galactic_chart();
 	}
-	else if (kbd_F6_pressed)
+	else if (gmlbKeyboard.kbd_F6_pressed)
 	{
 		find_input = 0;
 		old_cross_x = -1;
 		display_short_range_chart();
 	}
-	else if (kbd_F7_pressed)
+	else if (gmlbKeyboard.kbd_F7_pressed)
 	{
 		find_input = 0;
 		display_data_on_planet();
 	}
-	else if (kbd_F8_pressed && (!witchspace))
+	else if (gmlbKeyboard.kbd_F8_pressed && (!witchspace))
 	{
 		find_input = 0;
 		display_market_prices();
 	}	
-	else if (kbd_F9_pressed)
+	else if (gmlbKeyboard.kbd_F9_pressed)
 	{
 		find_input = 0;
 		display_commander_status();
 	}
-	else if (kbd_F10_pressed)
+	else if (gmlbKeyboard.kbd_F10_pressed)
 	{
 		find_input = 0;
 		display_inventory();
 	}
-	else if (kbd_F11_pressed)
+	else if (gmlbKeyboard.kbd_F11_pressed)
 	{
 		find_input = 0;
 		display_options();
@@ -1050,16 +1049,16 @@ static void handle_flight_keys(void)
 
 	/// On pause screens (options, settings), direction key handlers only affect menu
 	/// selection. On other screens, flight controls are active if not docked.
-	if (kbd_up_pressed)
+	if (gmlbKeyboard.kbd_up_pressed)
 		arrow_up();
-	else if (kbd_down_pressed)
+	else if (gmlbKeyboard.kbd_down_pressed)
 		arrow_down();
-	if (kbd_left_pressed)
+	if (gmlbKeyboard.kbd_left_pressed)
 		arrow_left();
-	else if (kbd_right_pressed)
+	else if (gmlbKeyboard.kbd_right_pressed)
 		arrow_right();
 
-	if (kbd_enter_pressed)
+	if (gmlbKeyboard.kbd_enter_pressed)
 		return_pressed();
 
 
@@ -1069,16 +1068,16 @@ static void handle_flight_keys(void)
 
 	if (find_input)
 	{
-		keyasc = kbd_read_key();
+		keyasc = gmlbKeyboardReadKey();
 		
-		if (kbd_enter_pressed)
+		if (gmlbKeyboard.kbd_enter_pressed)
 		{
 			find_input = 0;
 			find_planet_by_name(find_name);
 			return;
 		}
 
-		if (kbd_backspace_pressed)
+		if (gmlbKeyboard.kbd_backspace_pressed)
 		{
 			delete_find_char();
 			return;
@@ -1090,19 +1089,19 @@ static void handle_flight_keys(void)
 		return;		
 	}
 	
-	if (kbd_y_pressed)
+	if (gmlbKeyboard.kbd_y_pressed)
 		y_pressed();
 
-	if (kbd_n_pressed)
+	if (gmlbKeyboard.kbd_n_pressed)
 		n_pressed();
  
-	if (kbd_d_pressed)
+	if (gmlbKeyboard.kbd_d_pressed)
 		d_pressed();
 	
-	if (kbd_find_pressed)
+	if (gmlbKeyboard.kbd_find_pressed)
 		f_pressed();
 	
-	if (kbd_o_pressed)
+	if (gmlbKeyboard.kbd_o_pressed)
 		o_pressed();
 
 
@@ -1110,37 +1109,37 @@ static void handle_flight_keys(void)
 		return;
 	/// The following routines can assume not docked...
 
-	if (kbd_fire_pressed && (laser_frames_left == 0))
+	if (gmlbKeyboard.kbd_fire_pressed && (laser_frames_left == 0))
 		laser_frames_left = fire_laser(laser_type);
 
-	if (kbd_target_missile_pressed)
+	if (gmlbKeyboard.kbd_target_missile_pressed)
 		arm_missile();
-	else if (kbd_fire_missile_pressed)
+	else if (gmlbKeyboard.kbd_fire_missile_pressed)
 		fire_missile();
-	else if (kbd_unarm_missile_pressed)
+	else if (gmlbKeyboard.kbd_unarm_missile_pressed)
 		unarm_missile();
-	else if (kbd_ecm_pressed && cmdr.ecm)
+	else if (gmlbKeyboard.kbd_ecm_pressed && cmdr.ecm)
 		activate_ecm(1);
 
-	if ((kbd_inc_speed_pressed) && (flight_speed < myship.max_speed))
+	if ((gmlbKeyboard.kbd_inc_speed_pressed) && (flight_speed < myship.max_speed))
 		flight_speed++;
-	else if ((kbd_dec_speed_pressed) && (flight_speed > 1))
+	else if ((gmlbKeyboard.kbd_dec_speed_pressed) && (flight_speed > 1))
 		flight_speed--;
 
-	if (kbd_jump_pressed && (!witchspace))
+	if (gmlbKeyboard.kbd_jump_pressed && (!witchspace))
 		jump_warp();
-	else if (kbd_hyperspace_pressed)
-		(kbd_ctrl_pressed) ? start_galactic_hyperspace() : start_hyperspace();
+	else if (gmlbKeyboard.kbd_hyperspace_pressed)
+		(gmlbKeyboard.kbd_ctrl_pressed) ? start_galactic_hyperspace() : start_hyperspace();
 
-	if ((kbd_escape_pressed) && (cmdr.escape_pod) && (!witchspace))
+	if ((gmlbKeyboard.kbd_escape_pressed) && (cmdr.escape_pod) && (!witchspace))
 		run_escape_sequence();
-	else if ((kbd_energy_bomb_pressed) && (cmdr.energy_bomb))
+	else if ((gmlbKeyboard.kbd_energy_bomb_pressed) && (cmdr.energy_bomb))
 	{
 		detonate_bomb = 1;
 		cmdr.energy_bomb = 0;
 	}
 
-	if (kbd_dock_pressed && cmdr.docking_computer)
+	if (gmlbKeyboard.kbd_dock_pressed && cmdr.docking_computer)
 		(instant_dock) ? engage_instant_dock() : engage_auto_pilot();
 
 
@@ -1151,12 +1150,12 @@ static void handle_flight_keys(void)
 		return;
 	/// The following routines can assume the key is pressed on a flight screen...
 
-	if (kbd_pause_pressed)
+	if (gmlbKeyboard.kbd_pause_pressed)
 	{
 		game_paused = 1;
 		gfx_display_centre_text(115, "PAUSED", 140, 0);
 	}
-	if (kbd_o_pressed)
+	if (gmlbKeyboard.kbd_o_pressed)
 		obc_refresh();
 }
 
@@ -1261,9 +1260,9 @@ static void joystick_poll_fire_for_space()
 	{
 		gmlbJoystickPoll();
 		if (x360_controller == 1)
-			kbd_space_pressed |= joystick.fire4;
+			gmlbKeyboard.kbd_space_pressed |= gmlbJoystick.fire4;
 		else
-			kbd_space_pressed |= joystick.fire0;
+			gmlbKeyboard.kbd_space_pressed |= gmlbJoystick.fire0;
 	}
 }
 static void joystick_poll_yes_no()
@@ -1272,10 +1271,10 @@ static void joystick_poll_yes_no()
 	{
 		gmlbJoystickPoll();
 
-		if (joystick.fire0)
-			kbd_y_pressed = 1;
-		if (joystick.fire1)
-			kbd_n_pressed = 1;
+		if (gmlbJoystick.fire0)
+			gmlbKeyboard.kbd_y_pressed = 1;
+		if (gmlbJoystick.fire1)
+			gmlbKeyboard.kbd_n_pressed = 1;
 	}
 }
 
@@ -1293,16 +1292,16 @@ static void run_first_intro_screen(void)
 
 		gmlbUpdateScreen();
 
-		kbd_poll_keyboard();
+		gmlbKeyboardPoll();
 		joystick_poll_yes_no();
 
-		if (kbd_y_pressed)
+		if (gmlbKeyboard.kbd_y_pressed)
 		{
 			snd_stop_midi();	
 			load_commander_screen();
 			break;
 		}
-		if (kbd_n_pressed)
+		if (gmlbKeyboard.kbd_n_pressed)
 		{ 
 			snd_stop_midi();	
 			break;
@@ -1328,10 +1327,10 @@ static void run_second_intro_screen(void)
 
 		gmlbUpdateScreen();
 
-		kbd_poll_keyboard();
+		gmlbKeyboardPoll();
 		joystick_poll_fire_for_space();
 
-		if (kbd_space_pressed) 
+		if (gmlbKeyboard.kbd_space_pressed)
 			break;
 	} 
 

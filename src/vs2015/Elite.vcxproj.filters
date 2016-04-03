@@ -33,12 +33,6 @@
     <ClCompile Include="..\intro.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\keyboard.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\missions.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\options.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,6 +84,9 @@
     <ClCompile Include="..\gamelib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\missions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\docked.h">
@@ -105,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\intro.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\main.h">
