@@ -57,6 +57,9 @@ extern GmlbKeyboard gmlbKeyboard;
 void gmlbKeyboardPoll();
 int gmlbKeyboardReadKey();
 
+int gmlbJoystickInit();
+void gmlbJoystickPoll();
+
 typedef struct {
 	int up;
 	int down;
@@ -75,10 +78,9 @@ typedef struct {
 	int fire7;
 	int fire9;
 } GmlbJoystick;
-extern GmlbJoystick gmlbJoystick;
 
-int gmlbJoystickInit();
-void gmlbJoystickPoll();
+GmlbJoystick *gmlbJoystickGetCurrent();
+GmlbJoystick *gmlbJoystickGetPrevious();
 
 /////////////////////////////////////////////////////////////////////////////
 // Graphics

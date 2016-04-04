@@ -24,7 +24,9 @@
 
 #pragma region Input
 GmlbKeyboard gmlbKeyboard;
-GmlbJoystick gmlbJoystick;
+
+static GmlbJoystick gmlbJoysticks[2];		/// addresses passed to caller
+static int gmlbJoystickCurrent = 1;
 
 
 void gmlbKeyboardPoll()
@@ -110,7 +112,6 @@ int gmlbKeyboardReadKey()
 	return keyasc;
 }
 
-
 int gmlbJoystickInit()
 {
 	int rv = 0;
@@ -121,45 +122,57 @@ int gmlbJoystickInit()
 }
 void gmlbJoystickPoll()
 {
-	memset(&gmlbJoystick, 0, sizeof(GmlbJoystick));
+	gmlbJoystickCurrent ^= 1;
+	GmlbJoystick *pJoystick = &gmlbJoysticks[gmlbJoystickCurrent];
+	memset(pJoystick, 0, sizeof(GmlbJoystick));
 
 	poll_joystick();
 
 	if (joy[0].stick[0].axis[1].d1)
-		gmlbJoystick.up = 1;
+		pJoystick->up = 1;
 	if (joy[0].stick[0].axis[1].d2)
-		gmlbJoystick.down = 1;
+		pJoystick->down = 1;
 	if (joy[0].stick[0].axis[0].d1)
-		gmlbJoystick.left = 1;;
+		pJoystick->left = 1;;
 	if (joy[0].stick[0].axis[0].d2)
-		gmlbJoystick.right = 1;
+		pJoystick->right = 1;
 
 	if (joy[0].stick[1].axis[1].d1)
-		gmlbJoystick.d_up = 1;
+		pJoystick->d_up = 1;
 	if (joy[0].stick[1].axis[1].d2)
-		gmlbJoystick.d_down = 1;
+		pJoystick->d_down = 1;
 	if (joy[0].stick[1].axis[0].d1)
-		gmlbJoystick.d_left = 1;
+		pJoystick->d_left = 1;
 	if (joy[0].stick[1].axis[0].d2)
-		gmlbJoystick.d_right = 1;
+		pJoystick->d_right = 1;
 
 	if (joy[0].button[0].b)
-		gmlbJoystick.fire0 = 1;
+		pJoystick->fire0 = 1;
 	if (joy[0].button[1].b)
-		gmlbJoystick.fire1 = 1;
+		pJoystick->fire1 = 1;
 	if (joy[0].button[2].b)
-		gmlbJoystick.fire2 = 1;
+		pJoystick->fire2 = 1;
 	if (joy[0].button[3].b)
-		gmlbJoystick.fire3 = 1;
+		pJoystick->fire3 = 1;
 	if (joy[0].button[4].b)
-		gmlbJoystick.fire4 = 1;
+		pJoystick->fire4 = 1;
 	if (joy[0].button[5].b)
-		gmlbJoystick.fire5 = 1;
+		pJoystick->fire5 = 1;
 	if (joy[0].button[7].b)
-		gmlbJoystick.fire7 = 1;
+		pJoystick->fire7 = 1;
 	if (joy[0].button[9].b)
-		gmlbJoystick.fire9 = 1;
+		pJoystick->fire9 = 1;
 }
+
+GmlbJoystick *gmlbJoystickGetCurrent()
+{
+	return &gmlbJoysticks[gmlbJoystickCurrent];
+}
+GmlbJoystick *gmlbJoystickGetPrevious()
+{
+	return &gmlbJoysticks[gmlbJoystickCurrent ^ 1];
+}
+
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////

@@ -864,98 +864,102 @@ static void run_escape_sequence(void)
 }
 
 
+static void handle_flight_joystick()
+{
+	gmlbJoystickPoll();
+
+	GmlbJoystick *pJoystick = gmlbJoystickGetCurrent();
+	GmlbJoystick *pJoystickPrev = gmlbJoystickGetPrevious();
+
+	if (pJoystick->up)
+		gmlbKeyboard.kbd_up_pressed = 1;
+	if (pJoystick->down)
+		gmlbKeyboard.kbd_down_pressed = 1;
+	if (pJoystick->left)
+		gmlbKeyboard.kbd_left_pressed = 1;;
+	if (pJoystick->right)
+		gmlbKeyboard.kbd_right_pressed = 1;
+
+	// Respond to buttons
+	if (pJoystick->fire1)
+		gmlbKeyboard.kbd_inc_speed_pressed = 1;
+	if (pJoystick->fire2)
+		gmlbKeyboard.kbd_dec_speed_pressed = 1;
+
+	if (current_screen == SCR_QUIT)
+	{
+		if (pJoystick->fire0 && !(pJoystickPrev->fire0))
+			gmlbKeyboard.kbd_y_pressed = 1;
+		if (pJoystick->fire1 && !(pJoystickPrev->fire1))
+			gmlbKeyboard.kbd_n_pressed = 1;
+	}
+	else if ( (current_screen == SCR_EQUIP_SHIP) ||
+		      (current_screen == SCR_OPTIONS)    ||
+		      (current_screen == SCR_SETTINGS)   )
+	{
+		if (pJoystick->fire0)
+			gmlbKeyboard.kbd_enter_pressed = 1;
+	}
+	else  // in flight
+	{
+		if (x360_controller)
+			gmlbKeyboard.kbd_fire_pressed |= pJoystick->fire4;
+		else
+			gmlbKeyboard.kbd_fire_pressed |= pJoystick->fire0;
+	}
+
+	/// Bonus controls for x360
+	if (x360_controller == 1)
+	{
+		if (pJoystick->fire7 && !(pJoystickPrev->fire7))	/// Start button - options menu/resume
+		{
+			if (game_paused)
+				gmlbKeyboard.kbd_resume_pressed = 1;
+			else
+				gmlbKeyboard.kbd_F11_pressed = 1;
+		}
+
+		if (docked)
+		{
+			if (pJoystick->fire9)				/// Launch by clicking right stick
+				gmlbKeyboard.kbd_F1_pressed = 1;
+		}
+		else // if (!docked)
+		{
+			if (pJoystick->fire9)					/// Hyper - space by clicking right stick
+				gmlbKeyboard.kbd_hyperspace_pressed = 1;
+			if (pJoystick->fire3)					/// Y to jump
+				gmlbKeyboard.kbd_jump_pressed = 1;
+
+			if (pJoystick->d_up)		/// Switch view in flight with d-pad
+				gmlbKeyboard.kbd_F1_pressed = 1;
+			if (pJoystick->d_down)
+				gmlbKeyboard.kbd_F2_pressed = 1;
+			if (pJoystick->d_left)
+				gmlbKeyboard.kbd_F3_pressed = 1;
+			if (pJoystick->d_right)
+				gmlbKeyboard.kbd_F4_pressed = 1;
+
+			if (pJoystick->fire5)				/// R bumper to refresh obc
+				gmlbKeyboard.kbd_o_pressed = 1;
+		}
+	}
+}
+
 static void handle_flight_keys(void)
 {
     int keyasc;
 	
 	gmlbKeyboardPoll();
 
-
 #ifdef _DEBUG
 	if (gmlbKeyboard.kbd_dbg_pressed)
 		dbg_dump_universe();
 #endif
 
-
 	/// Except for obc refresh command, joystick handling simply sets kbd flags
 	if (have_joystick)
-	{
-		gmlbJoystickPoll();
-
-		if (gmlbJoystick.up)
-			gmlbKeyboard.kbd_up_pressed = 1;
-		if (gmlbJoystick.down)
-			gmlbKeyboard.kbd_down_pressed = 1;
-		if (gmlbJoystick.left)
-			gmlbKeyboard.kbd_left_pressed = 1;;
-		if (gmlbJoystick.right)
-			gmlbKeyboard.kbd_right_pressed = 1;
-
-		// Respond to buttons
-		if (gmlbJoystick.fire1)
-			gmlbKeyboard.kbd_inc_speed_pressed = 1;
-		if (gmlbJoystick.fire2)
-			gmlbKeyboard.kbd_dec_speed_pressed = 1;
-
-		if (current_screen == SCR_QUIT)
-		{
-			if (gmlbJoystick.fire0)
-				gmlbKeyboard.kbd_y_pressed = 1;
-			if (gmlbJoystick.fire1)
-				gmlbKeyboard.kbd_n_pressed = 1;
-		}
-		else if ((current_screen == SCR_EQUIP_SHIP) ||
-				 (current_screen == SCR_OPTIONS) ||
-				 (current_screen == SCR_SETTINGS))
-		{
-			if (gmlbJoystick.fire0)
-				gmlbKeyboard.kbd_enter_pressed = 1;
-		}
-		else  // in flight
-		{
-			if (x360_controller)
-				gmlbKeyboard.kbd_fire_pressed |= gmlbJoystick.fire4;
-			else
-				gmlbKeyboard.kbd_fire_pressed |= gmlbJoystick.fire0;
-		}
-
-		/// Bonus controls for x360
-		if (x360_controller == 1)
-		{
-			if (gmlbJoystick.fire7)					/// Start button - options menu/resume
-			{
-				if (game_paused)
-					gmlbKeyboard.kbd_resume_pressed = 1;
-				else
-					gmlbKeyboard.kbd_F11_pressed = 1;
-			}
-
-			if (docked)
-			{
-				if (gmlbJoystick.fire9)				/// Launch by clicking right stick
-					gmlbKeyboard.kbd_F1_pressed = 1;
-			}
-			else // if (!docked)
-			{
-				if (gmlbJoystick.fire9)					/// Hyper - space by clicking right stick
-					gmlbKeyboard.kbd_hyperspace_pressed = 1;
-				if (gmlbJoystick.fire3)					/// Y to jump
-					gmlbKeyboard.kbd_jump_pressed = 1;
-
-				if (gmlbJoystick.d_up)		/// Switch view in flight with d-pad
-					gmlbKeyboard.kbd_F1_pressed = 1;
-				if (gmlbJoystick.d_down)
-					gmlbKeyboard.kbd_F2_pressed = 1;
-				if (gmlbJoystick.d_left)
-					gmlbKeyboard.kbd_F3_pressed = 1;
-				if (gmlbJoystick.d_right)
-					gmlbKeyboard.kbd_F4_pressed = 1;
-
-				if (gmlbJoystick.fire5)				/// R bumper to refresh obc
-					gmlbKeyboard.kbd_o_pressed = 1;
-			}
-		}
-	}
+		handle_flight_joystick();
 	
 	/// If paused, return early: don't process any keys except resume (start button)
 	if (game_paused)
@@ -1251,10 +1255,12 @@ static void joystick_poll_fire_for_space()
 	if (have_joystick)
 	{
 		gmlbJoystickPoll();
+		GmlbJoystick *pJoyStick = gmlbJoystickGetCurrent();
+
 		if (x360_controller == 1)
-			gmlbKeyboard.kbd_space_pressed |= gmlbJoystick.fire4;
+			gmlbKeyboard.kbd_space_pressed |= pJoyStick->fire4;
 		else
-			gmlbKeyboard.kbd_space_pressed |= gmlbJoystick.fire0;
+			gmlbKeyboard.kbd_space_pressed |= pJoyStick->fire0;
 	}
 }
 static void joystick_poll_yes_no()
@@ -1262,10 +1268,12 @@ static void joystick_poll_yes_no()
 	if (have_joystick)
 	{
 		gmlbJoystickPoll();
+		GmlbJoystick *pJoyStick = gmlbJoystickGetCurrent();
+		GmlbJoystick *pJoystickPrev = gmlbJoystickGetPrevious();
 
-		if (gmlbJoystick.fire0)
+		if (pJoyStick->fire0 && !(pJoystickPrev->fire0))
 			gmlbKeyboard.kbd_y_pressed = 1;
-		if (gmlbJoystick.fire1)
+		if (pJoyStick->fire1 && !(pJoystickPrev->fire1))
 			gmlbKeyboard.kbd_n_pressed = 1;
 	}
 }
