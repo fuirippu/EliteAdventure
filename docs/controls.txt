@@ -1,5 +1,5 @@
    +===================+
-   | Elite Adventurous |	alpha-4
+   | Elite Adventurous |
    +===================+
 --------------------------
 Keyboard/Joystick Controls (x360 controller recommended)
