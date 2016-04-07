@@ -308,7 +308,9 @@ void gmlbUpdateScreen()
 	frame_count = 0;
 
 	acquire_screen();
-	blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 512);
+	//blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 512);
+	//blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 522);
+	blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 530);
 	release_screen();
 }
 void gmlbReleaseScreen()
@@ -390,6 +392,7 @@ void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour)
 
 void gmlbGraphicsBlitScanner()
 {
+	gmlbGraphicsSetClipRegion(0, 0, 512, 530);
 	blit(gmlbBmpScanner, gmlbBmpScreen, 0, 0, gmlbGfxOffsetX, 385 + gmlbGfxOffsetY, gmlbBmpScanner->w, gmlbBmpScanner->h);
 }
 void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y)

@@ -1432,7 +1432,7 @@ static int system_initialise()
 	if ((rv = gmlbGraphicsInit2(speed_cap)) != 0)
 		return rv;			// Catastrophic failure, no graphics again
 
-	// Draw viewport border
+	/// Draw border around ship viewport
 	gfx_draw_line(0, 0, 0, 384);
 	gfx_draw_line(0, 0, 511, 0);
 	gfx_draw_line(511, 0, 511, 384);
@@ -1491,7 +1491,8 @@ int elite_main()
 		{
 			snd_update_sound();
 			gmlbUpdateScreen();
-			gfx_set_clip_region(1, 1, 510, 383);
+
+			gfx_set_clip_region(1, 1, 510, 383);		/// Ship view port only
 
 			rolling = 0;
 			climbing = 0;
@@ -1499,7 +1500,10 @@ int elite_main()
 			handle_flight_keys();
 
 			if (game_paused || (current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
+			{
+				gmlbGraphicsBlitScanner();
 				continue;
+			}
 				
 			if (message_count > 0)
 				message_count--;

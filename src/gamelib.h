@@ -105,6 +105,7 @@ void gmlbAcquireScreen();
 void gmlbUpdateScreen();
 void gmlbReleaseScreen();
 
+#pragma region Draw primitives, text, sprites
 void gmlbPlotPixelDx(int x, int y, int colour);
 void gmlbPlotPixelGdi(int x, int y, int colour);
 void gmlbPlotPixelSafe(int x, int y, int colour);
@@ -129,7 +130,7 @@ void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour);
 
 void gmlbGraphicsBlitScanner();
 void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y);
-
+#pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
 // Audio
