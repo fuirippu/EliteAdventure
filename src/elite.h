@@ -66,7 +66,7 @@
 #define FLG_POLICE			(8192)
 
 
-#define VERSION_STRING		"Version: alpha-4"
+#define VERSION_STRING		"Version: alpha-5"
 #define CREDIT_FUI			"further adventures from fuirippu 2016"
 #define VERSION_MAJOR		0x00
 #define VERSION_MINOR		0x00
