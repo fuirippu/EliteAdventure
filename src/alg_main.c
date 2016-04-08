@@ -1499,7 +1499,7 @@ int elite_main()
 
 			handle_flight_keys();
 
-			if (game_paused || (current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
+			if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS)) && !docked) || game_paused )
 			{
 				gmlbGraphicsBlitScanner();
 				continue;
