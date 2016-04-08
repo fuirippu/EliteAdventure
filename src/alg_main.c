@@ -15,7 +15,7 @@
 /*
  * alg_main.c
  *
- * Allegro version of the main game handler.
+ * Main game handler.
  */
 
 
@@ -395,10 +395,9 @@ static void display_break_pattern(void)
 	gfx_set_clip_region(1, 1, 510, 383);
 	gfx_clear_display();
 
-	//// All-new color break pattern for Elite Adventures
-	//const int break_base_colour = GFX_COL_AA_0;	// boring... zzzz..
-	//const int break_base_colour = GFX_COL_GREEN_3;	// psychedlic
-	const int break_base_colour = GFX_COL_BRK_00;	// Cycle :)
+	//break_pattern_base_colour = GFX_COL_AA_0;			// boring... zzzz..	(hyperspace)
+	//break_pattern_base_colour = GFX_COL_GREEN_3;		// psychedlic		(witch space)
+	//break_pattern_base_colour = GFX_COL_BRK_00;		// Cycle :)			(dock/launch)
 
 	const int numCircles = 15;
 	const int step = 20;
@@ -411,11 +410,11 @@ static void display_break_pattern(void)
 		maxR = 30 + (i * step);
 		for (int r = maxR; r >= minR; r -= step)
 		{
-			gfx_draw_circle(256, 192, r + 0, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 0, break_pattern_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 6, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 6, break_pattern_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 12, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 12, break_pattern_base_colour + col);
 			col = (col + 3) % 8;
 		}
 		gmlbUpdateScreen();
@@ -426,11 +425,11 @@ static void display_break_pattern(void)
 		minR = 30 + (i * step);
 		for (int r = minR; r <= maxR; r += step)
 		{
-			gfx_draw_circle(256, 192, r + 0, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 0, break_pattern_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 6, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 6, break_pattern_base_colour + col);
 			col = (col + 3) % 8;
-			gfx_draw_circle(256, 192, r + 12, break_base_colour + col);
+			gfx_draw_circle(256, 192, r + 12, break_pattern_base_colour + col);
 			col = (col + 3) % 8;
 		}
 		gmlbUpdateScreen();
@@ -438,7 +437,8 @@ static void display_break_pattern(void)
 	}
 
 	//// Original code. gfx_draw_circle() detects white circles and anti-aliases.
-	//for (i = 0; i < 20; i++)
+	////for (int i = 0; i < 20; i++)
+	//for (int i = 19; i > -1; --i)
 	//{
 	//	gfx_draw_circle(256, 192, 30 + i * 15, GFX_COL_WHITE);
 	//	gmlbUpdateScreen();

@@ -450,6 +450,7 @@ static void check_docking(int i)
 		snd_play_sample(SND_DOCK);					
 		dock_player();
 		current_screen = SCR_BREAK_PATTERN;
+		break_pattern_base_colour = GFX_COL_BRK_00;
 		return;
 	}
 					
@@ -471,6 +472,7 @@ void engage_instant_dock(void)
 		snd_play_sample(SND_DOCK);
 		dock_player();
 		current_screen = SCR_BREAK_PATTERN;
+		break_pattern_base_colour = GFX_COL_BRK_00;
 	}
 }
 #pragma endregion
@@ -1163,6 +1165,7 @@ static void enter_witchspace(void)
 		create_thargoid();	
 	
 	current_screen = SCR_BREAK_PATTERN;
+	break_pattern_base_colour = GFX_COL_GREEN_3;
 	snd_play_sample(SND_HYPERSPACE);
 }
 
@@ -1230,6 +1233,7 @@ static void complete_hyperspace(void)
 	add_new_ship(SHIP_SUN, px, py, pz, rotmat, 0, 0);
 
 	current_screen = SCR_BREAK_PATTERN;
+	break_pattern_base_colour = GFX_COL_AA_0;
 	snd_play_sample(SND_HYPERSPACE);
 }
 
@@ -1328,5 +1332,6 @@ void launch_player(void)
 	add_new_station(0, 0, -256, rotmat);
 
 	current_screen = SCR_BREAK_PATTERN;
+	break_pattern_base_colour = GFX_COL_BRK_00;
 	snd_play_sample(SND_LAUNCH);
 }

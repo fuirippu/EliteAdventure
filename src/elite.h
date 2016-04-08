@@ -66,7 +66,7 @@
 #define FLG_POLICE			(8192)
 
 
-#define VERSION_STRING		"Version: alpha-5"
+#define VERSION_STRING		"Version: alpha-4"
 #define CREDIT_FUI			"further adventures from fuirippu 2016"
 #define VERSION_MAJOR		0x00
 #define VERSION_MINOR		0x00
@@ -142,6 +142,7 @@ extern struct planet_data current_planet_data;
 
 extern int carry_flag;
 extern int current_screen;
+extern int break_pattern_base_colour;
 
 extern struct ship_data *ship_list[];
 

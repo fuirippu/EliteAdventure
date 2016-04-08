@@ -1233,5 +1233,6 @@ void abandon_ship(void)
 	snd_play_sample(SND_DOCK);
 	dock_player();
 	current_screen = SCR_BREAK_PATTERN;
+	break_pattern_base_colour = GFX_COL_BRK_00;
 }
 

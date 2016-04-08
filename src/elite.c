@@ -34,6 +34,7 @@ struct planet_data current_planet_data;
 
 int carry_flag = 0;
 int current_screen = 0;
+int break_pattern_base_colour;
 int witchspace;
 
 int x360_controller = 0;
