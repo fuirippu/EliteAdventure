@@ -538,8 +538,8 @@ void generate_landscape(int rnd_seed)
 	if ((planet_render_style == 0) || (planet_render_style == 1))
 		return;
 
-	/// One in four planets are abstract colour
-	if ((rnd_seed & 0x3) == 0x3)
+	/// One in eight planets are abstract colour
+	if ((rnd_seed & 0x7) == 0x7)
 		generate_snes_landscape(rnd_seed);
 	else
 		generate_fractal_landscape(rnd_seed);
