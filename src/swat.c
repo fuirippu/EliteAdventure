@@ -404,7 +404,8 @@ void check_target(int un, struct univ_object *flip)
 			if (univ->energy <= 0)
 			{
 				explode_object(un);
-				
+				univ->flags |= FLG_SHOT;
+
 				if (univ->type == SHIP_ASTEROID)
 				{
 					if (current_laser == (MINING_LASER & 127))

@@ -582,13 +582,14 @@ void update_universe(void)
 
 					col = GFX_COL_FUI;
 				}
-				if ((type == SHIP_CARGO) || (type == SHIP_ALLOY) || (type == SHIP_MISSILE) || (type == SHIP_ROCK))
+				if ((type == SHIP_CARGO) || (type == SHIP_ALLOY) || (type == SHIP_ROCK))
 					col = GFX_COL_AA_0;
+				else if (type == SHIP_MISSILE)
+					col = GFX_COL_BAR_MED0;
 				sprintf(buf, " k[%s, %02d.%d CR]", obc_ship_name(type), bounty / 10, bounty % 10);
-				if (type != SHIP_MISSILE)
+
+				if ((type != SHIP_MISSILE) || (universe[i].flags & FLG_SHOT))
 					obc_message(buf, col);		/// Display bounty and ship type
-				else if ((!ecm_active) && (!detonate_bomb))
-					obc_message(buf, col);		/// Missile shot (or collided?)
 
 				remove_ship (i);
 				continue;

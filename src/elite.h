@@ -64,6 +64,7 @@
 #define FLG_SLOW			(2048)
 #define FLG_BOLD			(4096)
 #define FLG_POLICE			(8192)
+#define FLG_SHOT			(16384)
 
 
 #define VERSION_STRING		"Version: alpha-4"
