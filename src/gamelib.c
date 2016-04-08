@@ -218,7 +218,10 @@ int gmlbGraphicsInit(int dx)
 		rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
 	}
 	else
+	{
+		set_window_title("Elite - Adventurous");
 		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
+	}
 #endif
 
 #else
