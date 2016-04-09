@@ -568,7 +568,7 @@ void update_universe(void)
 			if (universe[i].flags & FLG_REMOVE)
 			{
 				if (type == SHIP_VIPER)
-					cmdr.legal_status |= 64;
+					cmdr.legal_status |= 64;		// cop killer
 			
 				char buf[64];
 				int col = GFX_COL_CARDINAL;
@@ -1327,7 +1327,7 @@ void launch_player(void)
 	flight_speed = 12;
 	flight_roll = -15;
 	flight_climb = 0;
-	cmdr.legal_status |= carrying_contraband();
+	cmdr.legal_status |= carrying_contraband();		// smuggler
 	create_new_stars();
 	clear_universe();
 	generate_landscape(docked_planet.a * 251 + docked_planet.b);

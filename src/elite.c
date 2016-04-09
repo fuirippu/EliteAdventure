@@ -199,6 +199,8 @@ void dbg_dump_universe()
 	dbg_out(buf);
 	sprintf(buf, "   score = 0x%04X [%d] (mission: %d)\n", cmdr.score, cmdr.score, cmdr.mission);
 	dbg_out(buf);
+	sprintf(buf, "legality = 0x%04X [%d]\n", cmdr.legal_status, cmdr.legal_status);
+	dbg_out(buf);
 	sprintf(buf, "NRG unit = %d\n", cmdr.energy_unit);
 	dbg_out(buf);
 }

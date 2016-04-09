@@ -397,12 +397,18 @@ static void display_break_pattern(void)
 	//break_pattern_base_colour = GFX_COL_GREEN_3;		// psychedlic		(witch space)
 	//break_pattern_base_colour = GFX_COL_BRK_00;		// Cycle :)			(dock/launch)
 
-	const int numCircles = 15;
-	const int step = 20;
+	int numCircles = 15;
+	int step = 20;
+	if (break_pattern_base_colour == GFX_COL_AA_0)
+	{
+		step = 15;				// longer duration pattern for hyperspace
+		numCircles = 20;		// ...more and tighter cirles
+	}
 
 	int col = 0;
 	int minR = 30;
 	int maxR = 30;
+
 	for (int i = 0; i < numCircles; i++)
 	{
 		maxR = 30 + (i * step);
