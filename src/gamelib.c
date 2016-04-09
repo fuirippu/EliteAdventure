@@ -622,6 +622,12 @@ int gmlbSoundInit()
 	int rv = install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
 	if (rv == 0)
 		set_volume(gmlbVolumeSamples, gmlbVolumeMidi);
+	else
+	{
+		char buf[64];
+		sprintf(buf, "Error install_sound() %d", rv);
+		gmlbBasicError(buf);
+	}
 
 	return rv;
 }
@@ -635,15 +641,14 @@ int gmlbSoundLoadSample(const char *file, void **ppSample)
 		return -1;
 }
 
-void gmlbSoundUnloadSample(void **ppSample)
-{
-	destroy_sample(*ppSample);
-	*ppSample = NULL;
-}
-
 int gmlbSoundPlaySample(void *pSample)
 {
 	return play_sample(pSample, 255, 128, 1000, FALSE);
+}
+
+void gmlbDestroySample(void *pSample)
+{
+	destroy_sample(pSample);
 }
 
 /////////////////////////////////////////////////////////////////////////////

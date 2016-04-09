@@ -13,9 +13,7 @@
  */
 
 /*
- * alg_main.c
- *
- * Main game handler.
+ * alg_main.c - main game handler
  */
 
 
@@ -80,8 +78,8 @@ static int have_joystick = 0;
 static int find_input;
 static char find_name[20];
 
-static int finish = 0;              /// flag set to 1 Y is pressed on quit screen
-									/// main game loop is while (!finish)
+static int finish = 0;              /// flag is set to 1 if Y is pressed on the quit
+									/// screen, the outer game loop is while (!finish)
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
@@ -810,14 +808,14 @@ static void run_escape_sequence(void)
 	
 	newship = add_new_ship(SHIP_COBRA3, 0, 0, 200, rotmat, -127, -127);
 	universe[newship].velocity = 7;
-	snd_play_sample(SND_LAUNCH);
+	snd_play_sample(ass_smp_launch);
 
 	for (i = 0; i < 90; i++)
 	{
 		if (i == 40)
 		{
 			universe[newship].flags |= FLG_DEAD;
-			snd_play_sample(SND_EXPLODE);
+			snd_play_sample(ass_smp_explode);
 		}
 
 		gfx_set_clip_region(1, 1, 510, 383);
@@ -1391,9 +1389,9 @@ void info_message(const char *message, int col, int beep)
 		message_count = 37;
 
 		if (beep == 1)
-			snd_play_sample(SND_BEEP);
+			snd_play_sample(ass_smp_beep);
 		else if (beep == 2)
-			snd_play_sample(SND_BOOP);
+			snd_play_sample(ass_smp_boop);
 	}
 	message_colour = col;
 	strcpy(message_string, message);
@@ -1423,8 +1421,9 @@ static int system_initialise()
 
 	if ((rv = gmlbGraphicsInit(directx)) != 0)
 		return rv;			// Catastrophic failure, no graphics
+	if ((rv = gmlbSoundInit()) != 0)
+		return rv;			// Catastrophic failure, no sound
 
-	/// Allegro bitmaps, fonts and midi are combined in .\assets\elite.dat
 	if ((rv = load_assets(directx)) != 0)
 		return rv;			// Catastrophic failure, no assets
 
@@ -1437,13 +1436,6 @@ static int system_initialise()
 	gfx_draw_line(0, 0, 511, 0);
 	gfx_draw_line(511, 0, 511, 384);
 	gfx_draw_line(0, 384, 511, 384);
-
-	if ((rv = snd_sound_startup()) > 0)
-	{
-		char buf[64];
-		sprintf(buf, "Error wav %d", rv);
-		gmlbBasicError(buf);
-	}
 
 	return 0;
 }
@@ -1653,7 +1645,6 @@ int elite_main()
 			run_game_over_screen();
 	}
 
-	snd_sound_shutdown();
 	destroy_assets();
 	gmlbGraphicsShutdown();
 	

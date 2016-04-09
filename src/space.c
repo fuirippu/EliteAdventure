@@ -13,9 +13,7 @@
  */
 
 /*
- * space.c
- *
- * This module handles all the flight system and management of the space universe.
+ * space.c - handles the flight system and management of the space universe (?)
  */
 
 #include <stdio.h>
@@ -201,7 +199,7 @@ static void move_univ_object(struct univ_object *obj)
 
 static void do_game_over(void)
 {
-	snd_play_sample(SND_GAMEOVER);
+	snd_play_sample(ass_smp_gameover);
 	game_over = 1;
 }
 
@@ -395,6 +393,7 @@ static void make_station_appear(void)
 	add_new_station(sx, sy, sz, rotmat);
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
 #pragma region Docking
 /// Dock the player into the space station.
@@ -447,7 +446,7 @@ static void check_docking(int i)
 {
 	if (is_docking(i))
 	{
-		snd_play_sample(SND_DOCK);					
+		snd_play_sample(ass_smp_dock);
 		dock_player();
 		current_screen = SCR_BREAK_PATTERN;
 		break_pattern_base_colour = GFX_COL_BRK_00;
@@ -462,14 +461,14 @@ static void check_docking(int i)
 
 	flight_speed = 1;
 	damage_ship(5, universe[i].location.z > 0);
-	snd_play_sample(SND_CRASH);
+	snd_play_sample(ass_smp_crash);
 }
 
 void engage_instant_dock(void)
 {
 	if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
 	{
-		snd_play_sample(SND_DOCK);
+		snd_play_sample(ass_smp_dock);
 		dock_player();
 		current_screen = SCR_BREAK_PATTERN;
 		break_pattern_base_colour = GFX_COL_BRK_00;
@@ -477,6 +476,7 @@ void engage_instant_dock(void)
 }
 #pragma endregion
 
+/////////////////////////////////////////////////////////////////////////////
 
 static void switch_to_view(struct univ_object *flip)
 {
@@ -600,7 +600,7 @@ void update_universe(void)
 				(type != SHIP_CONSTRICTOR) && (type != SHIP_COUGAR) &&
 				(type != SHIP_CORIOLIS) && (type != SHIP_DODEC))
 			{
-				snd_play_sample(SND_EXPLODE);
+				snd_play_sample(ass_smp_explode);
 				universe[i].flags |= FLG_DEAD;		
 			}
 
@@ -1029,6 +1029,9 @@ void update_console(void)
 		gfx_draw_sprite(ass_bmp_ecm, 115, 490);
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
+#pragma region Flight roll and climb (pitch)
 void increase_flight_roll(void)
 {
 	if (flight_roll < myship.max_roll)
@@ -1049,9 +1052,12 @@ void decrease_flight_climb(void)
 	if (flight_climb > -myship.max_climb)
 		flight_climb--;
 }
+#pragma endregion
 
+/////////////////////////////////////////////////////////////////////////////
 
-/// Convenience function to call add_new_ship(PLANET) and display an obc message
+/// Called when launching/exiting hspace
+/// Calls add_new_ship(PLANET) and performs an obc reset
 static void add_planet(int x, int y, int z, Matrix rot)
 {
 	add_new_ship(SHIP_PLANET, x, y, z, rot, 0, 0);
@@ -1060,6 +1066,8 @@ static void add_planet(int x, int y, int z, Matrix rot)
 	capitalise_name(buf);
 	obc_reset(buf);
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 
 #pragma region Hyperspace
@@ -1167,7 +1175,7 @@ static void enter_witchspace(void)
 	
 	current_screen = SCR_BREAK_PATTERN;
 	break_pattern_base_colour = GFX_COL_GREEN_3;
-	snd_play_sample(SND_HYPERSPACE);
+	snd_play_sample(ass_smp_hyperspace);
 }
 
 static void complete_hyperspace(void)
@@ -1235,7 +1243,7 @@ static void complete_hyperspace(void)
 
 	current_screen = SCR_BREAK_PATTERN;
 	break_pattern_base_colour = GFX_COL_AA_0;
-	snd_play_sample(SND_HYPERSPACE);
+	snd_play_sample(ass_smp_hyperspace);
 }
 
 void countdown_hyperspace(void)
@@ -1334,5 +1342,5 @@ void launch_player(void)
 
 	current_screen = SCR_BREAK_PATTERN;
 	break_pattern_base_colour = GFX_COL_BRK_00;
-	snd_play_sample(SND_LAUNCH);
+	snd_play_sample(ass_smp_launch);
 }

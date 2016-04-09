@@ -137,8 +137,8 @@ void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y);
 
 int  gmlbSoundInit();
 int  gmlbSoundLoadSample(const char *file, void **ppSample);
-void gmlbSoundUnloadSample(void **ppSample);
 int  gmlbSoundPlaySample(void *pSample);
+void gmlbDestroySample(void *pSample);
 
 int  gmlbSoundLoadMidi(const char *file, void **ppMidi);
 void gmlbSoundPlayMidi(void *pMidi);

@@ -13,9 +13,7 @@
  */
 
 /*
- * swat.c
- *
- * Special Weapons And Tactics.
+ * swat.c - special weapons and tactics
  */
 
 #include <stdio.h>
@@ -35,6 +33,7 @@
 #include "trade.h"
 #include "pilot.h"
 #include "obcomp.h"
+#include "assets.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -363,7 +362,7 @@ void explode_object(int un)
 	if ((cmdr.score & 255) == 0)
 		info_message("Right On Commander!", GFX_COL_CYAN, 1);
 	
-	snd_play_sample(SND_EXPLODE);
+	snd_play_sample(ass_smp_explode);
 	universe[un].flags |= FLG_DEAD;
 
 	if (universe[un].type == SHIP_CONSTRICTOR)
@@ -386,7 +385,7 @@ void check_target(int un, struct univ_object *flip)
 	
 		if (current_laser)
 		{
-			snd_play_sample(SND_HIT_ENEMY);
+			snd_play_sample(ass_smp_hit_enemy);
 
 			if ((univ->type != SHIP_CORIOLIS) && (univ->type != SHIP_DODEC))
 			{			
@@ -431,7 +430,7 @@ void activate_ecm(int ours)
 	{
 		ecm_active = 32;
 		ecm_ours = ours;
-		snd_play_sample(SND_ECM);
+		snd_play_sample(ass_smp_ecm);
 	}
 }
 
@@ -454,7 +453,7 @@ void arm_missile(void)
 void unarm_missile(void)
 {
 	missile_target = MISSILE_UNARMED;
-	snd_play_sample(SND_BOOP);
+	snd_play_sample(ass_smp_boop);
 }
 
 void fire_missile(void)
@@ -490,7 +489,7 @@ void fire_missile(void)
 	cmdr.missiles--;
 	missile_target = MISSILE_UNARMED;
 	
-	snd_play_sample(SND_MISSILE);
+	snd_play_sample(ass_smp_missile);
 }
 #pragma endregion
 
@@ -550,7 +549,7 @@ static void missile_tactics(int un)
 	
 	if (ecm_active)
 	{
-		snd_play_sample(SND_EXPLODE);
+		snd_play_sample(ass_smp_explode);
 		missile->flags |= FLG_DEAD;		
 		return;
 	}
@@ -560,7 +559,7 @@ static void missile_tactics(int un)
 		if (missile->distance < 256)
 		{
 			missile->flags |= FLG_DEAD;
-			snd_play_sample(SND_EXPLODE);
+			snd_play_sample(ass_smp_explode);
 			damage_ship(250, missile->location.z >= 0.0);
 			return;
 		}
@@ -584,7 +583,7 @@ static void missile_tactics(int un)
 			if ((target->type != SHIP_CORIOLIS) && (target->type != SHIP_DODEC))
 				explode_object(missile->target);
 			else
-				snd_play_sample(SND_EXPLODE);
+				snd_play_sample(ass_smp_explode);
 
 			return;
 		}
@@ -811,9 +810,9 @@ void tactics(int un)
 			ship->acceleration--;
 			if (((ship->location.z >= 0.0) && (front_shield == 0)) ||
 				((ship->location.z < 0.0) && (aft_shield == 0)))
-				snd_play_sample(SND_INCOMMING_FIRE_2);
+				snd_play_sample(ass_smp_incoming_2);
 			else
-				snd_play_sample(SND_INCOMMING_FIRE_1);
+				snd_play_sample(ass_smp_incoming_1);
 		}				
 		else
 		{
@@ -915,8 +914,8 @@ void draw_laser_shots(int colour)
 }
 
 
-/// requires type is a valid laser type, not 0 [elite.h])
-/// returns the number of frames for which to draw the laser
+/// requires: type is a valid laser type [elite.h], not 0)
+/// returns : number of frames for which to draw the laser
 /// (#frames before calling again to simulate repeat fire)
 int fire_laser(int type)
 {
@@ -928,7 +927,7 @@ int fire_laser(int type)
 		laser_counter = (current_laser > 127) ? 0 : (current_laser & 0xFA);
 		current_laser &= 127;
 
-		snd_play_sample(SND_PULSE);
+		snd_play_sample(ass_smp_pulse);
 		laser_temp += 8;
 		if (energy > 1)
 			energy--;
@@ -1076,8 +1075,8 @@ static void create_lone_hunter(void)
 	}	
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
-/* Check for a random asteroid encounter... */
 static void check_for_asteroids(void)
 {
 	int newship;
@@ -1102,7 +1101,6 @@ static void check_for_asteroids(void)
 	}
 }
 
-/* If we've been a bad boy then send the cops after us... */
 static void check_for_cops(void)
 {
 	int newship;
@@ -1219,6 +1217,7 @@ void random_encounter(void)
 	check_for_others();	
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
 void abandon_ship(void)
 {
@@ -1231,7 +1230,7 @@ void abandon_ship(void)
 	for (i = 0; i < NO_OF_STOCK_ITEMS; i++)
 		cmdr.current_cargo[i] = 0;
 
-	snd_play_sample(SND_DOCK);
+	snd_play_sample(ass_smp_dock);
 	dock_player();
 	current_screen = SCR_BREAK_PATTERN;
 	break_pattern_base_colour = GFX_COL_BRK_00;
