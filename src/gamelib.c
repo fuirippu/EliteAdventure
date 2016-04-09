@@ -178,6 +178,7 @@ GmlbJoystick *gmlbJoystickGetPrevious()
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma region Graphics
+static const char *strWindowTitle = "Elite - Adventurous";
 static const char gmlbScanerFilename[256] = "assets\\scanner.bmp";
 static BITMAP *gmlbBmpScreen;
 static BITMAP *gmlbBmpScanner;
@@ -219,7 +220,7 @@ int gmlbGraphicsInit(int dx)
 	}
 	else
 	{
-		set_window_title("Elite - Adventurous");
+		set_window_title(strWindowTitle);
 		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
 	}
 #endif

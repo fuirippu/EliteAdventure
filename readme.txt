@@ -1,7 +1,10 @@
    ======================================
-    _Elite_Adventurous_  version:alpha-5		07/04/16
+    _Elite_Adventurous_  version:alpha-5		09/04/16
    ======================================
-07/04/16 London
+
+	< for further changes, see docs directory >
+
+09/04/16 London
 	alpha release rc_a5
 24/03/16 London
 	alpha release rc_a4

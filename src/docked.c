@@ -51,6 +51,8 @@ static const char *government_type[] = {	"Anarchy",
 							"Democracy",
 							"Corporate State"};
 
+/////////////////////////////////////////////////////////////////////////////
+
 #define NO_OF_RANKS	9
 static struct rank
 {
@@ -68,6 +70,8 @@ static struct rank
 	{ 0x0A00, "Deadly" },
 	{ 0x1900, "---- E L I T E ---" }
 };
+
+/////////////////////////////////////////////////////////////////////////////
 
 static const char *laser_name[5] = { "Pulse", "Beam", "Military", "Mining", "Custom" };
 
@@ -91,6 +95,8 @@ static char *condition_txt[] =
 
 static int hilite_item;
 static char *unit_name[] = { "t", "kg", "g" };
+
+/////////////////////////////////////////////////////////////////////////////
 
 enum equip_types
 {
@@ -487,25 +493,25 @@ void display_data_on_planet(void)
 
 	show_distance(42, docked_planet, hyperspace_planet);
 
-	sprintf(str, "Economy:%s", economy_type[hyper_planet_data.economy]);
+	sprintf(str, "Economy: %s", economy_type[hyper_planet_data.economy]);
 	gfx_display_text(16, 74, str);
 
-	sprintf(str, "Government:%s", government_type[hyper_planet_data.government]);
+	sprintf(str, "Government: %s", government_type[hyper_planet_data.government]);
 	gfx_display_text(16, 106, str);
 
-	sprintf(str, "Tech.Level:%3d", hyper_planet_data.techlevel + 1);
+	sprintf(str, "Tech.Level:   %d", hyper_planet_data.techlevel + 1);
 	gfx_display_text(16, 138, str);
 
-	sprintf(str, "Population:%d.%d Billion", hyper_planet_data.population / 10, hyper_planet_data.population % 10);
+	sprintf(str, "Population: %d.%d Billion", hyper_planet_data.population / 10, hyper_planet_data.population % 10);
 	gfx_display_text(16, 170, str);
 
 	describe_inhabitants(str, hyperspace_planet);
 	gfx_display_text(16, 202, str);
 
-	sprintf(str, "Gross Productivity:%5d M CR", hyper_planet_data.productivity);
+	sprintf(str, "Gross Productivity: %d M CR", hyper_planet_data.productivity);
 	gfx_display_text(16, 234, str);
 
-	sprintf(str, "Average Radius:%5d km", hyper_planet_data.radius);
+	sprintf(str, "Average Radius: %d km", hyper_planet_data.radius);
 	gfx_display_text(16, 266, str);
 
 	description = describe_planet(hyperspace_planet);

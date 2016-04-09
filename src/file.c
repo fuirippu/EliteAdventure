@@ -13,7 +13,7 @@
  */
 
 /*
- * file.c
+ * file.c - serialization of config file and game saves
  */
 
 #include <ctype.h>
@@ -22,10 +22,9 @@
 #include <string.h>
 
 #include "elite.h"
-#include "file.h"
 
 
-static const char *configFile = "config\\newkind.cfg";
+static const char *configFile = "config\\elite_adv.cfg";
 
 
 int write_config_file()

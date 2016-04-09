@@ -1,9 +1,24 @@
+   +===================+
+   | Elite Adventurous |
+   +===================+
+
+< current release note, see ReleaseNotes.txt for archive >
+
 ################	---------					+----------+
-# RELEASE NOTE #	v.alpha-5 (0x0000)			| 07/04/16 |
+# RELEASE NOTE #	v.alpha-5 (0x0000)			| 09/04/16 |
 ################	---------					+----------+
 
 Changes:
 --------
+  Tidied data on planet screen
+  Added install instructions
+  Renamed config file
+  New install file structure: samples (wavs)
+    handled uniformly with bmps, midi, fonts
+  Less snes planets
+  Window Title (non-directx only)
+  Only show obc msg for missile if shot
+  Break pattern now reflects ship activity
   New bitmaps (scanner, elitetx3)
   Fix: joystick button sensitivity in menus
   Don't display console items when paused
@@ -12,7 +27,6 @@ Changes:
 
 Known Bugs:
 -----------
-  No binary or install instructions
   64-bit build does not link (allegro build is 32-bit)
   Audio assets (wav) are not mastered (DC offset, unbalanced gain)
   Allegro build test on linux, no build procedure/project files for Elite

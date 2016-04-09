@@ -1,0 +1,37 @@
+   +===================+
+   | Elite Adventurous |
+   +===================+
+---------------------
+Installation Advisory
+---------------------
+Visual studio is required, Elite Adventurous is not
+distributed in binary form. Everything except visual
+studio (ie. full source and project files) is supplied.
+
+A binary of (deprecated but necessary) allegro library,
+alleg44.dll is in allegro/build_vs15. Alternatively full
+source code from which the binary was built is supplied.
+
+	+--------------------------------------------------+
+	| Build elite.exe (use visual studio)              |
+	|                                                  |
+	|                                                  |
+	| To install to <ELITE_ADV_DIR>, copy the files:   |
+	|                                                  |
+	|	<ELITE_ADV_DIR>/elite.exe                      |
+	|	<ELITE_ADV_DIR>/alleg44.dll                    |
+	|	<ELITE_ADV_DIR>/config/elite_adv.cfg           |
+	|	<ELITE_ADV_DIR>/assets/*			(28 files) |
+	|                                                  |
+	|                                                  |
+	| Launch elite.exe from <ELITE_ADV_DIR>            |
+	+--------------------------------------------------+
+
+
+ +------------------------------------------------+
+ | based on Elite - The New Kind                  |
+ |  by Christian Pinder <christian@newkind.co.uk> |
+ |                      http://www.newkind.co.uk  |
+ +------------------------------------------------+----------------+
+                                                  | fuirippu 03/16 |
+												  +----------------+

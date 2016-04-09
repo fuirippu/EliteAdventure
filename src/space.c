@@ -1283,7 +1283,7 @@ void jump_warp(void)
 		if (min_d > 20000)
 			sprintf(buf, " .u[%d]", min_d);
 		else
-			strcpy(buf, " .u[--]");
+			strcpy(buf, " .u[---]");
 		info_message(buf, GFX_COL_SNES_167, 2);
 		return;
 	}
