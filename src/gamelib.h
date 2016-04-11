@@ -91,7 +91,7 @@ int gmlbGraphicsInit(int dx);
 int gmlbGraphicsInit2(int speedCap);
 void gmlbGraphicsShutdown();
 
-int  gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap);
+int  gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap, int setPalette);
 int gmlbBitmapGetWidth(GmlbPBitmap pBitmap);
 void gmlbDestroyBitmap(GmlbPBitmap pBitmap);
 
@@ -128,8 +128,7 @@ void gmlbGraphicsPoly(int numPoints, int *poly, int colour);
 void gmlbGraphicsText(void *pFont, int x, int y, char *txt, int colour);
 void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour);
 
-void gmlbGraphicsBlitScanner();
-void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y);
+void gmlbGraphicsSprite(GmlbPBitmap sprite, int x, int y);
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////

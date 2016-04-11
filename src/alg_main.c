@@ -1437,11 +1437,12 @@ static int system_initialise()
 	if ((rv = gmlbGraphicsInit2(speed_cap)) != 0)
 		return rv;			// Catastrophic failure, no graphics again
 
-	/// Draw border around ship viewport
+	/// Draw border around ship viewport, and scanner background
 	gfx_draw_line(0, 0, 0, 384);
 	gfx_draw_line(0, 0, 511, 0);
 	gfx_draw_line(511, 0, 511, 384);
 	gfx_draw_line(0, 384, 511, 384);
+	gmlbGraphicsSprite(ass_bitmaps[ass_bmp_scanner], 0, 385);
 
 	return 0;
 }
@@ -1499,7 +1500,9 @@ int elite_main()
 
 			if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS)) && !docked) || game_paused )
 			{
-				gmlbGraphicsBlitScanner();
+				gmlbGraphicsSetClipRegion(0, 0, 512, 530);
+				gmlbGraphicsSprite(ass_bitmaps[ass_bmp_scanner], 0, 385);
+
 				continue;
 			}
 				

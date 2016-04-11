@@ -192,14 +192,15 @@ void gfx_draw_sprite(int sprite_no, int x, int y)
 	if (x == -1)
 		x = (((256 * GFX_SCALE) - gmlbBitmapGetWidth(sprite_bmp)) / 2);
 
-	gmlbGraphicsBlitSprite(sprite_bmp, x, y);
+	gmlbGraphicsSprite(sprite_bmp, x, y);
 }
 #pragma endregion
 
 
 void gfx_draw_scanner(void)
 {
-	gmlbGraphicsBlitScanner();
+	gmlbGraphicsSetClipRegion(0, 0, 512, 530);
+	gmlbGraphicsSprite(ass_bitmaps[ass_bmp_scanner], 0, 385);
 }
 
 

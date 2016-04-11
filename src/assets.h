@@ -16,9 +16,10 @@ typedef enum {
 	ass_bmp_missg = 5,
 	ass_bmp_missr = 6,
 	ass_bmp_missy = 7,
-	ass_bmp_safe = 8
+	ass_bmp_safe = 8,
+	ass_bmp_scanner = 9
 } ass_bmp;
-#define NUM_BITMAPS		(9)
+#define NUM_BITMAPS		(10)
 extern void *ass_bitmaps[NUM_BITMAPS];
 
 typedef enum {

@@ -18,6 +18,8 @@ void *ass_fonts[NUM_FONTS];
 void *ass_samples[NUM_SAMPLES];
 
 
+static const int gdiPaletteBitmap = ass_bmp_scanner;	/// The palette will be set from
+														/// this bitmap when loaded
 static const char *assetDir = "assets\\";
 
 /// Filenames
@@ -30,7 +32,8 @@ static const char *bmp_files[NUM_BITMAPS] = {
 	"missgrn",
 	"missred",
 	"missyell",
-	"safe"
+	"safe",
+	"scanner"
 };
 static const char *midi_files[NUM_MIDIS] = {
 	"theme",
@@ -74,7 +77,7 @@ static int ass_load_bitmaps()
 	for (int i = 0; i < NUM_BITMAPS; ++i)
 	{
 		sprintf(buf, "%s%s%s", assetDir, bmp_files[i], bmp_extnsn);
-		if (gmlbGraphicsLoadBitmap(buf, &ass_bitmaps[i]) != 0)
+		if (gmlbGraphicsLoadBitmap(buf, &ass_bitmaps[i], (i == ass_bmp_scanner)) != 0)
 		{
 			char msg[256];
 			sprintf(msg, "Can't load %s", buf);

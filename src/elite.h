@@ -67,7 +67,7 @@
 #define FLG_SHOT			(16384)
 
 
-#define VERSION_STRING		"Version: alpha-5"
+#define VERSION_STRING		"Version: beta-1"
 #define CREDIT_FUI			"further adventures from fuirippu 2016"
 #define VERSION_MAJOR		0x00
 #define VERSION_MINOR		0x00

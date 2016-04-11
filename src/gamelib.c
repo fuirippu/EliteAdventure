@@ -179,9 +179,8 @@ GmlbJoystick *gmlbJoystickGetPrevious()
 
 #pragma region Graphics
 static const char *strWindowTitle = "Elite - Adventurous";
-static const char gmlbScanerFilename[256] = "assets\\scanner.bmp";
+
 static BITMAP *gmlbBmpScreen;
-static BITMAP *gmlbBmpScanner;
 
 static const int gmlbGfxOffsetX = 144;
 static const int gmlbGfxOffsetY = 44;
@@ -236,18 +235,8 @@ int gmlbGraphicsInit(int dx)
 }
 int gmlbGraphicsInit2(int speedCap)
 {
-	PALETTE the_palette;
-	gmlbBmpScanner = load_bitmap(gmlbScanerFilename, the_palette);
-	if (gmlbBmpScanner == NULL)
-	{
-		gmlbBasicError("Error scanner bitmap");
-		return -1;
-	}
-
-	set_palette(the_palette);		/// Seems to only affect GDI mode
 	gmlbBmpScreen = create_bitmap(SCREEN_W, SCREEN_H);
 	clear(gmlbBmpScreen);
-	blit(gmlbBmpScanner, gmlbBmpScreen, 0, 0, gmlbGfxOffsetX, 385 + gmlbGfxOffsetY, gmlbBmpScanner->w, gmlbBmpScanner->h);
 
 	LOCK_VARIABLE(frame_count);
 	LOCK_FUNCTION(frame_timer);
@@ -258,17 +247,20 @@ int gmlbGraphicsInit2(int speedCap)
 }
 void gmlbGraphicsShutdown()
 {
-	destroy_bitmap(gmlbBmpScanner);
 	destroy_bitmap(gmlbBmpScreen);
 }
 
-int gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap)
+int gmlbGraphicsLoadBitmap(const char *file, void **ppBitmap, int setPalette)
 {
-	*ppBitmap = load_bitmap(file, NULL);
-	if (*ppBitmap)
-		return 0;
-	else
+	PALETTE palette;
+	*ppBitmap = load_bitmap(file, palette);
+	if (*ppBitmap == NULL)
 		return -1;
+
+	if (setPalette)
+		set_palette(palette);
+
+	return 0;
 }
 int gmlbBitmapGetWidth(GmlbPBitmap pBitmap)
 {
@@ -312,8 +304,6 @@ void gmlbUpdateScreen()
 	frame_count = 0;
 
 	acquire_screen();
-	//blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 512);
-	//blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 522);
 	blit(gmlbBmpScreen, screen, gmlbGfxOffsetX, gmlbGfxOffsetY, gmlbGfxOffsetX, gmlbGfxOffsetY, 512, 530);
 	release_screen();
 }
@@ -394,12 +384,7 @@ void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour)
 	textout_centre(gmlbBmpScreen, pFont, txt, (128 * gmlbGfxScale) + gmlbGfxOffsetX, (y / (2 / gmlbGfxScale)) + gmlbGfxOffsetY, colour);
 }
 
-void gmlbGraphicsBlitScanner()
-{
-	gmlbGraphicsSetClipRegion(0, 0, 512, 530);
-	blit(gmlbBmpScanner, gmlbBmpScreen, 0, 0, gmlbGfxOffsetX, 385 + gmlbGfxOffsetY, gmlbBmpScanner->w, gmlbBmpScanner->h);
-}
-void gmlbGraphicsBlitSprite(GmlbPBitmap sprite, int x, int y)
+void gmlbGraphicsSprite(GmlbPBitmap sprite, int x, int y)
 {
 	draw_sprite(gmlbBmpScreen, sprite, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY);
 }
