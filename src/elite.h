@@ -41,6 +41,8 @@
 #define SCR_GAME_OVER		19
 #define SCR_SETTINGS		20
 #define SCR_ESCAPE_POD		21
+
+#define SCR_MODIFY_SHIP		22
 #pragma endregion
 
 
@@ -111,6 +113,7 @@ struct commander
 	int market_rnd;
 	int score;
 	int saved;
+	int audio_scanner;
 	int vga_scanner;
 	int obc;
 };

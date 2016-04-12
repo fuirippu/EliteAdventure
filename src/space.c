@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include "vector.h"
+#include "gamelib.h"
 
 #include "elite.h"
 #include "gfx.h"
@@ -636,7 +637,8 @@ void update_universe(void)
 				continue;
 			}
 			
-			
+			/// The current object is neither planet nor sun...
+
 			if (universe[i].distance < 170)
 			{
 				if ((type == SHIP_CORIOLIS) || (type == SHIP_DODEC))
@@ -651,11 +653,18 @@ void update_universe(void)
 			{
 				char buf[64];
 				sprintf(buf, "-d[%s]", obc_ship_name(type));
-				obc_message(buf, GFX_COL_BAR_SAFE2);		/// Display out-of-range and ship type
+				int col = GFX_COL_BAR_SAFE2;
+				if (type == SHIP_VIPER)
+					col = GFX_COL_VIPER;
+				obc_message(buf, col);		/// Display out-of-range and ship type
 
 				remove_ship(i);
 
-				// TODO: ping sound for removal of mass locking object?
+				if ((type != SHIP_ASTEROID) && (type != SHIP_CARGO) &&
+					(type != SHIP_ALLOY) && (type != SHIP_ROCK) &&
+					(type != SHIP_BOULDER) && (type != SHIP_ESCAPE_CAPSULE) &&
+					(type != SHIP_CORIOLIS) && (type != SHIP_DODEC) && (cmdr.audio_scanner))
+					gmlbSoundPlaySample(ass_samples[ass_smp_beep]);
 
 				continue;
 			}

@@ -24,6 +24,7 @@
 #include "planet.h"
 #include "shipdata.h"
 #include "space.h"
+#include "obcomp.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -102,8 +103,7 @@ enum equip_types
 {
 	EQ_FUEL, EQ_MISSILE, EQ_CARGO_BAY, EQ_ECM, EQ_FUEL_SCOOPS,
 	EQ_ESCAPE_POD, EQ_ENERGY_BOMB, EQ_ENERGY_UNIT, EQ_DOCK_COMP,
-	EQ_GAL_DRIVE, EQ_VGA_SCANNER, EQ_OBC,
-	EQ_PULSE_LASER, EQ_FRONT_PULSE, EQ_REAR_PULSE,
+	EQ_GAL_DRIVE, EQ_PULSE_LASER, EQ_FRONT_PULSE, EQ_REAR_PULSE,
 	EQ_LEFT_PULSE, EQ_RIGHT_PULSE, EQ_BEAM_LASER, EQ_FRONT_BEAM,
 	EQ_REAR_BEAM, EQ_LEFT_BEAM, EQ_RIGHT_BEAM, EQ_MINING_LASER,
 	EQ_FRONT_MINING, EQ_REAR_MINING, EQ_LEFT_MINING, EQ_RIGHT_MINING,
@@ -111,7 +111,7 @@ enum equip_types
 	EQ_LEFT_MILITARY, EQ_RIGHT_MILITARY
 };
 
-#define NO_OF_EQUIP_ITEMS	36
+#define NO_OF_EQUIP_ITEMS	34
 static struct equip_item
 {
 	int canbuy;
@@ -133,8 +133,6 @@ static struct equip_item
 	{ 0, 0, 1, 8, 15000, " Extra Energy Unit",		EQ_ENERGY_UNIT },
 	{ 0, 0, 1, 9, 15000, " Docking Computers",		EQ_DOCK_COMP },
 	{ 0, 0, 1,10, 50000, " Galactic Hyperdrive",	EQ_GAL_DRIVE },
-	{ 0, 0, 1,10,750000, " VGA Scanner",			EQ_VGA_SCANNER },
-	{ 0, 0, 1,10,750000, " On-board Computer",		EQ_OBC },
 	{ 0, 0, 0, 3,  4000, "+Pulse Laser",			EQ_PULSE_LASER },
 	{ 0, 0, 1, 3,     0, "-Pulse Laser",			EQ_PULSE_LASER },
 	{ 0, 0, 1, 3,  4000, ">Front",					EQ_FRONT_PULSE },
@@ -161,6 +159,27 @@ static struct equip_item
 	{ 0, 0, 0,10, 60000, ">Right",					EQ_RIGHT_MILITARY }
 };
 
+/////////////////////////////////////////////////////////////////////////////
+
+enum modifications {
+	mod_scanner_audio	= 0,
+	mod_scanner_vga		= 1,
+	mod_obc				= 2
+};
+
+#define NUM_MOD_ITEMS	(3)
+static struct mod_item {
+	int y_pos;
+	int canbuy;
+	int level;
+	int price;
+	char *name;
+} mods_inventory[NUM_MOD_ITEMS] =
+{
+	{ 0, 0, 8, 650000, "Audio Scanner"},			/// Tech level 10
+	{ 0, 0, 8, 750000, "VGA Scanner"},
+	{ 0, 0,10, 750000, "On-board Computer"}			/// TL.12
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // Functions
@@ -692,6 +711,17 @@ void display_commander_status(void)
 		}
 	}
 
+	if (cmdr.audio_scanner)
+	{
+		gfx_display_text(x, y, "Audio Scanner");
+		y += Y_INC;
+		if (y > EQUIP_MAX_Y)
+		{
+			y = EQUIP_START_Y;
+			x += EQUIP_WIDTH;
+		}
+	}
+
 	if (cmdr.vga_scanner)
 	{
 		gfx_display_text(x, y, "VGA Scanner");
@@ -980,12 +1010,6 @@ static int is_equipped(int item)
 		case EQ_GAL_DRIVE:
 			return cmdr.galactic_hyperdrive;
 
-		case EQ_VGA_SCANNER:
-			return cmdr.vga_scanner;
-
-		case EQ_OBC:
-			return cmdr.obc;
-
 		case EQ_FRONT_PULSE:
 			return (cmdr.front_laser == PULSE_LASER);
 		
@@ -1257,16 +1281,6 @@ void buy_equip(void)
 			cmdr.galactic_hyperdrive = 1;
 			break;
 
-
-		case EQ_VGA_SCANNER:
-			cmdr.vga_scanner = 1;
-			break;
-
-		case EQ_OBC:
-			cmdr.obc = 1;
-			break;
-
-
 		case EQ_FRONT_PULSE:
 			cmdr.credits += laser_refund(cmdr.front_laser);
 			cmdr.front_laser = PULSE_LASER;
@@ -1365,5 +1379,176 @@ void equip_ship(void)
 	hilite_item = 0;
 	
 	list_equip_prices();
+}
+#pragma endregion
+
+#pragma region Ship Modifications
+static int show_modification(int mod)
+{
+	int y = mods_inventory[mod].y_pos;
+	if (y == 0)
+		return 0;
+
+	int col = mods_inventory[mod].canbuy ? GFX_COL_WHITE : GFX_COL_GREY_1;
+	gfx_display_colour_text(16, y, mods_inventory[mod].name, col);
+
+	char str[64];
+	sprintf(str, "%d.%d", mods_inventory[mod].price / 10, mods_inventory[mod].price % 10);
+	gfx_display_colour_text(338, y, str, col);
+
+	return 1;
+}
+
+static void highlight_modification(int i)
+{
+	int y;
+	char str[30];
+
+	if ((hilite_item != -1) && (hilite_item != i))
+	{
+		/// Remove highlight from current
+		y = mods_inventory[hilite_item].y_pos;
+		gfx_clear_area(2, y + 1, 510, y + 15);
+		show_modification(hilite_item);
+	}
+
+	y = mods_inventory[i].y_pos;
+	gfx_draw_rectangle(2, y + 1, 510, y + 15, GFX_COL_DARK_RED);
+	show_modification(i);
+	hilite_item = i;
+
+	gfx_clear_text_area();
+	sprintf(str, "Cash: %d.%d", cmdr.credits / 10, cmdr.credits % 10);
+	gfx_display_text(16, 340, str);
+}
+
+void select_next_modification(void)
+{
+	if (hilite_item == (NUM_MOD_ITEMS - 1) || (hilite_item == -1))
+		return;
+
+	int next = hilite_item;
+	for (int i = hilite_item + 1; i < NUM_MOD_ITEMS; i++)
+	{
+		if (mods_inventory[i].y_pos != 0)
+		{
+			next = i;
+			break;
+		}
+	}
+
+	if (next != hilite_item)
+		highlight_modification(next);
+}
+
+void select_previous_modification(void)
+{
+	if (hilite_item <= 0)
+		return;
+
+	int prev = hilite_item;
+	for (int i = hilite_item - 1; i >= 0; i--)
+	{
+		if (mods_inventory[i].y_pos != 0)
+		{
+			prev = i;
+			break;
+		}
+	}
+
+	if (prev != hilite_item)
+		highlight_modification(prev);
+}
+
+static void show_modifications()
+{
+	int num_shown = 0;
+	for (int i = 0; i < NUM_MOD_ITEMS; ++i)
+		num_shown += show_modification(i);
+	if (num_shown == 0)
+		gfx_display_centre_text(85, "None available", 120, GFX_COL_GREY_1);
+	else
+	{
+		int current = hilite_item;
+		hilite_item = -1;
+		highlight_modification(current);
+	}
+
+	gfx_clear_text_area();
+	char str[64];
+	sprintf(str, "Cash: %d.%d", cmdr.credits / 10, cmdr.credits % 10);
+	gfx_display_text(16, 340, str);
+}
+
+void purchase_modification(void)
+{
+	if (hilite_item == -1)
+		return;
+	if (mods_inventory[hilite_item].canbuy == 0)
+		return;
+
+	switch (hilite_item)
+	{
+	case mod_scanner_audio:
+		cmdr.audio_scanner = 1;
+		break;
+
+	case mod_scanner_vga:
+		cmdr.vga_scanner = 1;
+		break;
+
+	case mod_obc:
+		cmdr.obc = 1;
+		obc_clear();
+		break;
+	}
+
+	cmdr.credits -= mods_inventory[hilite_item].price;
+
+	for (int i = 0; i < NUM_MOD_ITEMS; ++i)
+		mods_inventory[i].canbuy = ((mods_inventory[i].canbuy) && (cmdr.credits >= mods_inventory[i].price));
+	mods_inventory[hilite_item].canbuy = 0;
+
+	dbg_out("Purchase mod\n");
+
+	show_modifications();
+}
+
+void modify_ship(void)
+{
+	current_screen = SCR_MODIFY_SHIP;
+
+	gfx_clear_display();
+	gfx_display_centre_text(10, "SHIP MODIFICATIONS", 140, GFX_COL_GOLD);
+	gfx_draw_line(0, 36, 511, 36);
+
+	hilite_item = -1;
+	int y = 55;
+	for (int i = 0; i < NUM_MOD_ITEMS; ++i)
+	{
+		mods_inventory[i].canbuy = 0;
+		mods_inventory[i].y_pos = 0;
+
+		if (current_planet_data.techlevel > mods_inventory[i].level)
+		{
+			mods_inventory[i].y_pos = y;
+			y += 15;
+			if (hilite_item == -1)
+				hilite_item = i;
+
+			if (cmdr.credits >= mods_inventory[i].price)
+			{
+				if ((i == mod_scanner_audio) && (!cmdr.audio_scanner))
+					mods_inventory[i].canbuy = 1;
+				else if ((i == mod_scanner_vga) && (!cmdr.vga_scanner))
+					mods_inventory[i].canbuy = 1;
+				else if ((i == mod_obc) && (!cmdr.obc))
+					mods_inventory[i].canbuy = 1;
+			}
+
+		}
+	}
+
+	show_modifications();
 }
 #pragma endregion

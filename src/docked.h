@@ -19,6 +19,12 @@
 extern int cross_x;
 extern int cross_y;
 
+// [F3] Ship Modifications
+void select_next_modification();
+void select_previous_modification();
+void purchase_modification();
+void modify_ship();
+
 // F4
 void equip_ship(void);
 void select_next_equip(void);

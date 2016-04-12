@@ -24,9 +24,11 @@
 #include "elite.h"
 
 
+/////////////////////////////////////////////////////////////////////////////
 static const char *configFile = "config\\elite_adv.cfg";
 
 
+/////////////////////////////////////////////////////////////////////////////
 int write_config_file()
 {
 	FILE *fp = fopen(configFile, "w");
@@ -65,7 +67,6 @@ static void read_cfg_line(char *str, int max_size, FILE *fp)
 	do
 	{	
 		fgets(str, max_size, fp);
-
 		for (s = str; *s; s++)					/* End of line at LF or # */
 		{
 			if ((*s == '\n') || (*s == '#'))
@@ -74,7 +75,6 @@ static void read_cfg_line(char *str, int max_size, FILE *fp)
 				break;
 			} 		
 		}
-
 		if (s != str)							/* Trim any trailing white space */
 		{
 			s--;
@@ -86,10 +86,8 @@ static void read_cfg_line(char *str, int max_size, FILE *fp)
 				s--;
 			}
 		}
-
 	} while (*str == '\0');
 }
-
 int read_config_file()
 {
 	FILE *fp;
@@ -138,94 +136,88 @@ int read_config_file()
 	return warn;
 }
 
+/////////////////////////////////////////////////////////////////////////////
 
 static int checksum(unsigned char *block)
 {
-	int acc,carry;
-	int i;
-
-	acc = 0x49;
-	carry = 0;
-	for (i = 0x49; i > 0; i--)
+	int acc = 0x49;
+	int carry = 0;
+	for (int i = 0x49; i > 0; i--)
 	{
 		acc += block[i-1] + carry;
 		carry = acc >> 8;
 		acc &= 255;
 		acc ^= block[i];
 	}
-
 	return acc;
 }
 
 int save_commander_file(const char *path)
 {
-	FILE *fp;
-	unsigned char block[256];
-	int i;
-	int chk;
-	
-	fp = fopen(path, "wb");
+	FILE *fp = fopen(path, "wb");
 	if (fp == NULL)
 		return 1;
 	
-	block[0]  = cmdr.mission;
-	block[1]  = docked_planet.d;
-	block[2]  = docked_planet.b;
-	block[3]  = cmdr.galaxy.a;
-	block[4]  = cmdr.galaxy.b;
-	block[5]  = cmdr.galaxy.c;
-	block[6]  = cmdr.galaxy.d;
-	block[7]  = cmdr.galaxy.e;
-	block[8]  = cmdr.galaxy.f;
-	block[9]  = (cmdr.credits >> 24) & 255;
-	block[10] = (cmdr.credits >> 16) & 255;
-	block[11] = (cmdr.credits >> 8) & 255;
-	block[12] = cmdr.credits & 255;
-	block[13] = cmdr.fuel;
-	block[14] = 4;
-	block[15] = cmdr.galaxy_number;
-	block[16] = cmdr.front_laser;
-	block[17] = cmdr.rear_laser;
-	block[18] = cmdr.left_laser;
-	block[19] = cmdr.right_laser;
-	block[20] = 0;
-	block[21] = 0;
-	block[22] = cmdr.cargo_capacity + 2;
+	unsigned char block[256];
+	block[0x00]  = cmdr.mission;
+	block[0x01]  = docked_planet.d;
+	block[0x02]  = docked_planet.b;
+	block[0x03]  = cmdr.galaxy.a;
+	block[0x04]  = cmdr.galaxy.b;
+	block[0x05]  = cmdr.galaxy.c;
+	block[0x06]  = cmdr.galaxy.d;
+	block[0x07]  = cmdr.galaxy.e;
+	block[0x08]  = cmdr.galaxy.f;
+	block[0x09]  = (cmdr.credits >> 24) & 255;
+	block[0x0a] = (cmdr.credits >> 16) & 255;
+	block[0x0b] = (cmdr.credits >> 8) & 255;
+	block[0x0b] = cmdr.credits & 255;
+	block[0x0d] = cmdr.fuel;
+	block[0x0e] = 4;
+	block[0x0f] = cmdr.galaxy_number;
+	block[0x10] = cmdr.front_laser;
+	block[0x11] = cmdr.rear_laser;
+	block[0x12] = cmdr.left_laser;
+	block[0x13] = cmdr.right_laser;
+	block[0x14] = 0;
+	block[0x15] = 0;
+	block[0x16] = cmdr.cargo_capacity + 2;
 
-	for (i = 0; i < NO_OF_STOCK_ITEMS; i++)
-		block[23+i] = cmdr.current_cargo[i];
+	for (int i = 0; i < NO_OF_STOCK_ITEMS; i++)
+		block[0x17 + i] = cmdr.current_cargo[i];
 	
-	block[40] = cmdr.ecm ? 255 : 0;
-	block[41] = cmdr.fuel_scoop ? 255 : 0;
-	block[42] = cmdr.energy_bomb ? 0x7F : 0;
-	block[43] = cmdr.energy_unit;
-	block[44] = cmdr.docking_computer ? 255 : 0;
-	block[45] = cmdr.galactic_hyperdrive ? 255 : 0;
-	block[46] = cmdr.escape_pod ? 255 : 0;
-	block[47] = VERSION_MAJOR;
-	block[48] = VERSION_MINOR;
-	block[49] = 0;
-	block[50] = 0;
-	block[51] = cmdr.missiles;
-	block[52] = cmdr.legal_status;
+	block[0x28] = cmdr.ecm ? 255 : 0;
+	block[0x29] = cmdr.fuel_scoop ? 255 : 0;
+	block[0x2a] = cmdr.energy_bomb ? 0x7F : 0;
+	block[0x2b] = cmdr.energy_unit;
+	block[0x2c] = cmdr.docking_computer ? 255 : 0;
+	block[0x2d] = cmdr.galactic_hyperdrive ? 255 : 0;
+	block[0x2e] = cmdr.escape_pod ? 255 : 0;
+	block[0x2f] = VERSION_MAJOR;
+	block[0x30] = VERSION_MINOR;
+	block[0x31] = 0;
+	block[0x32] = 0;
+	block[0x33] = cmdr.missiles;
+	block[0x34] = cmdr.legal_status;
 	
-	for (i = 0; i < NO_OF_STOCK_ITEMS; i++)
-		block[53+i] = stock_market[i].current_quantity;
+	for (int i = 0; i < NO_OF_STOCK_ITEMS; i++)
+		block[0x35 + i] = stock_market[i].current_quantity;
 	
-	block[70] = cmdr.market_rnd;
-	block[71] = cmdr.score & 255;
-	block[72] = cmdr.score >> 8;
-	block[73] = 0x20;
+	block[0x46] = cmdr.market_rnd;
+	block[0x47] = cmdr.score & 255;
+	block[0x48] = cmdr.score >> 8;
+	block[0x49] = 0x20;
 
-	chk = checksum(block);
+	int chk = checksum(block);
 	
-	block[74] = chk ^ 0xA9;
-	block[75] = chk;
+	block[0x4a] = chk ^ 0xA9;
+	block[0x4b] = chk;
 	
-	block[76] = cmdr.vga_scanner;
-	block[77] = cmdr.obc;
+	block[0x4c] = cmdr.vga_scanner;
+	block[0x4d] = cmdr.obc;
+	block[0x4e] = cmdr.audio_scanner;
 
-	for (i = 78; i < 256; i++)
+	for (int i = 0x4f; i < 0x100; i++)
 		block[i] = 0;
 
 	if (fwrite(block, 256, 1, fp) != 1)
@@ -239,74 +231,71 @@ int save_commander_file(const char *path)
 
 int load_commander_file(const char *path)
 {
-	unsigned char block[256];
-	int i;
-	int chk;
-	
 	FILE *fp = fopen(path, "rb");
 	if (fp == NULL)
 		return 1;
 
+	unsigned char block[256];
 	if (fread(block, 256, 1, fp) != 1)
 		return 1;
 
-	chk = checksum(block);
-
-	if ((block[74] != (chk ^ 0xA9)) || (block[75] != chk))
+	int chk = checksum(block);
+	if ((block[0x4a] != (chk ^ 0xA9)) || (block[0x4b] != chk))
 		return 1;
 	
-	saved_cmdr.mission = block[0];
+	saved_cmdr.mission = block[0x00];
 
-	saved_cmdr.ship_x = block[1];
-	saved_cmdr.ship_y = block[2];
+	saved_cmdr.ship_x = block[0x01];
+	saved_cmdr.ship_y = block[0x02];
 	
-	saved_cmdr.galaxy.a = block[3];
-	saved_cmdr.galaxy.b = block[4];
-	saved_cmdr.galaxy.c = block[5];
-	saved_cmdr.galaxy.d = block[6];
-	saved_cmdr.galaxy.e = block[7];
-	saved_cmdr.galaxy.f = block[8];;
+	saved_cmdr.galaxy.a = block[0x03];
+	saved_cmdr.galaxy.b = block[0x04];
+	saved_cmdr.galaxy.c = block[0x05];
+	saved_cmdr.galaxy.d = block[0x06];
+	saved_cmdr.galaxy.e = block[0x07];
+	saved_cmdr.galaxy.f = block[0x08];;
 	
-	saved_cmdr.credits = block[9] << 24;
-	saved_cmdr.credits += block[10] << 16;
-	saved_cmdr.credits += block[11] << 8;
-	saved_cmdr.credits += block[12];
+	saved_cmdr.credits = block[0x09] << 24;
+	saved_cmdr.credits += block[0x0a] << 16;
+	saved_cmdr.credits += block[0x0b] << 8;
+	saved_cmdr.credits += block[0x0c];
 
-	saved_cmdr.fuel = block[13];
+	saved_cmdr.fuel = block[0x0d];
 
-	saved_cmdr.galaxy_number = block[15];
-	saved_cmdr.front_laser = block[16];
-	saved_cmdr.rear_laser = block[17];
-	saved_cmdr.left_laser = block[18];
-	saved_cmdr.right_laser = block[19];
+	saved_cmdr.galaxy_number = block[0x0f];
+	saved_cmdr.front_laser = block[0x10];
+	saved_cmdr.rear_laser = block[0x11];
+	saved_cmdr.left_laser = block[0x12];
+	saved_cmdr.right_laser = block[0x13];
 
-	saved_cmdr.cargo_capacity = block[22] - 2;
+	saved_cmdr.cargo_capacity = block[0x16] - 2;
 
-	for (i = 0; i < NO_OF_STOCK_ITEMS; i++)
-		saved_cmdr.current_cargo[i] = block[23+i];
+	for (int i = 0; i < NO_OF_STOCK_ITEMS; i++)
+		saved_cmdr.current_cargo[i] = block[0x17 + i];
 	
-	saved_cmdr.ecm = block[40];
-	saved_cmdr.fuel_scoop = block[41];
-	saved_cmdr.energy_bomb = block[42];
-	saved_cmdr.energy_unit = block[43];
-	saved_cmdr.docking_computer = block[44];
-	saved_cmdr.galactic_hyperdrive = block[45];
-	saved_cmdr.escape_pod = block[46];
-	saved_cmdr.version_major = block[47];
-	saved_cmdr.version_minor = block[48];
-	saved_cmdr.missiles = block[51];
-	saved_cmdr.legal_status = block[52];
+	saved_cmdr.ecm = block[0x28];
+	saved_cmdr.fuel_scoop = block[0x29];
+	saved_cmdr.energy_bomb = block[0x2a];
+	saved_cmdr.energy_unit = block[0x2b];
+	saved_cmdr.docking_computer = block[0x2c];
+	saved_cmdr.galactic_hyperdrive = block[0x2d];
+	saved_cmdr.escape_pod = block[0x2e];
+	saved_cmdr.version_major = block[0x2f];
+	saved_cmdr.version_minor = block[0x30];
+	saved_cmdr.missiles = block[0x33];
+	saved_cmdr.legal_status = block[0x34];
 	
-	for (i = 0; i < NO_OF_STOCK_ITEMS; i++)
-		saved_cmdr.station_stock[i] = block[53+i];
+	for (int i = 0; i < NO_OF_STOCK_ITEMS; i++)
+		saved_cmdr.station_stock[i] = block[0x35 + i];
 	
-	saved_cmdr.market_rnd = block[70];
+	saved_cmdr.market_rnd = block[0x46];
 
-	saved_cmdr.score = block[71];
-	saved_cmdr.score += block[72] << 8;
+	saved_cmdr.score = block[0x47];
+	saved_cmdr.score += block[0x48] << 8;
 
-	saved_cmdr.vga_scanner = block[76];
-	saved_cmdr.obc = block[77];
+	saved_cmdr.vga_scanner = block[0x4c];
+	saved_cmdr.obc = block[0x4d];
+	saved_cmdr.audio_scanner = block[0x4e];
 
 	if (fclose(fp) == EOF)
 		return 1;	

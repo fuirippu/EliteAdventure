@@ -529,6 +529,9 @@ static void arrow_up(void)
 		case SCR_EQUIP_SHIP:
 			select_previous_equip();
 			break;
+		case SCR_MODIFY_SHIP:
+			select_previous_modification();
+			break;
 
 		case SCR_GALACTIC_CHART:
 		case SCR_SHORT_RANGE:
@@ -565,6 +568,9 @@ static void arrow_down(void)
 	{
 		case SCR_EQUIP_SHIP:
 			select_next_equip();
+			break;
+		case SCR_MODIFY_SHIP:
+			select_next_modification();
 			break;
 
 		case SCR_GALACTIC_CHART:
@@ -603,7 +609,10 @@ static void return_pressed(void)
 		case SCR_EQUIP_SHIP:
 			buy_equip();
 			break;
-		
+		case SCR_MODIFY_SHIP:
+			purchase_modification();
+			break;
+
 		case SCR_OPTIONS:
 			do_option();
 			break;
@@ -899,7 +908,8 @@ static void handle_flight_joystick()
 	}
 	else if ( (current_screen == SCR_EQUIP_SHIP) ||
 		      (current_screen == SCR_OPTIONS)    ||
-		      (current_screen == SCR_SETTINGS)   )
+		      (current_screen == SCR_SETTINGS)   ||
+			  (current_screen == SCR_MODIFY_SHIP))
 	{
 		if (pJoystick->fire0)
 			gmlbKeyboard.kbd_enter_pressed = 1;
@@ -999,7 +1009,9 @@ static void handle_flight_keys(void)
 	{
 		find_input = 0;
 		
-		if ((!docked) && (current_screen != SCR_LEFT_VIEW))
+		if (docked)
+			modify_ship();
+		else if (current_screen != SCR_LEFT_VIEW)
 		{
 			current_screen = SCR_LEFT_VIEW;
 			flip_stars();

@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "gamelib.h"
+
 #include "gfx.h"
 #include "elite.h"
 #include "vector.h"
@@ -151,7 +153,8 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 			}
 
 			char buf[64] = "";
-			int col;
+			int col = GFX_COL_BAR_ALERT1;
+			int playSound = 0;
 			int type = universe[i].type;
 			if ((type == SHIP_CORIOLIS) || (type == SHIP_DODEC) ||
 				(type == SHIP_ESCAPE_CAPSULE) ||
@@ -160,20 +163,32 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 			{
 				sprintf(buf, "+[%s]", obc_ship_name(type));
 				col = GFX_COL_AA_0;
+				playSound = 1;
 			}
 			else if ((type == SHIP_THARGOID) || (type == SHIP_THARGLET))
 			{
 				sprintf(buf, "d-in[_eRR0+.]");
 				col = GFX_COL_RED;
+				playSound = 1;
+			}
+			else if (type == SHIP_VIPER)
+			{
+				sprintf(buf, "+[Viper HK]");
+				col = GFX_COL_VIPER;
+				playSound = 1;
 			}
 			else if ((type != SHIP_MISSILE) && (type != SHIP_PLANET) && (type != SHIP_SUN))
 			{
 				sprintf(buf, strNewShipMsg);
-				col = GFX_COL_BAR_ALERT1;
+				playSound = 1;
 			}
-			/// No message for SHIP_SUN or SHIP_PLANET (obc reset)
+
+			/// No message for missiles, planets, or suns
 			if (buf[0] != 0)
 				obc_message(buf, col);		/// Display new object message
+
+			if ((playSound) && (cmdr.audio_scanner))
+				gmlbSoundPlaySample(ass_samples[ass_smp_beep]);
 
 			return i;
 		}

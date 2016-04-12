@@ -13,7 +13,7 @@
  */
 
 /*
- * file.h
+ * file.h - serialization of config file and game saves
  */
 
 #ifndef FILE_H
