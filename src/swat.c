@@ -179,7 +179,7 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 			}
 			else if ((type != SHIP_MISSILE) && (type != SHIP_PLANET) && (type != SHIP_SUN))
 			{
-				sprintf(buf, strNewShipMsg);
+				strcpy(buf, strNewShipMsg);
 				playSound = 1;
 			}
 

@@ -622,7 +622,7 @@ static void render_planet(int xo, int yo, int radius, struct vector *vec)
 
 
 /// TODO: wireframe planet: add two arcs from original Elite
-static void draw_wireframe_planet(int xo, int yo, int radius, struct vector *vec)
+static void draw_wireframe_planet(int xo, int yo, int radius)
 {
 	gfx_draw_circle(xo, yo, radius, GFX_COL_WHITE);
 }
@@ -658,7 +658,7 @@ static void draw_planet(struct univ_object *planet)
 	switch (planet_render_style)
 	{
 		case 0:
-			draw_wireframe_planet(x, y, radius, planet->rotmat);
+			draw_wireframe_planet(x, y, radius);
 			break;
 		
 		case 1:

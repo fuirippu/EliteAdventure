@@ -123,7 +123,7 @@ void gfx_display_text(int x, int y, char *txt)
 	gfx_display_colour_text(x, y, txt, GFX_COL_WHITE);
 }
 
-void gfx_display_pretty_text(int x1, int y1, int x2, int y2, char *txt)
+void gfx_display_pretty_text(int x1, int x2, int y, char *txt)
 {
 	char strbuf[100];
 	char *str;
@@ -156,8 +156,8 @@ void gfx_display_pretty_text(int x1, int y1, int x2, int y2, char *txt)
 
 		*bptr = '\0';
 
-		gmlbGraphicsText(ass_fonts[ass_fnt_one], x1, y1, strbuf, pColours[GFX_COL_WHITE]);
-		y1 += (8 * GFX_SCALE);
+		gmlbGraphicsText(ass_fonts[ass_fnt_one], x1, y, strbuf, pColours[GFX_COL_WHITE]);
+		y += (8 * GFX_SCALE);
 	}
 }
 

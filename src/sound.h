@@ -22,7 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 void snd_play_sample(int sample_no);
-void snd_play_midi(int midi_no, int repeat);
+void snd_play_midi(int midi_no);
 void snd_stop_midi(void);
 
 /// Audio update routine, called at start of main same loop

@@ -69,7 +69,7 @@ static struct rank
 	{ 0x0080, "Competent" },
 	{ 0x0200, "Dangerous" },
 	{ 0x0A00, "Deadly" },
-	{ 0x1900, "---- E L I T E ---" }
+	{ 0x1900, "--- E L I T E ---" }
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -534,7 +534,7 @@ void display_data_on_planet(void)
 	gfx_display_text(16, 266, str);
 
 	description = describe_planet(hyperspace_planet);
-	gfx_display_pretty_text(16, 298, 400, 384, description);
+	gfx_display_pretty_text(16, 400, 298, description);
 }
 
 #pragma region Status screen (F9)
@@ -1508,8 +1508,6 @@ void purchase_modification(void)
 	for (int i = 0; i < NUM_MOD_ITEMS; ++i)
 		mods_inventory[i].canbuy = ((mods_inventory[i].canbuy) && (cmdr.credits >= mods_inventory[i].price));
 	mods_inventory[hilite_item].canbuy = 0;
-
-	dbg_out("Purchase mod\n");
 
 	show_modifications();
 }

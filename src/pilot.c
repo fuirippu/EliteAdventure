@@ -280,7 +280,7 @@ void engage_auto_pilot (void)
 		return; 
 
 	auto_pilot = 1;
-	snd_play_midi(ass_mid_dnube, 1);
+	snd_play_midi(ass_mid_dnube);
 }
 
 

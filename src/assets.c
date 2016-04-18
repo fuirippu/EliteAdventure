@@ -20,7 +20,11 @@ void *ass_samples[NUM_SAMPLES];
 
 static const int gdiPaletteBitmap = ass_bmp_scanner;	/// The palette will be set from
 														/// this bitmap when loaded
+#ifdef WINDOWS
 static const char *assetDir = "assets\\";
+#else
+static const char *assetDir = "assets/";
+#endif
 
 /// Filenames
 static const char *bmp_files[NUM_BITMAPS] = {

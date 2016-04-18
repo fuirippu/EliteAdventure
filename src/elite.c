@@ -13,7 +13,10 @@
  */
 
 #include <stdio.h>
+
+#ifdef WINDOWS
 #include <Windows.h>
+#endif
 
 #include "elite.h"
 #include "vector.h"
@@ -98,6 +101,7 @@ struct commander saved_cmdr =
 	0,											/* Fluctuation		*/
 	0,											/* Score			*/
 	0x80,										/* Saved			*/
+	0,											/* Audio Scanner	*/
 	0,											/* VGA Scanner		*/
 	0											/* OBC				*/
 };
@@ -169,7 +173,11 @@ void restore_saved_commander(void)
 
 void dbg_out(const char *str)
 {
+#ifdef WINDOWS
 	OutputDebugString(str);
+#else
+	printf("%s", str);
+#endif
 }
 
 

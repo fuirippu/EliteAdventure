@@ -12,6 +12,9 @@
 
 #include "gamelib.h"
 
+#ifndef WINDOWS
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -137,13 +140,17 @@ void gmlbJoystickPoll()
 	if (joy[0].stick[0].axis[0].d2)
 		pJoystick->right = 1;
 
-	if (joy[0].stick[1].axis[1].d1)
+	int stickView = 1;
+#ifndef WINDOWS
+	stickView = 3;
+#endif
+	if (joy[0].stick[stickView].axis[1].d1)
 		pJoystick->d_up = 1;
-	if (joy[0].stick[1].axis[1].d2)
+	if (joy[0].stick[stickView].axis[1].d2)
 		pJoystick->d_down = 1;
-	if (joy[0].stick[1].axis[0].d1)
+	if (joy[0].stick[stickView].axis[0].d1)
 		pJoystick->d_left = 1;
-	if (joy[0].stick[1].axis[0].d2)
+	if (joy[0].stick[stickView].axis[0].d2)
 		pJoystick->d_right = 1;
 
 	if (joy[0].button[0].b)
@@ -160,7 +167,11 @@ void gmlbJoystickPoll()
 		pJoystick->fire5 = 1;
 	if (joy[0].button[7].b)
 		pJoystick->fire7 = 1;
+#ifdef WINDOWS
 	if (joy[0].button[9].b)
+#else
+	if (joy[0].button[10].b)
+#endif
 		pJoystick->fire9 = 1;
 }
 
@@ -201,6 +212,7 @@ int gmlbGraphicsInit(int dx)
 #ifdef ALLEGRO_WINDOWS	
 
 #ifdef RES_512_512
+	(void)dx;
 	rv = set_gfx_mode(GFX_DIRECTX_OVL, 512, 512, 0, 0);
 
 	if (rv != 0)
@@ -225,7 +237,9 @@ int gmlbGraphicsInit(int dx)
 #endif
 
 #else
-	rv = set_gfx_mode(GFX_AUTODETECT, 800, 600, 0, 0);
+	(void)dx;
+	set_window_title(strWindowTitle);
+	rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
 #endif
 
 	if (rv != 0)
@@ -695,7 +709,7 @@ int gmlbRequestFile(char *title, char *path, char *ext)
 void gmlbBasicError(const char *str)
 {
 	set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-	allegro_message(str);
+	allegro_message("%s", str);
 }
 #pragma endregion
 

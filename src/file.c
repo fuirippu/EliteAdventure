@@ -25,9 +25,11 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
+#ifdef WINDOWS
 static const char *configFile = "config\\elite_adv.cfg";
-
-
+#else
+static const char *configFile = "config/elite_adv.cfg";
+#endif
 /////////////////////////////////////////////////////////////////////////////
 int write_config_file()
 {
@@ -132,6 +134,10 @@ int read_config_file()
 		warn = (warn == 0) ? 8 : warn;
 
 	fclose(fp);
+
+#ifndef WINDOWS
+	directx = 0;
+#endif
 
 	return warn;
 }

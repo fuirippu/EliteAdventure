@@ -199,8 +199,8 @@ static void constrictor_mission_brief(void)
 	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_pretty_text(16, 50, 300, 384, mission1_brief_a);
-	gfx_display_pretty_text(16, 200, 470, 384,
+	gfx_display_pretty_text(16, 300, 50, mission1_brief_a);
+	gfx_display_pretty_text(16, 470, 200,
 	      (cmdr.galaxy_number == 0) ? mission1_brief_b : mission1_brief_c);
 		
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
@@ -236,7 +236,7 @@ static void constrictor_mission_debrief(void)
 
 	gfx_display_centre_text(100, "Congratulations Commander!", 140, GFX_COL_GOLD);
 	
-	gfx_display_pretty_text(116, 132, 400, 384, mission1_debrief);
+	gfx_display_pretty_text(116, 400, 132, mission1_debrief);
 
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 
@@ -258,7 +258,7 @@ static void thargoid_mission_first_brief(void)
 	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_pretty_text(116, 132, 400, 384, mission2_brief_a);
+	gfx_display_pretty_text(116, 400, 132, mission2_brief_a);
 
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 
@@ -280,8 +280,8 @@ static void thargoid_mission_second_brief(void)
 	gfx_display_centre_text(10, "INCOMING MESSAGE", 140, GFX_COL_GOLD);
 	gfx_draw_line(0, 36, 511, 36);
 
-	gfx_display_pretty_text(16, 50, 300, 384, mission2_brief_b);
-	gfx_display_pretty_text(16, 200, 470, 384, mission2_brief_c);
+	gfx_display_pretty_text(16, 300, 50, mission2_brief_b);
+	gfx_display_pretty_text(16, 470, 200, mission2_brief_c);
 
 	gfx_draw_sprite(ass_bmp_blake, 352, 46);
 	
@@ -309,7 +309,7 @@ static void thargoid_mission_debrief(void)
 
 	gfx_display_centre_text(100, "Well done, Commander.", 140, GFX_COL_GOLD);
 	
-	gfx_display_pretty_text(116, 132, 400, 384, mission2_debrief);
+	gfx_display_pretty_text(116, 400, 132, mission2_debrief);
 
 	gfx_display_centre_text(330, "Press space to continue", 140, GFX_COL_GOLD);
 

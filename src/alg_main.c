@@ -1298,7 +1298,7 @@ static void run_first_intro_screen(void)
 {
 	current_screen = SCR_INTRO_ONE;
 
-	snd_play_midi(ass_mid_theme, -1);
+	snd_play_midi(ass_mid_theme);
 
 	initialise_intro1();
 
@@ -1329,7 +1329,7 @@ static void run_second_intro_screen(void)
 {
 	current_screen = SCR_INTRO_TWO;
 	
-	snd_play_midi(ass_mid_dnube, -1);
+	snd_play_midi(ass_mid_dnube);
 		
 	initialise_intro2();
 
