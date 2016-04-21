@@ -5,9 +5,9 @@
 ALGDIR := ../../allegro/build_linux
 
 CC := gcc
-CFLAGS := -I $(ALGDIR)/include -std=c99 -D_DEBUG -Wall -Wextra -Wno-unknown-pragmas -Werror
+CFLAGS := -I $(ALGDIR)/include -std=c99 -D_DEBUG -Wall -Wextra -Wno-unknown-pragmas -Werror -O2
 
-LDFLAGS := -L $(ALGDIR)/lib
+LDFLAGS := -L $(ALGDIR)/lib -s
 LDLIBS := -lm -lalleg
 ###########################################################
 SRCDIR := ..

@@ -68,7 +68,7 @@ static void read_cfg_line(char *str, int max_size, FILE *fp)
 
 	do
 	{	
-		fgets(str, max_size, fp);
+		str = fgets(str, max_size, fp);
 		for (s = str; *s; s++)					/* End of line at LF or # */
 		{
 			if ((*s == '\n') || (*s == '#'))

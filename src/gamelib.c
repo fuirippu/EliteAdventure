@@ -14,7 +14,7 @@
 
 #ifndef WINDOWS
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+#endif // WINDOWS
 
 /////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -24,6 +24,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // Functions
 /////////////////////////////////////////////////////////////////////////////
+#ifdef _DEBUG
+void dbg_out(const char *str);	/// see elite.c
+void dbg_dump_universe();
+#endif // _DEBUG
+
 
 #pragma region Input
 GmlbKeyboard gmlbKeyboard;
@@ -85,8 +90,9 @@ void gmlbKeyboardPoll()
 	gmlbKeyboard.kbd_space_pressed = key[KEY_SPACE];
 
 #ifdef _DEBUG
-	gmlbKeyboard.kbd_dbg_pressed = key[KEY_B];
-#endif
+	if (key[KEY_B])
+		dbg_dump_universe();
+#endif // _DEBUG
 
 	while (keypressed())
 		readkey();
@@ -143,7 +149,7 @@ void gmlbJoystickPoll()
 	int stickView = 1;
 #ifndef WINDOWS
 	stickView = 3;
-#endif
+#endif // not WINDOWS
 	if (joy[0].stick[stickView].axis[1].d1)
 		pJoystick->d_up = 1;
 	if (joy[0].stick[stickView].axis[1].d2)
@@ -169,9 +175,9 @@ void gmlbJoystickPoll()
 		pJoystick->fire7 = 1;
 #ifdef WINDOWS
 	if (joy[0].button[9].b)
-#else
+#else // not WINDOWS
 	if (joy[0].button[10].b)
-#endif
+#endif // WINDOWS
 		pJoystick->fire9 = 1;
 }
 
@@ -209,7 +215,7 @@ int gmlbGraphicsInit(int dx)
 {
 	int rv;
 
-#ifdef ALLEGRO_WINDOWS	
+#ifdef WINDOWS	
 
 #ifdef RES_512_512
 	(void)dx;
@@ -223,7 +229,7 @@ int gmlbGraphicsInit(int dx)
 
 	if (rv == 0)
 		set_display_switch_mode(SWITCH_BACKGROUND);
-#else
+#else // not RES_512_512
 	if (dx == 1)
 	{
 		set_color_depth(32);
@@ -234,12 +240,20 @@ int gmlbGraphicsInit(int dx)
 		set_window_title(strWindowTitle);
 		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
 	}
-#endif
+#endif // RES_xxx_xxx
 
-#else
-	(void)dx;
-	set_window_title(strWindowTitle);
-	rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
+#else // not WINDOWS
+
+	if (dx == 1)
+	{
+		rv = set_gfx_mode(GFX_AUTODETECT, 800, 600, 0, 0);
+	}
+	else
+	{
+		set_window_title(strWindowTitle);
+		rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
+	}
+
 #endif
 
 	if (rv != 0)
@@ -387,12 +401,12 @@ void gmlbGraphicsPoly(int numPoints, int *poly, int colour)
 	polygon(gmlbBmpScreen, numPoints, poly, colour);
 }
 
-void gmlbGraphicsText(void *pFont, int x, int y, char *txt, int colour)
+void gmlbGraphicsText(void *pFont, int x, int y, const char *txt, int colour)
 {
 	text_mode(-1);
 	textout(gmlbBmpScreen, pFont, txt, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, colour);
 }
-void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour)
+void gmlbGraphicsTextCentre(void *pFont, int y, const char *txt, int colour)
 {
 	text_mode(-1);
 	textout_centre(gmlbBmpScreen, pFont, txt, (128 * gmlbGfxScale) + gmlbGfxOffsetX, (y / (2 / gmlbGfxScale)) + gmlbGfxOffsetY, colour);
@@ -716,6 +730,7 @@ void gmlbBasicError(const char *str)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef _DEBUG
+
 // Using OutputDebugString() requires windows.h, this defines BITMAP
 // and clashes with allegro.h. For now, debug functions are in elite.c
 
@@ -756,11 +771,11 @@ void gmlbBasicError(const char *str)
 //	dbg_out(buf);
 //}
 /////////////////////////////////////////////////////////////////////////////
-#endif
+#endif // _DEBUG
 
 /////////////////////////////////////////////////////////////////////////////
 
-int elite_main();			/// [alg_main.c]
+int elite_main();		/// [alg_main.c]
 int main()
 {
 	return elite_main();

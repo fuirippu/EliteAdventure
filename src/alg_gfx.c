@@ -113,29 +113,25 @@ void gfx_draw_rectangle(int tx, int ty, int bx, int by, int colour)
 }
 
 
-void gfx_display_colour_text(int x, int y, char *txt, int colour)
+void gfx_display_colour_text(int x, int y, const char *txt, int colour)
 {
 	gmlbGraphicsText(ass_fonts[ass_fnt_one], (x / (2 / GFX_SCALE)), (y / (2 / GFX_SCALE)), txt, pColours[colour]);
 }
 
-void gfx_display_text(int x, int y, char *txt)
+void gfx_display_text(int x, int y, const char *txt)
 {
 	gfx_display_colour_text(x, y, txt, GFX_COL_WHITE);
 }
 
-void gfx_display_pretty_text(int x1, int x2, int y, char *txt)
+void gfx_display_pretty_text(int x1, int x2, int y, const char *txt)
 {
 	char strbuf[100];
-	char *str;
 	char *bptr;
-	int len;
 	int pos;
-	int maxlen;
 
-	maxlen = (x2 - x1) / 8;
-
-	str = txt;
-	len = strlen(txt);
+	int maxlen = (x2 - x1) / 8;
+	const char *str = txt;
+	int len = strlen(txt);
 
 	while (len > 0)
 	{
@@ -161,7 +157,7 @@ void gfx_display_pretty_text(int x1, int x2, int y, char *txt)
 	}
 }
 
-void gfx_display_centre_text(int y, char *str, int psize, int colour)
+void gfx_display_centre_text(int y, const char *str, int psize, int colour)
 {
 	ass_fnt font;
 	int txt_colour;
