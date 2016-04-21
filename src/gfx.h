@@ -185,10 +185,10 @@ void gfx_draw_line(int x1, int y1, int x2, int y2);
 void gfx_draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int colour);
 void gfx_draw_rectangle(int tx, int ty, int bx, int by, int colour);
 
-void gfx_display_colour_text(int x, int y, char *txt, int colour);
-void gfx_display_text(int x, int y, char *txt);
-void gfx_display_pretty_text(int x1, int x2, int y, char *txt);
-void gfx_display_centre_text(int y, char *str, int psize, int colour);
+void gfx_display_colour_text(int x, int y, const char *txt, int colour);
+void gfx_display_text(int x, int y, const char *txt);
+void gfx_display_pretty_text(int x1, int x2, int y, const char *txt);
+void gfx_display_centre_text(int y, const char *str, int psize, int colour);
 
 void gfx_draw_sprite(int sprite_no, int x, int y);
 /////////////////////////////////////////////////////////////////////////////

@@ -16,7 +16,7 @@
 
 #ifdef WINDOWS
 #include <Windows.h>
-#endif
+#endif // WINDOWS
 
 #include "elite.h"
 #include "vector.h"
@@ -175,43 +175,40 @@ void dbg_out(const char *str)
 {
 #ifdef WINDOWS
 	OutputDebugString(str);
-#else
+#else // not WINDOWS
 	printf("%s", str);
-#endif
+	fflush(stdout);
+#endif // WINDOWS
 }
 
 
 void dbg_dump_universe()
 {
 	char buf[128];
-
 	for (int i = 0; i < MAX_UNIV_OBJECTS; i++)
 	{
 		if (universe[i].type != 0)
 		{
-			sprintf(buf, "[%02d] - %s\n", i, obc_ship_name(universe[i].type));
-			dbg_out(buf);
-			sprintf(buf, "      @ <% 11.3f, % 11.3f, % 11.3f> d=%d\n",
-				universe[i].location.x, universe[i].location.y, universe[i].location.z,
-				universe[i].distance);
+			sprintf(buf, "[%02d] %-13s @ <% 11.3f, % 11.3f, % 11.3f> d=%d\n",
+							i, obc_ship_name(universe[i].type),
+							universe[i].location.x, universe[i].location.y, universe[i].location.z,
+							universe[i].distance);
 			dbg_out(buf);
 		}
 	}
-	dbg_out(" <End_of_universe>\n");
-
-	sprintf(buf, "Cmdr \"%s\"  %d.%d Cr\n", cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10));
-	dbg_out(buf);
-	sprintf(buf, "    Fuel = %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
-	dbg_out(buf);
-	sprintf(buf, "     Alt = %d (x100km minimum alt)\n", myship.altitude / 4);
-	dbg_out(buf);
-	sprintf(buf, "   score = 0x%04X [%d] (mission: %d)\n", cmdr.score, cmdr.score, cmdr.mission);
-	dbg_out(buf);
-	sprintf(buf, "legality = 0x%04X [%d]\n", cmdr.legal_status, cmdr.legal_status);
-	dbg_out(buf);
-	sprintf(buf, "NRG unit = %d\n", cmdr.energy_unit);
+	//sprintf(buf, "    Fuel = %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
+	//dbg_out(buf);
+	//sprintf(buf, "     Alt = %d (x100km minimum alt)\n", myship.altitude / 4);
+	//dbg_out(buf);
+	//sprintf(buf, "     legality = 0x%04X [%d]\n", cmdr.legal_status, cmdr.legal_status);
+	//dbg_out(buf);
+	//sprintf(buf, "     NRG unit = %d\n", cmdr.energy_unit);
+	//dbg_out(buf);
+	sprintf(buf, "  ^Cmdr \"%s\" %d.%d Cr, score = 0x%04X [%d] (mission: %d)\n\n",
+					cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10),
+					cmdr.score, cmdr.score, cmdr.mission);
 	dbg_out(buf);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#endif
+#endif // _DEBUG

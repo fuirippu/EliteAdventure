@@ -1,0 +1,21 @@
+#!/bin/sh
+###############################################
+# Script to run Elite writing stdout & stderr #
+#  to both the terminal, and to a file.       #
+###############################################
+#                                             #
+#    Usage: run [<nn>]                        #
+#      output is saved to Elite_nn.out        #
+#                                             #
+###############################################
+
+if [ "$#" = "0" ]
+then
+	OUTFILE=/dev/null
+else
+	OUTFILE="Elite_$1.out"
+fi
+
+echo "Elite running, output log is $OUTFILE\n"
+(cd ../.. && src/linux/Elite 2>&1 | tee $OUTFILE)
+

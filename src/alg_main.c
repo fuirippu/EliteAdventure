@@ -345,12 +345,11 @@ static void draw_mining_sights()
 /// Draws sights and shots as appropriate to type and laser_frames_left count
 static void draw_lasers()
 {
-	int shot_colour;
+	int shot_colour = GFX_COL_WHITE;
 	switch (laser_type)
 	{
 	case PULSE_LASER:
 		draw_pulse_sights(GFX_COL_WHITE, GFX_COL_GREY_1);
-		shot_colour = GFX_COL_WHITE;
 		break;
 	case BEAM_LASER:
 		draw_beam_sights(GFX_COL_YELLOW_3, GFX_COL_GREY_1);
@@ -911,7 +910,7 @@ static void handle_flight_joystick()
 		      (current_screen == SCR_SETTINGS)   ||
 			  (current_screen == SCR_MODIFY_SHIP))
 	{
-		if (pJoystick->fire0)
+		if ((pJoystick->fire0) && (pJoystickPrev->fire0))
 			gmlbKeyboard.kbd_enter_pressed = 1;
 	}
 	else  // in flight
@@ -965,11 +964,6 @@ static void handle_flight_keys(void)
     int keyasc;
 	
 	gmlbKeyboardPoll();
-
-#ifdef _DEBUG
-	if (gmlbKeyboard.kbd_dbg_pressed)
-		dbg_dump_universe();
-#endif
 
 	/// Except for obc refresh command, joystick handling simply sets kbd flags
 	if (have_joystick)

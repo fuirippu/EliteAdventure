@@ -41,7 +41,6 @@
 #define SCR_GAME_OVER		19
 #define SCR_SETTINGS		20
 #define SCR_ESCAPE_POD		21
-
 #define SCR_MODIFY_SHIP		22
 #pragma endregion
 
@@ -151,7 +150,8 @@ extern int break_pattern_base_colour;
 extern struct ship_data *ship_list[];
 
 extern int x360_controller;	/// 1 == yes, 0 == no
-extern int directx;			/// 1 == Use directx, 0 == Use GDI
+extern int directx;			/// 1 == Use directx (full-screen on linux)
+							/// 0 == Use GDI (windowed on linux)
 extern int wireframe;
 extern int anti_alias_gfx;
 extern int hoopy_casinos;
@@ -189,7 +189,7 @@ void restore_saved_commander(void);
 #ifdef _DEBUG
 void dbg_dump_universe();
 void dbg_out(const char *str);
-#endif		// #ifdef _DEBUG
+#endif // _DEBUG
 
 
 #endif		// #ifndef ELITE_H

@@ -48,9 +48,6 @@ typedef struct {
 	int kbd_enter_pressed;
 	int kbd_backspace_pressed;
 	int kbd_space_pressed;
-#ifdef _DEBUG
-	int kbd_dbg_pressed;
-#endif
 } GmlbKeyboard;
 extern GmlbKeyboard gmlbKeyboard;
 
@@ -125,8 +122,8 @@ void gmlbGraphicsRectFill(int x1, int y1, int x2, int y2, int colour);
 
 void gmlbGraphicsPoly(int numPoints, int *poly, int colour);
 
-void gmlbGraphicsText(void *pFont, int x, int y, char *txt, int colour);
-void gmlbGraphicsTextCentre(void *pFont, int y, char *txt, int colour);
+void gmlbGraphicsText(void *pFont, int x, int y, const char *txt, int colour);
+void gmlbGraphicsTextCentre(void *pFont, int y, const char *txt, int colour);
 
 void gmlbGraphicsSprite(GmlbPBitmap sprite, int x, int y);
 #pragma endregion
