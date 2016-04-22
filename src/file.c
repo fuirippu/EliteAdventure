@@ -135,10 +135,6 @@ int read_config_file()
 
 	fclose(fp);
 
-#ifndef WINDOWS
-	directx = 0;
-#endif
-
 	return warn;
 }
 
@@ -177,7 +173,7 @@ int save_commander_file(const char *path)
 	block[0x09]  = (cmdr.credits >> 24) & 255;
 	block[0x0a] = (cmdr.credits >> 16) & 255;
 	block[0x0b] = (cmdr.credits >> 8) & 255;
-	block[0x0b] = cmdr.credits & 255;
+	block[0x0c] = cmdr.credits & 255;
 	block[0x0d] = cmdr.fuel;
 	block[0x0e] = 4;
 	block[0x0f] = cmdr.galaxy_number;

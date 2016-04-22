@@ -1436,10 +1436,15 @@ static int system_initialise()
 	if ((rv = gmlbSoundInit()) != 0)
 		return rv;			// Catastrophic failure, no sound
 
-	if ((rv = load_assets(directx)) != 0)
+	if ((rv = load_assets()) != 0)
 		return rv;			// Catastrophic failure, no assets
 
+#ifdef WINDOWS
 	setColours(directx);
+#else // not WINDOWS		// On linux, directx determines full-screen (1) or
+	setColours(1);			// window (0). Unlike MSoft, both use 32-bit colour.
+#endif // WINDOWS
+
 	if ((rv = gmlbGraphicsInit2(speed_cap)) != 0)
 		return rv;			// Catastrophic failure, no graphics again
 
@@ -1468,7 +1473,8 @@ int elite_main()
 		update_console();
 
 		//char buf[80];
-		//sprintf(buf, "sizeof(int)  is %d\nsizeof(long) is %d\n", sizeof(int), sizeof(long));
+		//sprintf(buf, "sizeof(int)  is %ld\nsizeof(long) is %ld\nsizeof(unsigned char) is %ld\n",
+		//				sizeof(int), sizeof(long), sizeof(unsigned char));
 		//dbg_out(buf);
 
 		current_screen = SCR_FRONT_VIEW;
