@@ -188,7 +188,7 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
 				obc_message(buf, col);		/// Display new object message
 
 			if ((playSound) && (cmdr.audio_scanner))
-				gmlbSoundPlaySample(ass_samples[ass_smp_beep]);
+				gmlbSoundPlaySample(ass_smp_beep);
 
 			return i;
 		}
@@ -331,19 +331,6 @@ static void launch_loot(int un, int loot)
 	}
 }
 
-
-static int in_target(int type, double x, double y, double z)
-{
-	double size;
-	
-	if (z < 0)
-		return 0;
-		
-	size = ship_list[type]->size;
-
-	return ((x*x + y*y) <= size);	
-}
-
 static void make_angry(int un)
 {
 	int type;
@@ -384,17 +371,35 @@ void explode_object(int un)
 		cmdr.mission = 2;
 }
 
-void check_target(int un, struct univ_object *flip)
+/// Check a ship's size and position, return true if ship is in our sights
+static int in_target(int type, double x, double y, double z)
 {
-	struct univ_object *univ;
+	double size;
 	
-	univ = &universe[un];
-	
-	if (in_target(univ->type, flip->location.x, flip->location.y, flip->location.z))
+	if (z < 0)
+		return 0;
+
+	size = ship_list[type]->size;
+
+	return (((x * x) + (y * y)) <= size);
+}
+
+/// Check our sights to see if we have armed a missile,
+/// or shot (and destroyed?) an object
+void check_target(int targetIndex, struct univ_object *flip)
+{
+	/// Don't bother checking if we're not shooting and no missile is armed
+	if ((!current_laser) && (missile_target != MISSILE_ARMED))
+		return;
+
+	struct univ_object *pTarget = &universe[targetIndex];
+	int type = pTarget->type;
+
+	if (in_target(type, flip->location.x, flip->location.y, flip->location.z))
 	{
-		if ((missile_target == MISSILE_ARMED) && (univ->type >= 0))
+		if ((missile_target == MISSILE_ARMED) && (type >= 0))
 		{
-			missile_target = un;
+			missile_target = targetIndex;
 			info_message("Target Locked", GFX_COL_WHITE, 1);
 		}
 	
@@ -402,37 +407,35 @@ void check_target(int un, struct univ_object *flip)
 		{
 			snd_play_sample(ass_smp_hit_enemy);
 
-			if ((univ->type != SHIP_CORIOLIS) && (univ->type != SHIP_DODEC))
-			{			
-				if ((univ->type == SHIP_CONSTRICTOR) || (univ->type == SHIP_COUGAR))
-				{
-					if (current_laser == (MILITARY_LASER & 127))
-						univ->energy -= current_laser / 4;
-				}
-				else
-				{
-					univ->energy -= current_laser;
-				}
+			/// Constrictor and Cougar are heavily armoured
+			if ((type == SHIP_CONSTRICTOR) || (type == SHIP_COUGAR))
+			{
+				if (current_laser == (MILITARY_LASER & 127))
+					pTarget->energy -= current_laser / 4;
+			}
+			/// Space stations are invulnerable
+			else if ((type != SHIP_CORIOLIS) && (type != SHIP_DODEC))
+			{
+				pTarget->energy -= current_laser;
 			}
 
-			if (univ->energy <= 0)
+			if (pTarget->energy <= 0)
 			{
-				explode_object(un);
-				univ->flags |= FLG_SHOT;
+				explode_object(targetIndex);
+				pTarget->flags |= FLG_SHOT;
 
-				if (univ->type == SHIP_ASTEROID)
+				if (type == SHIP_ASTEROID)
 				{
 					if (current_laser == (MINING_LASER & 127))
-					    launch_loot(un, SHIP_ROCK);
+					    launch_loot(targetIndex, SHIP_ROCK);
 				}
 				else
 				{
-					launch_loot(un, SHIP_ALLOY);
-					launch_loot(un, SHIP_CARGO);
+					launch_loot(targetIndex, SHIP_ALLOY);
+					launch_loot(targetIndex, SHIP_CARGO);
 				}
 			}
-					
-			make_angry(un);
+			make_angry(targetIndex);
 		}
 	}
 }

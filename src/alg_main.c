@@ -1661,6 +1661,7 @@ int elite_main()
 	}
 
 	destroy_assets();
+	gmlbSoundShutdown();
 	gmlbGraphicsShutdown();
 	
 	return 0;

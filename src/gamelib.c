@@ -10,11 +10,15 @@
 #include <stdio.h>
 #include <allegro.h>
 
+#ifdef USE_ALSA
+#include <portaudio.h>
+#endif // USE_ALSA
+
 #include "gamelib.h"
 
 #ifndef WINDOWS
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif // WINDOWS
+#endif // not WINDOWS
 
 /////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -244,14 +248,17 @@ int gmlbGraphicsInit(int dx)
 
 #else // not WINDOWS
 
+	set_color_depth(32);
 	if (dx == 1)
 	{
-		rv = set_gfx_mode(GFX_AUTODETECT, 800, 600, 0, 0);
+		//rv = set_gfx_mode(GFX_AUTODETECT, 800, 600, 0, 0);
+		rv = set_gfx_mode(GFX_AUTODETECT, 1280, 800, 0, 0);
 	}
 	else
 	{
 		set_window_title(strWindowTitle);
-		rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
+		//rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
+		rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1280, 800, 0, 0);
 	}
 
 #endif
@@ -628,45 +635,282 @@ void gmlbGraphicsAACircle(int cx, int cy, int radius)
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma region Audio
+
+
+#ifdef USE_ALG_AUDIO
+typedef Sample *GmlbAudioAsset;
+
 static const int gmlbVolumeSamples = 128;
 static const int gmlbVolumeMidi = 96;
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+typedef struct {
+	void *pData;
+	size_t numBytes;
+} GmlbPCM;
+static GmlbPCM gmlbAudioAssets[NUM_SAMPLES];
+
+typedef enum { STREAM_FREE, STREAM_PLAY, STREAM_FLUSH } GmlbStreamState;
+typedef struct {
+	PaStream *paStream;
+	ass_smp	asset;
+	void *pCurrent;
+	size_t bytesRemaining;
+	GmlbStreamState state;
+} GmlbStream;
+#define NUM_STREAMS	(4)
+static GmlbStream gmlbAudioStreams[NUM_STREAMS];
+
+/////////////////////////////////////////////////////////////////////////////
+
+static int portAudioCB( const void *inputBuffer,
+						void *outputBuffer,
+                        unsigned long framesPerBuffer,
+                        const PaStreamCallbackTimeInfo* timeInfo,
+                        PaStreamCallbackFlags statusFlags,
+                        void *userData )
+{
+	(void)inputBuffer;
+	(void)timeInfo;
+	(void)statusFlags;
+	GmlbStream *pStream = userData;
+
+	size_t numBytesToCopy = framesPerBuffer * 2;
+	if (numBytesToCopy < pStream->bytesRemaining)
+	{
+		memcpy(outputBuffer, pStream->pCurrent, numBytesToCopy);
+		pStream->pCurrent += numBytesToCopy;
+		pStream->bytesRemaining -= numBytesToCopy;
+
+		return paContinue;
+	}
+
+	memcpy(outputBuffer, pStream->pCurrent, pStream->bytesRemaining);
+	numBytesToCopy -= pStream->bytesRemaining;
+	memset(outputBuffer + pStream->bytesRemaining, 0, numBytesToCopy);
+	pStream->bytesRemaining = 0;
+	pStream->state = STREAM_FLUSH;
+
+	return paComplete;
+}
+#endif	// USE_ALSA
+
+/////////////////////////////////////////////////////////////////////////////
 
 int gmlbSoundInit()
 {
-	int rv = install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
-	if (rv == 0)
-		set_volume(gmlbVolumeSamples, gmlbVolumeMidi);
-	else
+	int rv = 0;
+	char buf[64];
+
+#ifdef USE_ALG_AUDIO
+    rv = install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
+    if (rv == 0)
+        set_volume(gmlbVolumeSamples, gmlbVolumeMidi);
+    else
 	{
-		char buf[64];
-		sprintf(buf, "Error install_sound() %d", rv);
+        sprintf(buf, "Error install_sound() %d", rv);
 		gmlbBasicError(buf);
 	}
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+	for (int i=0; i < NUM_STREAMS; ++i)
+		gmlbAudioStreams[i].paStream = NULL;
+	for (int i=0; i < NUM_SAMPLES; ++i)
+		gmlbAudioAssets[i].pData = NULL;
+
+	rv = Pa_Initialize();
+	if ( rv != paNoError )
+	{
+		sprintf(buf, "Pa_Initialize %d, %s", rv, Pa_GetErrorText(rv));
+		gmlbBasicError(buf);
+
+		return rv;
+	}
+
+	for (int i=0; i < NUM_STREAMS; ++i)
+	{
+		// 0 in, 1 out, PCM16, 44.1kHz, best bufsiz, callback, userdata
+		rv = Pa_OpenDefaultStream( &(gmlbAudioStreams[i].paStream), 0, 1, paInt16, 44100,
+					paFramesPerBufferUnspecified, portAudioCB, &gmlbAudioStreams[i]);
+		if (rv != paNoError)
+		{
+			sprintf(buf, "OpenStream %d %d, %s", i, rv, Pa_GetErrorText(rv));
+			gmlbBasicError(buf);
+
+			return rv;
+		}
+		gmlbAudioStreams[i].state = STREAM_FREE;
+	}
+#endif // USE_ALSA
 
 	return rv;
 }
 
-int gmlbSoundLoadSample(const char *file, void **ppSample)
+void gmlbSoundShutdown()
 {
-	*ppSample = load_sample(file);
-	if (*ppSample)
-		return 0;
-	else
+	// No shutdown for Allegro?
+
+#ifdef USE_ALSA
+	PaError rv;
+	char buf[64];
+
+	for (int i=0; i < NUM_STREAMS; ++i)
+	{
+		if (gmlbAudioStreams[i].paStream == NULL)
+			continue;
+
+		rv = Pa_CloseStream(gmlbAudioStreams[i].paStream);
+	    if ( rv != paNoError )
+		{
+			sprintf(buf, "CloseStream %d %d, %s", i, rv, Pa_GetErrorText(rv));
+			gmlbBasicError(buf);
+		}
+		gmlbAudioStreams[i].paStream = NULL;
+	}
+#endif // USE_ALSA
+}
+
+int gmlbSoundLoadSample(const char *file, ass_smp asset)
+{
+#ifdef USE_ALG_AUDIO
+    gmlbAudioAssets[asset] = load_sample(file);
+    if (gmlbAudioAssets[asset])
+        return 0;
+    else
 		return -1;
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+	FILE *fd = fopen(file, "rb");
+	if (fd == NULL)
+		return -1;
+
+	int rv = fseek(fd, 0, SEEK_END);
+	if (rv != 0)
+	{
+		rv = -2;
+		goto close;
+	}
+	long numBytes = ftell(fd);
+	if (numBytes == -1)
+	{
+		rv = -3;
+		goto close;
+	}
+	gmlbAudioAssets[asset].numBytes = numBytes;
+	rv = fseek(fd, 0, SEEK_SET);
+	if (rv != 0)
+	{
+		rv = -4;
+		goto close;
+	}
+
+	gmlbAudioAssets[asset].pData = malloc(gmlbAudioAssets[asset].numBytes);
+	if (gmlbAudioAssets[asset].pData == NULL)
+	{
+		rv = -5;
+		goto close;
+	}
+
+	long bytesRemaining = gmlbAudioAssets[asset].numBytes;
+	void *p = gmlbAudioAssets[asset].pData;
+	while (bytesRemaining > 0)
+	{
+		size_t readSize = MIN(bytesRemaining, 64 * 1024);
+		size_t blocksRead = fread(p, readSize, 1, fd);
+		if (blocksRead != 1)
+		{
+			rv = -6;
+			goto freemem;
+		}
+		p += readSize;
+		bytesRemaining -= readSize;
+	}
+
+	goto close;
+freemem:
+	free(gmlbAudioAssets[asset].pData);
+	gmlbAudioAssets[asset].pData = NULL;
+
+close:
+	fclose(fd);
+	return rv;
+#endif // USE_ALSA
 }
 
-int gmlbSoundPlaySample(void *pSample)
+int gmlbSoundPlaySample(ass_smp asset)
 {
-	return play_sample(pSample, 255, 128, 1000, FALSE);
+#ifdef USE_ALG_AUDIO
+	return play_sample(gmlbAudioAssets[asset], 255, 128, 1000, FALSE);
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+	PaError err;
+
+	// Check for already playing
+	int stream;
+	for (stream = 0; stream < NUM_STREAMS; ++stream)
+	{
+		// Check for flush
+		if (gmlbAudioStreams[stream].state == STREAM_FLUSH)
+		{
+			err = Pa_IsStreamActive(gmlbAudioStreams[stream].paStream);
+			if (err == 0)
+			{
+				err = Pa_StopStream(gmlbAudioStreams[stream].paStream);
+				//if (err != paNoError)
+				//	printf(" - stop stream[%d] %d\n", stream, err);
+				gmlbAudioStreams[stream].state = STREAM_FREE;
+			}
+		}
+
+		if ((gmlbAudioStreams[stream].asset == asset) && (gmlbAudioStreams[stream].state != STREAM_FREE))
+			break;
+	}
+	//if ((stream < NUM_STREAMS) && (gmlbAudioStreams[stream].state != STREAM_FREE))
+	if (stream < NUM_STREAMS)
+		return 0;
+
+	for (stream = 0; stream < NUM_STREAMS; ++stream)
+	{
+		if (gmlbAudioStreams[stream].state == STREAM_FREE)
+			break;
+	}
+	if (stream == NUM_STREAMS)
+		return -1;
+
+	gmlbAudioStreams[stream].asset = asset;
+	gmlbAudioStreams[stream].pCurrent = gmlbAudioAssets[asset].pData;
+	gmlbAudioStreams[stream].bytesRemaining = gmlbAudioAssets[asset].numBytes;
+
+	err = Pa_StartStream(gmlbAudioStreams[stream].paStream);
+	if (err == paNoError)
+		gmlbAudioStreams[stream].state = STREAM_PLAY;
+	//else
+	//	printf(" - start stream[%d] %d\n", stream, err);
+
+	return err;
+#endif // USE_ALSA
 }
 
-void gmlbDestroySample(void *pSample)
+void gmlbDestroySample(ass_smp asset)
 {
-	destroy_sample(pSample);
+#ifdef USE_ALG_AUDIO
+	destroy_sample(gmlbAudioAssets[asset]);
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+	if (gmlbAudioAssets[asset].pData != NULL)
+		free(gmlbAudioAssets[asset].pData);
+	gmlbAudioAssets[asset].pData = NULL;
+#endif // USE_ALSA
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef USE_ALG_AUDIO
 int gmlbSoundLoadMidi(const char *file, void **ppMidi)
 {
 	*ppMidi = load_midi(file);
@@ -690,6 +934,7 @@ void gmlbDestroyMidi(void *pMidi)
 {
 	destroy_midi(pMidi);
 }
+#endif // USE_ALG_AUDIO
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////

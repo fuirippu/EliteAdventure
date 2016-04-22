@@ -36,25 +36,6 @@ typedef enum {
 #define NUM_FONTS		(2)
 extern void *ass_fonts[NUM_FONTS];
 
-typedef enum {
-	ass_smp_launch = 0,
-	ass_smp_crash = 1,
-	ass_smp_dock = 2,
-	ass_smp_gameover = 3,
-	ass_smp_pulse = 4,
-	ass_smp_hit_enemy = 5,
-	ass_smp_explode = 6,
-	ass_smp_ecm = 7,
-	ass_smp_missile = 8,
-	ass_smp_hyperspace = 9,
-	ass_smp_incoming_1 = 10,
-	ass_smp_incoming_2 = 11,
-	ass_smp_beep = 12,
-	ass_smp_boop = 13
-} ass_smp;
-#define NUM_SAMPLES		(14)
-extern void *ass_samples[NUM_SAMPLES];
-
 /////////////////////////////////////////////////////////////////////////////
 
 int load_assets();

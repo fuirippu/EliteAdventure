@@ -13,9 +13,8 @@
 // Globals
 /////////////////////////////////////////////////////////////////////////////
 void *ass_bitmaps[NUM_BITMAPS];
-void *ass_midis[NUM_MIDIS];
 void *ass_fonts[NUM_FONTS];
-void *ass_samples[NUM_SAMPLES];
+void *ass_midis[NUM_MIDIS];
 
 
 static const int gdiPaletteBitmap = ass_bmp_scanner;	/// The palette will be set from
@@ -39,10 +38,6 @@ static const char *bmp_files[NUM_BITMAPS] = {
 	"safe",
 	"scanner"
 };
-static const char *midi_files[NUM_MIDIS] = {
-	"theme",
-	"danube"
-};
 static const char *font_files[NUM_FONTS] = {
 	"verd2",
 	"verd4"
@@ -63,12 +58,25 @@ static const char *sample_files[NUM_SAMPLES] = {
 	"beep",
 	"boop"
 };
+#ifdef USE_ALG_AUDIO
+static const char *midi_files[NUM_MIDIS] = {
+	"theme",
+	"danube"
+};
+#endif // USE_ALG_AUDIO
 
 /// File extensions
 static const char *bmp_extnsn = ".bmp";
-static const char *midi_extnsn = ".mid";
 static const char *font_extnsn = ".pcx";
+
+#ifdef USE_ALG_AUDIO
 static const char *sample_extnsn = ".wav";
+static const char *midi_extnsn = ".mid";
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+static const char *sample_extnsn = ".raw";
+#endif // USE_ALSA
 
 /////////////////////////////////////////////////////////////////////////////
 // Functions
@@ -82,24 +90,6 @@ static int ass_load_bitmaps()
 	{
 		sprintf(buf, "%s%s%s", assetDir, bmp_files[i], bmp_extnsn);
 		if (gmlbGraphicsLoadBitmap(buf, &ass_bitmaps[i], (i == ass_bmp_scanner)) != 0)
-		{
-			char msg[256];
-			sprintf(msg, "Can't load %s", buf);
-			gmlbBasicError(msg);
-			return -1;
-		}
-	}
-	return 0;
-}
-
-static int ass_load_midis()
-{
-	char buf[128];
-
-	for (int i = 0; i < NUM_MIDIS; ++i)
-	{
-		sprintf(buf, "%s%s%s", assetDir, midi_files[i], midi_extnsn);
-		if (gmlbSoundLoadMidi(buf, &ass_midis[i]) != 0)
 		{
 			char msg[256];
 			sprintf(msg, "Can't load %s", buf);
@@ -135,7 +125,7 @@ static int ass_load_samples()
 	for (int i = 0; i < NUM_SAMPLES; ++i)
 	{
 		sprintf(buf, "%s%s%s", assetDir, sample_files[i], sample_extnsn);
-		if (gmlbSoundLoadSample(buf, &ass_samples[i]) != 0)
+		if (gmlbSoundLoadSample(buf, i) != 0)
 		{
 			char msg[256];
 			sprintf(msg, "Can't load %s", buf);
@@ -143,6 +133,26 @@ static int ass_load_samples()
 			return -1;
 		}
 	}
+	return 0;
+}
+
+static int ass_load_midis()
+{
+#ifdef USE_ALG_AUDIO
+	char buf[128];
+
+	for (int i = 0; i < NUM_MIDIS; ++i)
+	{
+		sprintf(buf, "%s%s%s", assetDir, midi_files[i], midi_extnsn);
+		if (gmlbSoundLoadMidi(buf, &ass_midis[i]) != 0)
+		{
+			char msg[256];
+			sprintf(msg, "Can't load %s", buf);
+			gmlbBasicError(msg);
+			return -1;
+		}
+	}
+#endif // USE_ALG_AUDIO
 	return 0;
 }
 
@@ -169,13 +179,15 @@ void destroy_assets()
 	for (int i = 0; i < NUM_BITMAPS; ++i)
 		gmlbDestroyBitmap(ass_bitmaps[i]);
 
-	for (int i = 0; i < NUM_MIDIS; ++i)
-		gmlbDestroyMidi(ass_midis[i]);
-
 	for (int i = 0; i < NUM_FONTS; ++i)
 		gmlbDestroyFont(ass_fonts[i]);
 
 	for (int i = 0; i < NUM_SAMPLES; ++i)
-		gmlbDestroySample(ass_samples[i]);
+		gmlbDestroySample(i);
+
+#ifdef USE_ALG_AUDIO
+	for (int i = 0; i < NUM_MIDIS; ++i)
+		gmlbDestroyMidi(ass_midis[i]);
+#endif // USE_ALG_AUDIO
 }
 

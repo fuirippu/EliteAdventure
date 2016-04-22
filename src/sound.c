@@ -57,21 +57,8 @@ void snd_play_sample(int sample_no)
 		return;
 
 	sample_list[sample_no].timeleft = sample_list[sample_no].runtime;	
-	gmlbSoundPlaySample(ass_samples[sample_no]);
+	gmlbSoundPlaySample(sample_no);
 }
-
-void snd_play_midi(int midi_no)
-{
-	if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
-		return;
-
-	gmlbSoundPlayMidi(ass_midis[midi_no]);
-}
-void snd_stop_midi(void)
-{
-	gmlbSoundStopMidi();
-}
-
 
 void snd_update_sound(void)
 {
@@ -83,3 +70,24 @@ void snd_update_sound(void)
 			sample_list[i].timeleft--;
 	}
 }
+
+
+#ifdef USE_ALG_AUDIO
+void snd_play_midi(int midi_no)
+{
+	if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
+		return;
+
+	gmlbSoundPlayMidi(ass_midis[midi_no]);
+}
+void snd_stop_midi(void)
+{
+	gmlbSoundStopMidi();
+}
+#endif // USE_ALG_AUDIO
+
+#ifdef USE_ALSA
+void snd_play_midi(int midi_no) { (void)midi_no; }
+void snd_stop_midi(void) { }
+#endif // USE_ALSA
+

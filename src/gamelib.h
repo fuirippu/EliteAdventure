@@ -131,15 +131,36 @@ void gmlbGraphicsSprite(GmlbPBitmap sprite, int x, int y);
 /////////////////////////////////////////////////////////////////////////////
 // Audio
 
-int  gmlbSoundInit();
-int  gmlbSoundLoadSample(const char *file, void **ppSample);
-int  gmlbSoundPlaySample(void *pSample);
-void gmlbDestroySample(void *pSample);
+typedef enum {
+	ass_smp_launch = 0,
+	ass_smp_crash = 1,
+	ass_smp_dock = 2,
+	ass_smp_gameover = 3,
+	ass_smp_pulse = 4,
+	ass_smp_hit_enemy = 5,
+	ass_smp_explode = 6,
+	ass_smp_ecm = 7,
+	ass_smp_missile = 8,
+	ass_smp_hyperspace = 9,
+	ass_smp_incoming_1 = 10,
+	ass_smp_incoming_2 = 11,
+	ass_smp_beep = 12,
+	ass_smp_boop = 13
+} ass_smp;
+#define NUM_SAMPLES		(14)
 
+int  gmlbSoundInit();
+void gmlbSoundShutdown();
+int  gmlbSoundLoadSample(const char *file, ass_smp asset);
+int  gmlbSoundPlaySample(ass_smp asset);
+void gmlbDestroySample(ass_smp asset);
+
+#ifdef USE_ALG_AUDIO
 int  gmlbSoundLoadMidi(const char *file, void **ppMidi);
 void gmlbSoundPlayMidi(void *pMidi);
 void gmlbSoundStopMidi();
 void gmlbDestroyMidi(void *pMidi);
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // Misc

@@ -42,22 +42,29 @@ void remove_ship(int un);
 
 void reset_weapons (void);
 void tactics(int un);
-void check_target(int un, struct univ_object *flip);
+
+
+/// Test if we've shot or locked-on to the specified universe object
+void check_target(int targetIndex, struct univ_object *flip);
+
 
 void draw_laser_shots(int colour);
-
 int fire_laser(int type);		/// returns the number of frames for which to draw the laser
 								/// requires type is a valid laser type, not 0 [elite.h]
 void cool_laser(void);
+
 
 void arm_missile(void);
 void unarm_missile(void);
 void fire_missile(void);
 
+
 void activate_ecm(int ours);
 void time_ecm(void);
 
+
 void random_encounter(void);
+
 
 void explode_object(int un);
 void abandon_ship(void);

@@ -3,12 +3,15 @@
 #                                          fuirippu 04/16 #
 ###########################################################
 ALGDIR := ../../allegro/build_linux
+PTADIR := ../../../PortAudio/install
 
 CC := gcc
-CFLAGS := -I $(ALGDIR)/include -std=c99 -D_DEBUG -Wall -Wextra -Wno-unknown-pragmas -Werror -O2
+INCDIRS_FLAGS := -I$(ALGDIR)/include -I$(PTADIR)/include
+WARNING_FLAGS := -Wall -Wextra -Wno-unknown-pragmas -Werror
+CFLAGS := $(INCDIRS_FLAGS) -std=c99 -D_DEBUG -DUSE_ALSA $(WARNING_FLAGS) -O2
 
-LDFLAGS := -L $(ALGDIR)/lib -s
-LDLIBS := -lm -lalleg
+LDFLAGS := -L$(ALGDIR)/lib -L$(PTADIR)/lib -s
+LDLIBS := -lm -lalleg -lportaudio
 ###########################################################
 SRCDIR := ..
 
