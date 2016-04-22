@@ -638,7 +638,7 @@ void gmlbGraphicsAACircle(int cx, int cy, int radius)
 
 
 #ifdef USE_ALG_AUDIO
-typedef Sample *GmlbAudioAsset;
+static SAMPLE *gmlbAudioAssets[NUM_SAMPLES];
 
 static const int gmlbVolumeSamples = 128;
 static const int gmlbVolumeMidi = 96;
