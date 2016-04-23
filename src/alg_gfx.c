@@ -195,7 +195,7 @@ void gfx_draw_sprite(int sprite_no, int x, int y)
 
 void gfx_draw_scanner(void)
 {
-	gmlbGraphicsSetClipRegion(0, 0, 512, 530);
+	gmlbGraphicsSetClipRegion(0, 0, 512, 528);
 	gmlbGraphicsSprite(ass_bitmaps[ass_bmp_scanner], 0, 385);
 }
 
