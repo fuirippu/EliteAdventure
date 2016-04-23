@@ -84,7 +84,7 @@ GmlbJoystick *gmlbJoystickGetPrevious();
 
 typedef struct BITMAP *GmlbPBitmap;
 
-int gmlbGraphicsInit(int dx);
+int gmlbGraphicsInit(int dx, int aspectY);
 int gmlbGraphicsInit2(int speedCap);
 void gmlbGraphicsShutdown();
 

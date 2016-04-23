@@ -20,6 +20,9 @@
 #define FILE_H
 
 
+extern const int kFileConfigValueAltered;
+
+
 int write_config_file();
 int read_config_file();
 

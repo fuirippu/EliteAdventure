@@ -149,9 +149,11 @@ extern int break_pattern_base_colour;
 
 extern struct ship_data *ship_list[];
 
-extern int x360_controller;	/// 1 == yes, 0 == no
 extern int directx;			/// 1 == Use directx (full-screen on linux)
 							/// 0 == Use GDI (windowed on linux)
+extern int aspect_16_y;		/// In full-screen/dx, screen ratio is 16:Y
+extern int x360_controller;	/// 1 == yes, 0 == no
+
 extern int wireframe;
 extern int anti_alias_gfx;
 extern int hoopy_casinos;
