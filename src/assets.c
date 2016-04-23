@@ -14,8 +14,9 @@
 /////////////////////////////////////////////////////////////////////////////
 void *ass_bitmaps[NUM_BITMAPS];
 void *ass_fonts[NUM_FONTS];
+#ifdef USE_ALG_AUDIO
 void *ass_midis[NUM_MIDIS];
-
+#endif // USE_ALG_AUDIO
 
 static const int gdiPaletteBitmap = ass_bmp_scanner;	/// The palette will be set from
 														/// this bitmap when loaded

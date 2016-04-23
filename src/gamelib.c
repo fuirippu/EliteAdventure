@@ -696,7 +696,10 @@ int gmlbSoundInit()
 	char buf[64];
 
 #ifdef USE_ALG_AUDIO
-    rv = install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
+	for (int i = 0; i < NUM_SAMPLES; ++i)
+		gmlbAudioAssets[i] = NULL;
+
+	rv = install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
     if (rv == 0)
         set_volume(gmlbVolumeSamples, gmlbVolumeMidi);
     else
@@ -707,10 +710,10 @@ int gmlbSoundInit()
 #endif // USE_ALG_AUDIO
 
 #ifdef USE_ALSA
-	for (int i=0; i < NUM_STREAMS; ++i)
-		gmlbAudioStreams[i].paStream = NULL;
 	for (int i=0; i < NUM_SAMPLES; ++i)
 		gmlbAudioAssets[i].pData = NULL;
+	for (int i = 0; i < NUM_STREAMS; ++i)
+		gmlbAudioStreams[i].paStream = NULL;
 
 	rv = Pa_Initialize();
 	if ( rv != paNoError )
@@ -723,7 +726,7 @@ int gmlbSoundInit()
 
 	for (int i=0; i < NUM_STREAMS; ++i)
 	{
-		// 0 in, 1 out, PCM16, 44.1kHz, best bufsiz, callback, userdata
+		// OP mono, PCM16, 44.1kHz, best bufsiz, callback, userdata
 		rv = Pa_OpenDefaultStream( &(gmlbAudioStreams[i].paStream), 0, 1, paInt16, 44100,
 					paFramesPerBufferUnspecified, portAudioCB, &gmlbAudioStreams[i]);
 		if (rv != paNoError)
@@ -742,8 +745,6 @@ int gmlbSoundInit()
 
 void gmlbSoundShutdown()
 {
-	// No shutdown for Allegro?
-
 #ifdef USE_ALSA
 	PaError rv;
 	char buf[64];
@@ -890,7 +891,9 @@ int gmlbSoundPlaySample(ass_smp asset)
 void gmlbDestroySample(ass_smp asset)
 {
 #ifdef USE_ALG_AUDIO
-	destroy_sample(gmlbAudioAssets[asset]);
+	if (gmlbAudioAssets[asset] != NULL)
+		destroy_sample(gmlbAudioAssets[asset]);
+	gmlbAudioAssets[asset] = NULL;
 #endif // USE_ALG_AUDIO
 
 #ifdef USE_ALSA
