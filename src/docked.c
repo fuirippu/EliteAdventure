@@ -472,10 +472,10 @@ void display_galactic_chart(void)
 		px = glx.d * GFX_SCALE;
 		py = (glx.b / (2 / GFX_SCALE)) + (18 * GFX_SCALE) + 1;
 
-		gfx_fast_plot_pixel(px + GFX_X_OFFSET, py + GFX_Y_OFFSET, GFX_COL_WHITE);
+		gfx_fast_plot_pixel(px, py, GFX_COL_WHITE);
 
 		if ((glx.e | 0x50) < 0x90)
-			gfx_fast_plot_pixel(px + 1 + GFX_X_OFFSET, py + GFX_Y_OFFSET, GFX_COL_WHITE);
+			gfx_fast_plot_pixel(px + 1, py, GFX_COL_WHITE);
 
 		waggle_galaxy(&glx);
 		waggle_galaxy(&glx);

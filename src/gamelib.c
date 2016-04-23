@@ -203,8 +203,8 @@ static const char *strWindowTitle = "Elite - Adventurous";
 
 static BITMAP *gmlbBmpScreen;
 
-static const int gmlbGfxOffsetX = 144;
-static const int gmlbGfxOffsetY = 44;
+static int gmlbGfxOffsetX = 144;
+static int gmlbGfxOffsetY = 35;
 static const int gmlbGfxScale = 2;
 
 
@@ -215,53 +215,35 @@ END_OF_FUNCTION(frame_timer);
 
 /// Allegro set_gfx_mode() must be called before assets can be loaded.
 /// More graphics init is performed in gmlbGraphicsInit2, after loading.
-int gmlbGraphicsInit(int dx)
+int gmlbGraphicsInit(int dx, int aspectY)
 {
 	int rv;
 
-#ifdef WINDOWS	
-
-#ifdef RES_512_512
-	(void)dx;
-	rv = set_gfx_mode(GFX_DIRECTX_OVL, 512, 512, 0, 0);
-
-	if (rv != 0)
-		rv = set_gfx_mode(GFX_DIRECTX_WIN, 512, 512, 0, 0);
-
-	if (rv != 0)
-		rv = set_gfx_mode(GFX_GDI, 512, 512, 0, 0);
-
-	if (rv == 0)
-		set_display_switch_mode(SWITCH_BACKGROUND);
-#else // not RES_512_512
 	if (dx == 1)
 	{
+		int h = 720;
+		int w = (h / aspectY) * 16;
+
 		set_color_depth(32);
-		rv = set_gfx_mode(GFX_DIRECTX, 800, 600, 0, 0);
+#ifdef WINDOWS	
+		rv = set_gfx_mode(GFX_DIRECTX, w, h, 0, 0);
+#else
+		rv = set_gfx_mode(GFX_AUTODETECT, w, h, 0, 0);
+#endif
+		gmlbGfxOffsetX = (w - 512) / 2;
+		gmlbGfxOffsetY = (h - 530) / 2;
 	}
 	else
 	{
+#ifdef WINDOWS	
 		set_window_title(strWindowTitle);
 		rv = set_gfx_mode(GFX_GDI, 800, 600, 0, 0);
-	}
-#endif // RES_xxx_xxx
-
-#else // not WINDOWS
-
-	set_color_depth(32);
-	if (dx == 1)
-	{
-		//rv = set_gfx_mode(GFX_AUTODETECT, 800, 600, 0, 0);
-		rv = set_gfx_mode(GFX_AUTODETECT, 1280, 800, 0, 0);
-	}
-	else
-	{
+#else
+		set_color_depth(32);
 		set_window_title(strWindowTitle);
-		//rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
-		rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1280, 800, 0, 0);
-	}
-
+		rv = set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
 #endif
+	}
 
 	if (rv != 0)
 		gmlbBasicError("Unable to set graphics mode.");
@@ -350,11 +332,11 @@ void gmlbReleaseScreen()
 #pragma region Draw primitives
 void gmlbPlotPixelDx(int x, int y, int colour)
 {
-	((int *)gmlbBmpScreen->line[y])[x] = colour;
+	((int *)gmlbBmpScreen->line[y + gmlbGfxOffsetY])[x + gmlbGfxOffsetX] = colour;
 }
 void gmlbPlotPixelGdi(int x, int y, int colour)
 {
-	gmlbBmpScreen->line[y][x] = colour;
+	gmlbBmpScreen->line[y + gmlbGfxOffsetY][x + gmlbGfxOffsetX] = colour;
 }
 void gmlbPlotPixelSafe(int x, int y, int colour)
 {

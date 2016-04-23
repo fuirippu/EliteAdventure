@@ -557,10 +557,9 @@ static void render_planet_line(int xo, int yo, int x, int y, int radius, int vx,
 
 	sy = y + yo;
 	
-	if ((sy < GFX_VIEW_TY + GFX_Y_OFFSET) ||
-		(sy > GFX_VIEW_BY + GFX_Y_OFFSET))
+	if ((sy < GFX_VIEW_TY) || (sy > GFX_VIEW_BY))
 		return;
-					   
+
 	sx = xo - x;
 	ex = xo + x;
 	
@@ -573,7 +572,7 @@ static void render_planet_line(int xo, int yo, int x, int y, int radius, int vx,
 		
 	for (; sx <= ex; sx++)
 	{
-		if ((sx >= (GFX_VIEW_TX + GFX_X_OFFSET)) && (sx <= (GFX_VIEW_BX + GFX_X_OFFSET)))
+		if ((sx >= GFX_VIEW_TX) && (sx <= GFX_VIEW_BX))
 		{
 			lx = rx / div;
 			ly = ry / div;
@@ -592,9 +591,6 @@ static void render_planet(int xo, int yo, int radius, struct vector *vec)
 	int s;
 	int vx,vy;
 
-	xo += GFX_X_OFFSET;
-	yo += GFX_Y_OFFSET;
-	
 	vx = (int)(vec[1].x * 65536);
 	vy = (int)(vec[1].y * 65536);
 	
@@ -684,25 +680,23 @@ static void render_sun_line(int xo, int yo, int x, int y, int radius)
 	int inner2;
 	int mix;
 
-	if ((sy < GFX_VIEW_TY + GFX_Y_OFFSET) ||
-		(sy > GFX_VIEW_BY + GFX_Y_OFFSET))
+	if ((sy < GFX_VIEW_TY) || (sy > GFX_VIEW_BY))
 		return;
-	
+
 	sx = xo - x;
 	ex = xo + x;
 
 	sx -= (radius * (2 + (randint() & 7))) >> 8;
 	ex += (radius * (2 + (randint() & 7))) >> 8;
 	
-	if ((sx > GFX_VIEW_BX + GFX_X_OFFSET) ||
-		(ex < GFX_VIEW_TX + GFX_X_OFFSET))
+	if ((sx > GFX_VIEW_BX) || (ex < GFX_VIEW_TX))
 		return;
-	
-	if (sx < GFX_VIEW_TX + GFX_X_OFFSET)
-		sx = GFX_VIEW_TX + GFX_X_OFFSET;
-	
-	if (ex > GFX_VIEW_BX + GFX_X_OFFSET)
-		ex = GFX_VIEW_BX + GFX_X_OFFSET;
+
+	if (sx < GFX_VIEW_TX)
+		sx = GFX_VIEW_TX;
+
+	if (ex > GFX_VIEW_BX)
+		ex = GFX_VIEW_BX;
 
 	inner = (radius * (200 + (randint() & 7))) >> 8;
 	inner *= inner;
@@ -739,9 +733,6 @@ static void render_sun(int xo, int yo, int radius)
 {
 	int x,y;
 	int s;
-	
-	xo += GFX_X_OFFSET;
-	yo += GFX_Y_OFFSET;
 	
 	s = -radius;
 	x = radius;
