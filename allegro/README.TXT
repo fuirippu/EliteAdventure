@@ -15,6 +15,8 @@ This version of Allegro can be used to build newkind.
     Contents of this directory
     --------------------------
 
+      build_common/      files common to Allegro builds.
+
       build_linux/       linux mint 64-bit build of Allegro
                            and headers.
       build_vs15/        VS2015 build of Allegro and headers
