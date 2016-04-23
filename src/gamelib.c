@@ -233,6 +233,7 @@ int gmlbGraphicsInit(int dx, int aspectY)
 			h = 600;
 			w = 800;
 		}
+
 		set_color_depth(32);
 #ifdef WINDOWS	
 		rv = set_gfx_mode(GFX_DIRECTX, w, h, 0, 0);
