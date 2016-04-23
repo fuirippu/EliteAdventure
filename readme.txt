@@ -1,8 +1,9 @@
-   ======================================
-    _Elite_Adventurous_  version:alpha-5		09/04/16
-   ======================================
+   =====================================
+    _Elite_Adventurous_  version:beta-1		23/04/16
+   =====================================
 
-	< for further changes, see docs directory >
+    < the rest of this file is no longer updated >
+	<   for further changes see docs directory   >
 
 09/04/16 London
 	alpha release rc_a5

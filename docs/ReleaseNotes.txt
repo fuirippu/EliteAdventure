@@ -5,6 +5,33 @@
 < archived release notes >
 
 ################	---------					+----------+
+# RELEASE NOTE #	v.alpha-5 (0x0000)			| 09/04/16 |
+################	---------					+----------+
+
+Changes:
+--------
+  Tidied data on planet screen
+  Added install instructions
+  Renamed config file
+  New install file structure: samples (wavs)
+    handled uniformly with bmps, midi, fonts
+  Less snes planets
+  Window Title (non-directx only)
+  Only show obc msg for missile if shot
+  Break pattern now reflects ship activity
+  New bitmaps (scanner, elitetx3)
+  Fix: joystick button sensitivity in menus
+  Don't display console items when paused
+  isolate allegro calls to gamelib.h|c
+  Fix: remove erroneous obc messages
+
+Known Bugs:
+-----------
+  64-bit build does not link (allegro build is 32-bit)
+  Audio assets (wav) are not mastered (DC offset, unbalanced gain)
+  Allegro build test on linux, no build procedure/project files for Elite
+
+################	---------					+----------+
 # RELEASE NOTE #	v.alpha-4 (0x0000)			| 29/03/16 |
 ################	---------					+----------+
 
@@ -37,7 +64,6 @@ Changes:
   Add Visual Studio Community 2015 files					[vs2015]
   Reorganize file structure, see //readme.txt				[move_files]
   Add Allegro source and 32-bit vs2015 dll build			[allegro]
-
 
 Known Bugs:
 -----------

@@ -4,28 +4,40 @@
 ---------------------
 Installation Advisory
 ---------------------
-Visual studio is required, Elite Adventurous is not
-distributed in binary form. Everything except visual
-studio (ie. full source and project files) is supplied.
+A C development environment is required, Elite Adventurous
+is not distributed in binary form. Full source and project
+files for gcc and visual studio are supplied.
 
-A binary of (deprecated but necessary) allegro library,
-alleg44.dll is in allegro/build_vs15. Alternatively full
-source code from which the binary was built is supplied.
+Binaries of (deprecated but necessary) allegro library,
+are in allegro/build_xxxx. Alternatively there is a zip of
+the full source code from which the binaries were built.
 
 	+--------------------------------------------------+
-	| Build elite.exe (use visual studio)              |
+	| Build elite.exe (gcc), from src/linux            |
+	|      $ make                                      |
 	|                                                  |
+	|   Add allegro/build_linux/lib to                 |
+	|     $LD_LIBRARY_PATH                             |
 	|                                                  |
-	| To install to <ELITE_ADV_DIR>, copy the files:   |
+	| To launch from src/linux                         |
+	|      $ run [<log_number>]                        |
 	|                                                  |
-	|	<ELITE_ADV_DIR>/elite.exe                      |
-	|	<ELITE_ADV_DIR>/alleg44.dll                    |
+	| If Elite is in <ELITE_ADV_DIR>,                  |
+	|   the following files are required:              |
 	|	<ELITE_ADV_DIR>/config/elite_adv.cfg           |
-	|	<ELITE_ADV_DIR>/assets/*			(28 files) |
-	|                                                  |
-	|                                                  |
-	| Launch elite.exe from <ELITE_ADV_DIR>            |
-	+--------------------------------------------------+
+	|	<ELITE_ADV_DIR>/assets/*			(42 files) |
+	+-+------------------------------------------------+-+
+	  | Build elite.exe (visual studio)                  |
+	  |                                                  |
+	  | To install to <ELITE_ADV_DIR>, copy the files:   |
+	  |                                                  |
+	  |	  <ELITE_ADV_DIR>/elite.exe                      |
+	  |	  <ELITE_ADV_DIR>/alleg44.dll                    |
+	  |	  <ELITE_ADV_DIR>/config/elite_adv.cfg           |
+	  |	  <ELITE_ADV_DIR>/assets/*			(42 files)   |
+	  |                                                  |
+	  |  Launch elite.exe from <ELITE_ADV_DIR>           |
+	  +--------------------------------------------------+
 
 
  +------------------------------------------------+
@@ -33,5 +45,5 @@ source code from which the binary was built is supplied.
  |  by Christian Pinder <christian@newkind.co.uk> |
  |                      http://www.newkind.co.uk  |
  +------------------------------------------------+----------------+
-                                                  | fuirippu 03/16 |
+                                                  | fuirippu 04/16 |
 												  +----------------+

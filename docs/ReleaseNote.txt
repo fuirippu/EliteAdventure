@@ -4,29 +4,38 @@
 
 < current release note, see ReleaseNotes.txt for archive >
 
-################	---------					+----------+
-# RELEASE NOTE #	v.alpha-5 (0x0000)			| 09/04/16 |
-################	---------					+----------+
+################	--------					+----------+
+# RELEASE NOTE #	v.beta-1 (0x0000)			| 23/04/16 |
+################	--------					+----------+
 
 Changes:
 --------
-  Tidied data on planet screen
-  Added install instructions
-  Renamed config file
-  New install file structure: samples (wavs)
-    handled uniformly with bmps, midi, fonts
-  Less snes planets
-  Window Title (non-directx only)
-  Only show obc msg for missile if shot
-  Break pattern now reflects ship activity
-  New bitmaps (scanner, elitetx3)
-  Fix: joystick button sensitivity in menus
-  Don't display console items when paused
-  isolate allegro calls to gamelib.h|c
-  Fix: remove erroneous obc messages
+  Isolate common Allegro include files
 
-Known Bugs:
------------
-  64-bit build does not link (allegro build is 32-bit)
+  Support for screen resolutions
+    4:3(800 x 600), 16:10(1280 x 800), 16:9(1280 x 720)
+  
+  BugFix: Validate cfg file
+  BugFix: Centralise display in screen/window
+  BugFix: Commander credits not saved properly
+  BugFix: Joystick button sensitivity on equip ship
+  New format dump universe (dbg)
+
+  Compile time option for Port Audio (ALSA) on linux
+    - define USE_ALG_AUDIO, USE_ALSA
+	- ALSA loads assets/*.raw, not WAVs
+	- Moved sample definitions [assets -> gmlb]
+
+  Added linux build (undef WINDOWS)
+    - project files (Makefile, run), mint-64 allegro
+
+  BugFix: Clear obc messages on purchase
+  Police obc messages in blue
+  Add screen for "Modify Ship" [F3 while docked]
+  Audio Scanner
+  Homogenise bitmap implementation (scanner.bmp)
+
+Known Bugs/Limitations:
+-----------------------
+  64-bit visual studio build does not link (allegro build is 32-bit)
   Audio assets (wav) are not mastered (DC offset, unbalanced gain)
-  Allegro build test on linux, no build procedure/project files for Elite
