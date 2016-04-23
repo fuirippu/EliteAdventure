@@ -25,6 +25,9 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
+const int kFileConfigValueAltered = 10;
+
+
 #ifdef WINDOWS
 static const char *configFile = "config\\elite_adv.cfg";
 #else
@@ -53,14 +56,41 @@ int write_config_file()
 		warn = (warn == 0) ? 6 : warn;
 	if (fprintf(fp, "%d\t\t\t# DirectX: 0 = off (use GDI), 1 = on\n", directx))
 		warn = (warn == 0) ? 7 : warn;
-	if (fprintf(fp, "%d\t\t\t# x360 controller: 0 = no, 1 = yes - extra controls :)\n", x360_controller))
+	if (fprintf(fp, "%d\t\t\t# Screen aspect-Y: game will use 16:Y {12, 10, 9} ratio (DirectX==1 only)\n", aspect_16_y))
 		warn = (warn == 0) ? 8 : warn;
+	if (fprintf(fp, "%d\t\t\t# x360 controller: 0 = no, 1 = yes - extra controls :)\n", x360_controller))
+		warn = (warn == 0) ? 9 : warn;
 
 	fclose(fp);
 
 	return warn;
 }
 
+static int validate_config()
+{
+	int warn = 0;
+
+	if (speed_cap < 50) { speed_cap = 50; warn = kFileConfigValueAltered; }
+	if (speed_cap > 100) { speed_cap = 100; warn = kFileConfigValueAltered; }
+
+	if ((wireframe != 0) && (wireframe != 1)) { wireframe = 0; warn = kFileConfigValueAltered; }
+
+	if ((anti_alias_gfx != 0) && (anti_alias_gfx != 1)) { anti_alias_gfx = 1; warn = kFileConfigValueAltered; }
+
+	if ((planet_render_style < 0) || (planet_render_style > 2)) { planet_render_style = 2; warn = kFileConfigValueAltered; }
+
+	if ((hoopy_casinos != 0) && (hoopy_casinos != 1)) { hoopy_casinos = 0; warn = kFileConfigValueAltered; }
+
+	if ((instant_dock != 0) && (instant_dock != 1)) { instant_dock = 0; warn = kFileConfigValueAltered; }
+
+	if ((directx != 0) && (directx != 1)) { directx = 1; warn = kFileConfigValueAltered; }
+
+	if ((aspect_16_y != 12) && (aspect_16_y != 10) && (aspect_16_y != 9)) { aspect_16_y = 9; warn = kFileConfigValueAltered; }
+
+	if ((x360_controller != 0) && (x360_controller != 1)) { x360_controller = 0; warn = kFileConfigValueAltered; }
+
+	return warn;
+}
 /// Read a line; ignore blanks and comments, and strip white space.
 static void read_cfg_line(char *str, int max_size, FILE *fp)
 {
@@ -130,10 +160,17 @@ int read_config_file()
 		warn = (warn == 0) ? 7 : warn;
 
 	read_cfg_line(str, sizeof(str), fp);
-	if (sscanf(str, "%d", &x360_controller) != 1)
+	if (sscanf(str, "%d", &aspect_16_y) != 1)
 		warn = (warn == 0) ? 8 : warn;
 
+	read_cfg_line(str, sizeof(str), fp);
+	if (sscanf(str, "%d", &x360_controller) != 1)
+		warn = (warn == 0) ? 9 : warn;
+
 	fclose(fp);
+
+	if (warn == 0)
+		warn = validate_config();
 
 	return warn;
 }

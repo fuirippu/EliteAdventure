@@ -1423,6 +1423,8 @@ static int system_initialise()
 	{
 		if (rv == -1)
 			gmlbBasicError("Failed to open cfg");
+		else if (rv == kFileConfigValueAltered)
+			gmlbBasicError("One or more cfg values out of range");
 		else
 		{
 			char buf[64];
@@ -1431,7 +1433,7 @@ static int system_initialise()
 		}
 	}
 
-	if ((rv = gmlbGraphicsInit(directx)) != 0)
+	if ((rv = gmlbGraphicsInit(directx, aspect_16_y)) != 0)
 		return rv;			// Catastrophic failure, no graphics
 	if ((rv = gmlbSoundInit()) != 0)
 		return rv;			// Catastrophic failure, no sound

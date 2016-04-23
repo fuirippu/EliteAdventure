@@ -35,8 +35,6 @@
 
 #define GFX_SCALE		(2)
 
-#define GFX_X_OFFSET	(144)
-#define GFX_Y_OFFSET	(44)
 #define GFX_X_CENTRE	(256)
 #define GFX_Y_CENTRE	(192)
 

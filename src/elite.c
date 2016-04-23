@@ -40,8 +40,9 @@ int current_screen = 0;
 int break_pattern_base_colour;
 int witchspace;
 
-int x360_controller = 0;
 int directx = 1;
+int aspect_16_y = 9;
+int x360_controller = 0;
 int wireframe = 0;
 int anti_alias_gfx = 0;
 int hoopy_casinos = 0;

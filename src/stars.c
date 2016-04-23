@@ -88,15 +88,15 @@ static void front_starfield(void)
 			(sx >= GFX_VIEW_TX) && (sx <= GFX_VIEW_BX) &&
 			(sy >= GFX_VIEW_TY) && (sy <= GFX_VIEW_BY))
 		{
-			gfx_fast_plot_pixel(sx + GFX_X_OFFSET, sy + GFX_Y_OFFSET, GFX_COL_WHITE);
+			gfx_fast_plot_pixel(sx, sy, GFX_COL_WHITE);
 
 			if (zz < 0xC0)
-				gfx_fast_plot_pixel(sx + 1 + GFX_X_OFFSET, sy + GFX_Y_OFFSET, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx + 1, sy, GFX_COL_WHITE);
 
 			if (zz < 0x90)
 			{
-				gfx_fast_plot_pixel(sx + GFX_X_OFFSET, sy + 1 + GFX_Y_OFFSET, GFX_COL_WHITE);
-				gfx_fast_plot_pixel(sx + 1 + GFX_X_OFFSET, sy + 1 + GFX_Y_OFFSET, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx, sy + 1, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx + 1, sy + 1, GFX_COL_WHITE);
 			}
 		}
 
@@ -182,15 +182,15 @@ static void rear_starfield(void)
 			(sx >= GFX_VIEW_TX) && (sx <= GFX_VIEW_BX) &&
 			(sy >= GFX_VIEW_TY) && (sy <= GFX_VIEW_BY))
 		{
-			gfx_fast_plot_pixel(sx + GFX_X_OFFSET, sy + GFX_Y_OFFSET, GFX_COL_WHITE);
+			gfx_fast_plot_pixel(sx, sy, GFX_COL_WHITE);
 
 			if (zz < 0xC0)
-				gfx_fast_plot_pixel(sx + 1 + GFX_X_OFFSET, sy + GFX_Y_OFFSET, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx + 1, sy, GFX_COL_WHITE);
 
 			if (zz < 0x90)
 			{
-				gfx_fast_plot_pixel(sx + GFX_X_OFFSET, sy + 1 + GFX_Y_OFFSET, GFX_COL_WHITE);
-				gfx_fast_plot_pixel(sx + 1 + GFX_X_OFFSET, sy + 1 + GFX_Y_OFFSET, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx, sy + 1, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx + 1, sy + 1, GFX_COL_WHITE);
 			}
 		}
 
@@ -292,15 +292,15 @@ static void side_starfield(void)
 			(sx >= GFX_VIEW_TX) && (sx <= GFX_VIEW_BX) &&
 			(sy >= GFX_VIEW_TY) && (sy <= GFX_VIEW_BY))
 		{
-			gfx_fast_plot_pixel(sx + GFX_X_OFFSET, sy + GFX_Y_OFFSET, GFX_COL_WHITE);
+			gfx_fast_plot_pixel(sx, sy, GFX_COL_WHITE);
 
 			if (zz < 0xC0)
-				gfx_fast_plot_pixel(sx + 1 + GFX_X_OFFSET, sy + GFX_Y_OFFSET, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx + 1, sy, GFX_COL_WHITE);
 
 			if (zz < 0x90)
 			{
-				gfx_fast_plot_pixel(sx + GFX_X_OFFSET, sy + 1 + GFX_Y_OFFSET, GFX_COL_WHITE);
-				gfx_fast_plot_pixel(sx + 1 + GFX_X_OFFSET, sy + 1 + GFX_Y_OFFSET, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx, sy + 1, GFX_COL_WHITE);
+				gfx_fast_plot_pixel(sx + 1, sy + 1, GFX_COL_WHITE);
 			}
 		}
 
