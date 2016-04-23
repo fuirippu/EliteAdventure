@@ -222,7 +222,17 @@ int gmlbGraphicsInit(int dx, int aspectY)
 	if (dx == 1)
 	{
 		int h = 720;
-		int w = (h / aspectY) * 16;
+		int w = 1280;
+		if (aspectY == 10)
+		{
+			h = 800;
+			w = 1280;
+		}
+		else if (aspectY == 12)
+		{
+			h = 600;
+			w = 800;
+		}
 
 		set_color_depth(32);
 #ifdef WINDOWS	
