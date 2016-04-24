@@ -71,40 +71,40 @@ int auto_pilot;
 
 struct commander saved_cmdr =
 {
-	"JAMESON",									/* Name 			*/
-	0,											/* Mission Number 	*/
-	0x14,0xAD,									/* Ship X,Y			*/
-	{0x4a, 0x5a, 0x48, 0x02, 0x53, 0xb7},		/* Galaxy Seed		*/
-	1000,										/* Credits * 10		*/
-	70,											/* Fuel	* 10		*/
-	0,
-	0,											/* Galaxy - 1		*/
-	PULSE_LASER,								/* Front Laser		*/
-	0,											/* Rear Laser		*/
-	0,											/* Left Laser		*/
-	0,											/* Right Laser		*/
-	0, 0,
-	20,											/* Cargo Capacity	*/
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},		/* Current Cargo	*/
-	0,											/* ECM				*/
-	0,											/* Fuel Scoop		*/
-	0,											/* Energy Bomb		*/
-	0,											/* Energy Unit		*/
-	0,											/* Docking Computer */
-	0,											/* Galactic H'Drive	*/
-	0,											/* Escape Pod		*/
-	0,0,0,0,
-	3,											/* No. of Missiles	*/
-	0,											/* Legal Status		*/
-	{0x10, 0x0F, 0x11, 0x00, 0x03, 0x1C,		/* Station Stock	*/
-	 0x0E, 0x00, 0x00, 0x0A, 0x00, 0x11,
-	 0x3A, 0x07, 0x09, 0x08, 0x00},
-	0,											/* Fluctuation		*/
-	0,											/* Score			*/
-	0x80,										/* Saved			*/
-	0,											/* Audio Scanner	*/
-	0,											/* VGA Scanner		*/
-	0											/* OBC				*/
+    "JAMESON",                                  /* Name             */
+    0,                                          /* Mission Number   */
+    0x14,0xAD,                                  /* Ship X,Y         */
+    {0x4a, 0x5a, 0x48, 0x02, 0x53, 0xb7},       /* Galaxy Seed      */
+    1000,                                       /* Credits * 10     */
+    70,                                         /* Fuel * 10        */
+    0,
+    0,                                          /* Galaxy - 1       */
+    PULSE_LASER,                                /* Front Laser      */
+    0,                                          /* Rear Laser       */
+    0,                                          /* Left Laser       */
+    0,                                          /* Right Laser      */
+    0, 0,
+    20,                                         /* Cargo Capacity   */
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},        /* Current Cargo    */
+    0,                                          /* ECM              */
+    0,                                          /* Fuel Scoop       */
+    0,                                          /* Energy Bomb      */
+    0,                                          /* Energy Unit      */
+    0,                                          /* Docking Computer */
+    0,                                          /* Galactic H'Drive */
+    0,                                          /* Escape Pod       */
+    0,0,0,0,
+    3,                                          /* No. of Missiles  */
+    0,                                          /* Legal Status     */
+    {0x10, 0x0F, 0x11, 0x00, 0x03, 0x1C,        /* Station Stock    */
+     0x0E, 0x00, 0x00, 0x0A, 0x00, 0x11,
+     0x3A, 0x07, 0x09, 0x08, 0x00},
+    0,                                          /* Fluctuation      */
+    0,                                          /* Score            */
+    0x80,                                       /* Saved            */
+    0,                                          /* Audio Scanner    */
+    0,                                          /* VGA Scanner      */
+    0                                           /* OBC              */
 };
 
 struct commander cmdr;
@@ -114,40 +114,40 @@ struct player_ship myship;
 
 struct ship_data *ship_list[NO_OF_SHIPS + 1] =
 {
-	NULL,
-	&missile_data,
-	&coriolis_data,
-	&esccaps_data,
-	&alloy_data,
-	&cargo_data,
-	&boulder_data,
-	&asteroid_data,
-	&rock_data,
-	&orbit_data,
-	&transp_data,
-	&cobra3a_data,
-	&pythona_data,
-	&boa_data,
-	&anacnda_data,
-	&hermit_data,
-	&viper_data,
-	&sidewnd_data,
-	&mamba_data,
-	&krait_data,
-	&adder_data,
-	&gecko_data,
-	&cobra1_data,
-	&worm_data,
-	&cobra3b_data,
-	&asp2_data,
-	&pythonb_data,
-	&ferdlce_data,
-	&moray_data,
-	&thargoid_data,
-	&thargon_data,
-	&constrct_data,
-	&cougar_data,
-	&dodec_data
+    NULL,
+    &missile_data,
+    &coriolis_data,
+    &esccaps_data,
+    &alloy_data,
+    &cargo_data,
+    &boulder_data,
+    &asteroid_data,
+    &rock_data,
+    &orbit_data,
+    &transp_data,
+    &cobra3a_data,
+    &pythona_data,
+    &boa_data,
+    &anacnda_data,
+    &hermit_data,
+    &viper_data,
+    &sidewnd_data,
+    &mamba_data,
+    &krait_data,
+    &adder_data,
+    &gecko_data,
+    &cobra1_data,
+    &worm_data,
+    &cobra3b_data,
+    &asp2_data,
+    &pythonb_data,
+    &ferdlce_data,
+    &moray_data,
+    &thargoid_data,
+    &thargon_data,
+    &constrct_data,
+    &cougar_data,
+    &dodec_data
 };
 
 
@@ -157,14 +157,14 @@ struct ship_data *ship_list[NO_OF_SHIPS + 1] =
 /////////////////////////////////////////////////////////////////////////////
 void restore_saved_commander(void)
 {
-	cmdr = saved_cmdr;
+    cmdr = saved_cmdr;
 
-	docked_planet = find_planet(cmdr.ship_x, cmdr.ship_y);
-	hyperspace_planet = docked_planet;
+    docked_planet = find_planet(cmdr.ship_x, cmdr.ship_y);
+    hyperspace_planet = docked_planet;
 
-	generate_planet_data(&current_planet_data, docked_planet);
-	generate_stock_market();
-	set_stock_quantities(cmdr.station_stock);
+    generate_planet_data(&current_planet_data, docked_planet);
+    generate_stock_market();
+    set_stock_quantities(cmdr.station_stock);
 }
 
 
@@ -175,54 +175,54 @@ void restore_saved_commander(void)
 void dbg_out(const char *str)
 {
 #ifdef WINDOWS
-	OutputDebugString(str);
+    OutputDebugString(str);
 #else // not WINDOWS
-	printf("%s", str);
-	fflush(stdout);
+    printf("%s", str);
+    fflush(stdout);
 #endif // WINDOWS
 }
 
 static const char *econ[] = {
-	"RchInd", "AvgInd", "PorInd", "MnlInd",
-	"MnlAgr", "RchAgr", "AvgAgr", "PorAgr" };
+    "RchInd", "AvgInd", "PorInd", "MnlInd",
+    "MnlAgr", "RchAgr", "AvgAgr", "PorAgr" };
 static const char *govt[] = {
-	"Anrchy", "Feudal", "MultiG", "Dctatr",
-	"Cmmnst", "Confed", "Dmcrcy", "CorpSt" };
+    "Anrchy", "Feudal", "MultiG", "Dctatr",
+    "Cmmnst", "Confed", "Dmcrcy", "CorpSt" };
 void dbg_dump_universe()
 {
-	char buf[128];
-	for (int i = 0; i < MAX_UNIV_OBJECTS; i++)
-	{
-		if (universe[i].type != 0)
-		{
-			sprintf(buf, "[%02d] %-13s @ <% 11.3f, % 11.3f, % 11.3f> d=%d\n",
-							i, obc_ship_name(universe[i].type),
-							universe[i].location.x, universe[i].location.y, universe[i].location.z,
-							universe[i].distance);
-			dbg_out(buf);
-		}
-	}
-	//sprintf(buf, "    Fuel = %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
-	//dbg_out(buf);
-	//sprintf(buf, "     Alt = %d (x100km minimum alt)\n", myship.altitude / 4);
-	//dbg_out(buf);
-	//sprintf(buf, "     legality = 0x%04X [%d]\n", cmdr.legal_status, cmdr.legal_status);
-	//dbg_out(buf);
-	//sprintf(buf, "     NRG unit = %d\n", cmdr.energy_unit);
-	//dbg_out(buf);
-	sprintf(buf, "  ^Cmdr \"%s\" %d.%d Cr, score = 0x%04X [%d] (mission: %d)\n",
-					cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10),
-					cmdr.score, cmdr.score, cmdr.mission);
-	dbg_out(buf);
+    char buf[128];
+    for (int i = 0; i < MAX_UNIV_OBJECTS; i++)
+    {
+        if (universe[i].type != 0)
+        {
+            sprintf(buf, "[%02d] %-13s @ <% 11.3f, % 11.3f, % 11.3f> d=%d\n",
+                            i, obc_ship_name(universe[i].type),
+                            universe[i].location.x, universe[i].location.y, universe[i].location.z,
+                            universe[i].distance);
+            dbg_out(buf);
+        }
+    }
+    //sprintf(buf, "    Fuel = %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
+    //dbg_out(buf);
+    //sprintf(buf, "     Alt = %d (x100km minimum alt)\n", myship.altitude / 4);
+    //dbg_out(buf);
+    //sprintf(buf, "     legality = 0x%04X [%d]\n", cmdr.legal_status, cmdr.legal_status);
+    //dbg_out(buf);
+    //sprintf(buf, "     NRG unit = %d\n", cmdr.energy_unit);
+    //dbg_out(buf);
+    sprintf(buf, "  ^Cmdr \"%s\" %d.%d Cr, score = 0x%04X [%d] (mission: %d)\n",
+                    cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10),
+                    cmdr.score, cmdr.score, cmdr.mission);
+    dbg_out(buf);
 
-	char strPlanetName[16];
-	name_planet(strPlanetName, docked_planet);
-	capitalise_name(strPlanetName);
-	struct planet_data p;
-	generate_planet_data(&p, docked_planet);
-	sprintf(buf, "   near \"%s\" %s.%s.tech-%d\n\n", strPlanetName,
-					govt[p.government], econ[p.economy], p.techlevel + 1);
-	dbg_out(buf);
+    char strPlanetName[16];
+    name_planet(strPlanetName, docked_planet);
+    capitalise_name(strPlanetName);
+    struct planet_data p;
+    generate_planet_data(&p, docked_planet);
+    sprintf(buf, "   near \"%s\" %s.%s.tech-%d\n\n", strPlanetName,
+                    govt[p.government], econ[p.economy], p.techlevel + 1);
+    dbg_out(buf);
 }
 
 /////////////////////////////////////////////////////////////////////////////

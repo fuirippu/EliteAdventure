@@ -7,4 +7,4 @@ char *mission_planet_desc(struct galaxy_seed planet);
 void check_mission_brief(void);
 
 
-#endif		// #ifndef MISSIONS_H
+#endif      // #ifndef MISSIONS_H

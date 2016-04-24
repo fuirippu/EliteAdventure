@@ -4,12 +4,15 @@
 
 < current release note, see ReleaseNotes.txt for archive >
 
-################	--------					+----------+
-# RELEASE NOTE #	v.beta-1 (0x0000)			| 23/04/16 |
-################	--------					+----------+
+################    --------                    +----------+
+# RELEASE NOTE #    v.beta-1 (0x0000)           | 24/04/16 |
+################    --------                    +----------+
 
 Changes:
 --------
+  git white space, tabs -> 4 spaces
+  BugFix: Set clip region before blitting scanner
+
   Add planet data to dump unvierse (dbg)
   BugFix: Release audio assets (Allegro) on exit
 
@@ -26,8 +29,8 @@ Changes:
 
   Compile time option for Port Audio (ALSA) on linux
     - define USE_ALG_AUDIO, USE_ALSA
-	- ALSA loads assets/*.raw, not WAVs
-	- Moved sample definitions [assets -> gmlb]
+    - ALSA loads assets/*.raw, not WAVs
+    - Moved sample definitions [assets -> gmlb]
 
   Added linux build (undef WINDOWS)
     - project files (Makefile, run), mint-64 allegro

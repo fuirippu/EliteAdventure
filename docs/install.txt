@@ -12,32 +12,32 @@ Binaries of (deprecated but necessary) allegro library,
 are in allegro/build_xxxx. Alternatively there is a zip of
 the full source code from which the binaries were built.
 
-	+--------------------------------------------------+
-	| Build elite.exe (gcc), from src/linux            |
-	|      $ make                                      |
-	|                                                  |
-	|   Add allegro/build_linux/lib to                 |
-	|     $LD_LIBRARY_PATH                             |
-	|                                                  |
-	| To launch from src/linux                         |
-	|      $ run [<log_number>]                        |
-	|                                                  |
-	| If Elite is in <ELITE_ADV_DIR>,                  |
-	|   the following files are required:              |
-	|	<ELITE_ADV_DIR>/config/elite_adv.cfg           |
-	|	<ELITE_ADV_DIR>/assets/*			(42 files) |
-	+-+------------------------------------------------+-+
-	  | Build elite.exe (visual studio)                  |
-	  |                                                  |
-	  | To install to <ELITE_ADV_DIR>, copy the files:   |
-	  |                                                  |
-	  |	  <ELITE_ADV_DIR>/elite.exe                      |
-	  |	  <ELITE_ADV_DIR>/alleg44.dll                    |
-	  |	  <ELITE_ADV_DIR>/config/elite_adv.cfg           |
-	  |	  <ELITE_ADV_DIR>/assets/*			(42 files)   |
-	  |                                                  |
-	  |  Launch elite.exe from <ELITE_ADV_DIR>           |
-	  +--------------------------------------------------+
+    +--------------------------------------------------+
+    | Build elite.exe (gcc), from src/linux            |
+    |      $ make                                      |
+    |                                                  |
+    |   Add allegro/build_linux/lib to                 |
+    |     $LD_LIBRARY_PATH                             |
+    |                                                  |
+    | To launch from src/linux                         |
+    |      $ run [<log_number>]                        |
+    |                                                  |
+    | If Elite is in <ELITE_ADV_DIR>,                  |
+    |   the following files are required:              |
+    |   <ELITE_ADV_DIR>/config/elite_adv.cfg           |
+    |   <ELITE_ADV_DIR>/assets/*            (42 files) |
+    +-+------------------------------------------------+-+
+      | Build elite.exe (visual studio)                  |
+      |                                                  |
+      | To install to <ELITE_ADV_DIR>, copy the files:   |
+      |                                                  |
+      |   <ELITE_ADV_DIR>/elite.exe                      |
+      |   <ELITE_ADV_DIR>/alleg44.dll                    |
+      |   <ELITE_ADV_DIR>/config/elite_adv.cfg           |
+      |   <ELITE_ADV_DIR>/assets/*          (42 files)   |
+      |                                                  |
+      |  Launch elite.exe from <ELITE_ADV_DIR>           |
+      +--------------------------------------------------+
 
 
  +------------------------------------------------+
@@ -46,4 +46,4 @@ the full source code from which the binaries were built.
  |                      http://www.newkind.co.uk  |
  +------------------------------------------------+----------------+
                                                   | fuirippu 04/16 |
-												  +----------------+
+                                                  +----------------+

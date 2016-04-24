@@ -22,17 +22,17 @@
 
 struct stock_item
 {
-	char name[16];
-	int current_quantity;
-	int current_price;
-	int base_price;
-	int eco_adjust;
-	int base_quantity;
-	int mask;
-	int units;
+    char name[16];
+    int current_quantity;
+    int current_price;
+    int base_price;
+    int eco_adjust;
+    int base_quantity;
+    int mask;
+    int units;
 };
 
-#define NO_OF_STOCK_ITEMS	17
+#define NO_OF_STOCK_ITEMS   17
 extern struct stock_item stock_market[NO_OF_STOCK_ITEMS];
 
 void generate_stock_market (void);
@@ -42,4 +42,4 @@ int total_cargo (void);
 void scoop_item (int un);
 
 
-#endif		// #ifndef TRADE_H
+#endif      // #ifndef TRADE_H

@@ -18,9 +18,9 @@
 
 struct vector
 {
-	double x;
-	double y;
-	double z;
+    double x;
+    double y;
+    double z;
 };
 
 typedef struct vector Matrix[3];
@@ -33,4 +33,4 @@ void set_init_matrix (struct vector *mat);
 void tidy_matrix (struct vector *mat);
 
 
-#endif		// #ifndef VECTOR_H
+#endif      // #ifndef VECTOR_H

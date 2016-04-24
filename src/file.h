@@ -30,4 +30,4 @@ int save_commander_file(const char *path);
 int load_commander_file(const char *path);
 
 
-#endif		// #ifndef FILE_H
+#endif      // #ifndef FILE_H

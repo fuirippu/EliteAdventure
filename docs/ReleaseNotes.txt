@@ -4,9 +4,9 @@
 
 < archived release notes >
 
-################	---------					+----------+
-# RELEASE NOTE #	v.alpha-5 (0x0000)			| 09/04/16 |
-################	---------					+----------+
+################    ---------                   +----------+
+# RELEASE NOTE #    v.alpha-5 (0x0000)          | 09/04/16 |
+################    ---------                   +----------+
 
 Changes:
 --------
@@ -31,39 +31,39 @@ Known Bugs:
   Audio assets (wav) are not mastered (DC offset, unbalanced gain)
   Allegro build test on linux, no build procedure/project files for Elite
 
-################	---------					+----------+
-# RELEASE NOTE #	v.alpha-4 (0x0000)			| 29/03/16 |
-################	---------					+----------+
+################    ---------                   +----------+
+# RELEASE NOTE #    v.alpha-4 (0x0000)          | 29/03/16 |
+################    ---------                   +----------+
 
 Changes:
 --------
-  Make Ergonomic and Aesthetic Additions:					[erg_aesth]
-	on-board computer (equip ship)
-	colour (VGA) scanner (equip ship)
-	enhanced planet landscape generation
-	variable laser sights, color shots, updated fire rates	[lasers]
-	closer emulation of C64 flight controls
-	reduce fuel scoop rate
-	jump failure message and audio
-	improved exception handling (loading config and asset files)
-	load all assets individually, not from packed .dat file
-	remove scanner.cfg (config is now build time constants)
-	set volume (build time constant)
-	credits and version number
+  Make Ergonomic and Aesthetic Additions:                   [erg_aesth]
+    on-board computer (equip ship)
+    colour (VGA) scanner (equip ship)
+    enhanced planet landscape generation
+    variable laser sights, color shots, updated fire rates  [lasers]
+    closer emulation of C64 flight controls
+    reduce fuel scoop rate
+    jump failure message and audio
+    improved exception handling (loading config and asset files)
+    load all assets individually, not from packed .dat file
+    remove scanner.cfg (config is now build time constants)
+    set volume (build time constant)
+    credits and version number
     updated brk pattern (dock/launch, hyperspace)
-	color designed console bars
-	horizontal line to separate viewport and console
+    color designed console bars
+    horizontal line to separate viewport and console
     extended joystick support (equip, stock, pause)
     extra support for x360 controller (newkind.cfg)
     BF: snes colors (introduced by directX fix)
     BF: double beep when acquiring missile target
-  Refactor - style											[refactor2]
-  Fix failure to run using Direct X	(newkind.cfg)			[dx]
-  Refactor - reduce scope of program objects				[scope]
-  Enable "warnings as errors"								[warnings]
-  Add Visual Studio Community 2015 files					[vs2015]
-  Reorganize file structure, see //readme.txt				[move_files]
-  Add Allegro source and 32-bit vs2015 dll build			[allegro]
+  Refactor - style                                          [refactor2]
+  Fix failure to run using Direct X (newkind.cfg)           [dx]
+  Refactor - reduce scope of program objects                [scope]
+  Enable "warnings as errors"                               [warnings]
+  Add Visual Studio Community 2015 files                    [vs2015]
+  Reorganize file structure, see //readme.txt               [move_files]
+  Add Allegro source and 32-bit vs2015 dll build            [allegro]
 
 Known Bugs:
 -----------

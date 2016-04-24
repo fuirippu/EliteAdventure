@@ -56,4 +56,4 @@ void display_commander_status(void);
 void display_inventory(void);
 
 
-#endif		// #ifndef DOCKED_H
+#endif      // #ifndef DOCKED_H

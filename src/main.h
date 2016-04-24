@@ -22,4 +22,4 @@ void save_commander_screen(void);
 void load_commander_screen(void);
 
 
-#endif		// #ifndef MAIN_H
+#endif      // #ifndef MAIN_H

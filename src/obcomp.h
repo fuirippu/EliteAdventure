@@ -22,4 +22,4 @@ void obc_refresh();
 const char *obc_ship_name(int type);
 
 
-#endif		// #ifndef OBCOMP_H
+#endif      // #ifndef OBCOMP_H

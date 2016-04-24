@@ -24,35 +24,35 @@
 
 struct point
 {
-	int x;
-	int y;
-	int z;
+    int x;
+    int y;
+    int z;
 };
 
 
 struct univ_object
 {
-	int type;
-	Vector location;
-	Matrix rotmat;
-	int rotx;
-	int rotz;
-	int flags;
-	int energy;
-	int velocity;
-	int acceleration;
-	int missiles;
-	int target;
-	int bravery;
-	int exp_delta;
-	int exp_seed;
-	int distance;
+    int type;
+    Vector location;
+    Matrix rotmat;
+    int rotx;
+    int rotz;
+    int flags;
+    int energy;
+    int velocity;
+    int acceleration;
+    int missiles;
+    int target;
+    int bravery;
+    int exp_delta;
+    int exp_seed;
+    int distance;
 };
 
-#define MAX_UNIV_OBJECTS	20
+#define MAX_UNIV_OBJECTS    20
 extern struct univ_object universe[MAX_UNIV_OBJECTS];
 
-#define NO_OF_SHIPS		33
+#define NO_OF_SHIPS     33
 extern int ship_count[NO_OF_SHIPS + 1];  /* many */
 
 extern int hyper_ready;
@@ -90,4 +90,4 @@ void launch_player(void);
 void engage_instant_dock(void);
 
 
-#endif		// #ifndef SPACE_H
+#endif      // #ifndef SPACE_H

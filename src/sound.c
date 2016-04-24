@@ -24,24 +24,24 @@
 /////////////////////////////////////////////////////////////////////////////
 static struct sound_sample
 {
-	int runtime;
-	int timeleft;
+    int runtime;
+    int timeleft;
 } sample_list[NUM_SAMPLES] =
 {
-	{ 32, 0 },			// launch
-	{  7, 0 },			// crash
-	{ 36, 0 },			// dock
-	{ 24, 0 },			// gameover
-	{  4, 0 },			// pulse
-	{  4, 0 },			// hitem
-	{ 23, 0 },			// explode
-	{ 23, 0 },			// ecm
-	{ 25, 0 },			// missile
-	{ 37, 0 },			// hyper
-	{  4, 0 },			// incom1
-	{  5, 0 },			// incom2
-	{  2, 0 },			// beep
-	{  7, 0 },			// boop
+    { 32, 0 },          // launch
+    {  7, 0 },          // crash
+    { 36, 0 },          // dock
+    { 24, 0 },          // gameover
+    {  4, 0 },          // pulse
+    {  4, 0 },          // hitem
+    { 23, 0 },          // explode
+    { 23, 0 },          // ecm
+    { 25, 0 },          // missile
+    { 37, 0 },          // hyper
+    {  4, 0 },          // incom1
+    {  5, 0 },          // incom2
+    {  2, 0 },          // beep
+    {  7, 0 },          // boop
 };
  
  
@@ -50,39 +50,39 @@ static struct sound_sample
 /////////////////////////////////////////////////////////////////////////////
 void snd_play_sample(int sample_no)
 {
-	if ((sample_no < 0) || (sample_no >(NUM_SAMPLES - 1)))
-		return;
+    if ((sample_no < 0) || (sample_no >(NUM_SAMPLES - 1)))
+        return;
 
-	if (sample_list[sample_no].timeleft != 0)
-		return;
+    if (sample_list[sample_no].timeleft != 0)
+        return;
 
-	sample_list[sample_no].timeleft = sample_list[sample_no].runtime;	
-	gmlbSoundPlaySample(sample_no);
+    sample_list[sample_no].timeleft = sample_list[sample_no].runtime;   
+    gmlbSoundPlaySample(sample_no);
 }
 
 void snd_update_sound(void)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < NUM_SAMPLES; i++)
-	{
-		if (sample_list[i].timeleft > 0)
-			sample_list[i].timeleft--;
-	}
+    for (i = 0; i < NUM_SAMPLES; i++)
+    {
+        if (sample_list[i].timeleft > 0)
+            sample_list[i].timeleft--;
+    }
 }
 
 
 #ifdef USE_ALG_AUDIO
 void snd_play_midi(int midi_no)
 {
-	if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
-		return;
+    if ((midi_no < 0) || (midi_no > (NUM_MIDIS - 1)))
+        return;
 
-	gmlbSoundPlayMidi(ass_midis[midi_no]);
+    gmlbSoundPlayMidi(ass_midis[midi_no]);
 }
 void snd_stop_midi(void)
 {
-	gmlbSoundStopMidi();
+    gmlbSoundStopMidi();
 }
 #endif // USE_ALG_AUDIO
 

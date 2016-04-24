@@ -22,8 +22,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // Globals
 /////////////////////////////////////////////////////////////////////////////
-#define MISSILE_UNARMED	-2
-#define MISSILE_ARMED	-1
+#define MISSILE_UNARMED -2
+#define MISSILE_ARMED   -1
 
 extern int ecm_active;
 extern int missile_target;
@@ -49,8 +49,8 @@ void check_target(int targetIndex, struct univ_object *flip);
 
 
 void draw_laser_shots(int colour);
-int fire_laser(int type);		/// returns the number of frames for which to draw the laser
-								/// requires type is a valid laser type, not 0 [elite.h]
+int fire_laser(int type);       /// returns the number of frames for which to draw the laser
+                                /// requires type is a valid laser type, not 0 [elite.h]
 void cool_laser(void);
 
 
@@ -71,4 +71,4 @@ void abandon_ship(void);
 void create_thargoid(void);
 
 
-#endif		// #ifndef SWAT_H
+#endif      // #ifndef SWAT_H

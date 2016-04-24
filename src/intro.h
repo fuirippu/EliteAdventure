@@ -23,4 +23,4 @@ void update_intro1(void);
 void update_intro2(void);
 
 
-#endif		// #ifndef INTRO_H
+#endif      // #ifndef INTRO_H

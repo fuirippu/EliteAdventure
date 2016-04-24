@@ -18,22 +18,22 @@
 
 struct galaxy_seed
 {
-	unsigned char a;	/* 6c */
-	unsigned char b;	/* 6d */
-	unsigned char c;	/* 6e */
-	unsigned char d;	/* 6f */
-	unsigned char e;	/* 70 */
-	unsigned char f;	/* 71 */
+    unsigned char a;    /* 6c */
+    unsigned char b;    /* 6d */
+    unsigned char c;    /* 6e */
+    unsigned char d;    /* 6f */
+    unsigned char e;    /* 70 */
+    unsigned char f;    /* 71 */
 };
 
 struct planet_data
 {
-	int government;
-	int economy;
-	int techlevel;
-	int population;
-	int productivity;
-	int radius;
+    int government;
+    int economy;
+    int techlevel;
+    int population;
+    int productivity;
+    int radius;
 };
 
 
@@ -47,4 +47,4 @@ void describe_inhabitants (char *str, struct galaxy_seed planet);
 void generate_planet_data (struct planet_data *pl, struct galaxy_seed planet_seed);
 
 
-#endif		// #ifndef PLANET_H
+#endif      // #ifndef PLANET_H

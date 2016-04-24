@@ -26,4 +26,4 @@ int get_rand_seed (void);
 int rand255 (void);
 
 
-#endif		// #ifndef RANDOM_H
+#endif      // #ifndef RANDOM_H

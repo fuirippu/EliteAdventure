@@ -11,9 +11,9 @@
 
 if [ "$#" = "0" ]
 then
-	OUTFILE=/dev/null
+    OUTFILE=/dev/null
 else
-	OUTFILE="Elite_$1.out"
+    OUTFILE="Elite_$1.out"
 fi
 
 echo "Elite running, output log is $OUTFILE\n"

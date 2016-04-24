@@ -1,19 +1,19 @@
    =====================================
-    _Elite_Adventurous_  version:beta-1		23/04/16
+    _Elite_Adventurous_  version:beta-1     23/04/16
    =====================================
 
     < the rest of this file is no longer updated >
-	<   for further changes see docs directory   >
+    <   for further changes see docs directory   >
 
 09/04/16 London
-	alpha release rc_a5
+    alpha release rc_a5
 24/03/16 London
-	alpha release rc_a4
+    alpha release rc_a4
 17/03/16 London
-	prepare alpha release (branch rc_a4)
+    prepare alpha release (branch rc_a4)
 14/03/16 London
-	dx branch for directx fix (win8.1)
-	
+    dx branch for directx fix (win8.1)
+    
  +------------------------------------------------+
  | based on Elite - The New Kind                  |
  |  by Christian Pinder <christian@newkind.co.uk> |
@@ -67,7 +67,7 @@ F1  - Launch when docked, Front View when in flight.
 F2  - Rear View
 F3  - Left View
 F4  - Right View when in flight.
-	When docked, Buy Equipment for ship.
+    When docked, Buy Equipment for ship.
       Use up and down arrow keys to select item, return/enter key to buy.
 F5  - Display Galactic Chart.
 F6  - Short Range Chart.

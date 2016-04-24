@@ -9,4 +9,4 @@ void update_starfield (void);
 void flip_stars (void);
 
 
-#endif		// #ifndef STARS_H
+#endif      // #ifndef STARS_H

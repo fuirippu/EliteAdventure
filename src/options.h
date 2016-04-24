@@ -32,4 +32,4 @@ void do_option(void);
 void display_options(void);
 
 
-#endif		// #ifndef OPTIONS_H
+#endif      // #ifndef OPTIONS_H
