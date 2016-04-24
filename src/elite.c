@@ -182,7 +182,12 @@ void dbg_out(const char *str)
 #endif // WINDOWS
 }
 
-
+static const char *econ[] = {
+	"RchInd", "AvgInd", "PorInd", "MnlInd",
+	"MnlAgr", "RchAgr", "AvgAgr", "PorAgr" };
+static const char *govt[] = {
+	"Anrchy", "Feudal", "MultiG", "Dctatr",
+	"Cmmnst", "Confed", "Dmcrcy", "CorpSt" };
 void dbg_dump_universe()
 {
 	char buf[128];
@@ -205,9 +210,18 @@ void dbg_dump_universe()
 	//dbg_out(buf);
 	//sprintf(buf, "     NRG unit = %d\n", cmdr.energy_unit);
 	//dbg_out(buf);
-	sprintf(buf, "  ^Cmdr \"%s\" %d.%d Cr, score = 0x%04X [%d] (mission: %d)\n\n",
+	sprintf(buf, "  ^Cmdr \"%s\" %d.%d Cr, score = 0x%04X [%d] (mission: %d)\n",
 					cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10),
 					cmdr.score, cmdr.score, cmdr.mission);
+	dbg_out(buf);
+
+	char strPlanetName[16];
+	name_planet(strPlanetName, docked_planet);
+	capitalise_name(strPlanetName);
+	struct planet_data p;
+	generate_planet_data(&p, docked_planet);
+	sprintf(buf, "   near \"%s\" %s.%s.tech-%d\n\n", strPlanetName,
+					govt[p.government], econ[p.economy], p.techlevel + 1);
 	dbg_out(buf);
 }
 

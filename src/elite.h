@@ -133,12 +133,10 @@ struct player_ship
 /////////////////////////////////////////////////////////////////////////////
 extern struct player_ship myship;
 
-
 extern struct commander cmdr;
 extern struct commander saved_cmdr;
 
 extern struct galaxy_seed docked_planet;
-
 extern struct galaxy_seed hyperspace_planet;
 
 extern struct planet_data current_planet_data;

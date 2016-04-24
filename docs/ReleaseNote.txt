@@ -10,6 +10,9 @@
 
 Changes:
 --------
+  Add planet data to dump unvierse (dbg)
+  BugFix: Release audio assets (Allegro) on exit
+
   Isolate common Allegro include files
 
   Support for screen resolutions
