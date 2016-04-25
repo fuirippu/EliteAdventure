@@ -215,13 +215,21 @@ void dbg_dump_universe()
                     cmdr.score, cmdr.score, cmdr.mission);
     dbg_out(buf);
 
+    sprintf(buf, "   galaxy %d{0x%02X.%02X.%02X.%02X.%02X.%02X} p{%02X.%02X.%02X.%02X.%02X.%02X}\n",
+                    cmdr.galaxy_number + 1, cmdr.galaxy.a, cmdr.galaxy.b, cmdr.galaxy.c,
+                    cmdr.galaxy.d, cmdr.galaxy.e, cmdr.galaxy.f,
+                    docked_planet.a, docked_planet.b, docked_planet.c,
+                    docked_planet.d, docked_planet.e, docked_planet.f);
+    dbg_out(buf);
+
     char strPlanetName[16];
     name_planet(strPlanetName, docked_planet);
     capitalise_name(strPlanetName);
     struct planet_data p;
     generate_planet_data(&p, docked_planet);
-    sprintf(buf, "   near \"%s\" %s.%s.tech-%d\n\n", strPlanetName,
-                    govt[p.government], econ[p.economy], p.techlevel + 1);
+
+    sprintf(buf, "     near  %s|%s|tech%02d  \"%s\"\n\n",
+                    econ[p.economy], govt[p.government], p.techlevel + 1, strPlanetName);
     dbg_out(buf);
 }
 

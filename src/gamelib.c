@@ -16,9 +16,6 @@
 
 #include "gamelib.h"
 
-#ifndef WINDOWS
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif // not WINDOWS
 
 /////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -317,7 +314,8 @@ void gmlbGraphicsSetXorMode(int i)
 }
 void gmlbGraphicsSetClipRegion(int x1, int y1, int x2, int y2)
 {
-    set_clip(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY);
+    set_clip_rect(gmlbBmpScreen, x1 + gmlbGfxOffsetX, y1 + gmlbGfxOffsetY, x2 + gmlbGfxOffsetX, y2 + gmlbGfxOffsetY);
+	set_clip_state(gmlbBmpScreen, TRUE);
 }
 
 void gmlbAcquireScreen()
@@ -402,13 +400,11 @@ void gmlbGraphicsPoly(int numPoints, int *poly, int colour)
 
 void gmlbGraphicsText(void *pFont, int x, int y, const char *txt, int colour)
 {
-    text_mode(-1);
-    textout(gmlbBmpScreen, pFont, txt, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, colour);
+	textout_ex(gmlbBmpScreen, pFont, txt, x + gmlbGfxOffsetX, y + gmlbGfxOffsetY, colour, -1);
 }
 void gmlbGraphicsTextCentre(void *pFont, int y, const char *txt, int colour)
 {
-    text_mode(-1);
-    textout_centre(gmlbBmpScreen, pFont, txt, (128 * gmlbGfxScale) + gmlbGfxOffsetX, (y / (2 / gmlbGfxScale)) + gmlbGfxOffsetY, colour);
+    textout_centre_ex(gmlbBmpScreen, pFont, txt, (128 * gmlbGfxScale) + gmlbGfxOffsetX, (y / (2 / gmlbGfxScale)) + gmlbGfxOffsetY, colour, -1);
 }
 
 void gmlbGraphicsSprite(GmlbPBitmap sprite, int x, int y)
@@ -951,10 +947,10 @@ char *gmlbFileNameFromPath(const char *path)
 {
     return get_filename(path);
 }
-int gmlbRequestFile(char *title, char *path, char *ext)
+int gmlbRequestFile(char *title, char *path, char *ext, int pathSize)
 {
     show_mouse(screen);
-    int fileLoaded = file_select(title, path, ext);
+    int fileLoaded = file_select_ex(title, path, ext, pathSize, -1, -1);
     show_mouse(NULL);
 
     return fileLoaded;
@@ -975,41 +971,17 @@ void gmlbBasicError(const char *str)
 // and clashes with allegro.h. For now, debug functions are in elite.c
 
 /////////////////////////////////////////////////////////////////////////////
+//
 //void gmlbDumpString(const char *str)
 //{
-//  OutputDebugString(str);
+//#ifdef WINDOWS
+//    OutputDebugString(str);
+//#else // not WINDOWS
+//    printf("%s", str);
+//    fflush(stdout);
+//#endif // WINDOWS
 //}
 //
-//
-//void gmlbDumpObjects(int numObjects, int x)
-//{
-//  char buf[128];
-//
-//  for (int i = 0; i < MAX_UNIV_OBJECTS; i++)
-//  {
-//      if (universe[i].type != 0)
-//      {
-//          sprintf(buf, "[%02d] - %s\n", i, obc_ship_name(universe[i].type));
-//          dbg_out(buf);
-//          sprintf(buf, "      @ <% 11.3f, % 11.3f, % 11.3f> d=%d\n",
-//              universe[i].location.x, universe[i].location.y, universe[i].location.z,
-//              universe[i].distance);
-//          dbg_out(buf);
-//      }
-//  }
-//  dbg_out(" <End_of_universe>\n");
-//
-//  //sprintf(buf, "Fuel - %d of 64 (max %dly)\n", (cmdr.fuel * 64) / myship.max_fuel, myship.max_fuel);
-//  //dbg_out(buf);
-//  //sprintf(buf, " Alt - %d (x100km minimum alt)\n", myship.altitude / 4);
-//  //dbg_out(buf);
-//  sprintf(buf, "Cmdr %s, %d.%d Cr\n", cmdr.name, (cmdr.credits / 10), (cmdr.credits % 10));
-//  dbg_out(buf);
-//  sprintf(buf, "     score = %d (mission: %d)\n", cmdr.score, cmdr.mission);
-//  dbg_out(buf);
-//  sprintf(buf, "  NRG unit = %d\n", cmdr.energy_unit);
-//  dbg_out(buf);
-//}
 /////////////////////////////////////////////////////////////////////////////
 #endif // _DEBUG
 

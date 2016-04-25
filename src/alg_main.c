@@ -1206,7 +1206,7 @@ void save_commander_screen(void)
     strcpy(path, cmdr.name);
     strcat(path, ".nkc");
     
-    int clickedOkay = gmlbRequestFile("Save Commander", path, "nkc");
+    int clickedOkay = gmlbRequestFile("Save Commander", path, "nkc", 255);
     if (!clickedOkay)           /// clicked Cancel
     {
         display_options();
@@ -1238,7 +1238,7 @@ void load_commander_screen(void)
     
     char path[255];
     strcpy(path, "jameson.nkc");
-    int clickedOkay = gmlbRequestFile("Load Commander", path, "nkc");
+    int clickedOkay = gmlbRequestFile("Load Commander", path, "nkc", 255);
     if (!clickedOkay)           /// clicked Cancel
         return;
 

@@ -167,7 +167,7 @@ void gmlbDestroyMidi(void *pMidi);
 int gmlbInit();
 
 char *gmlbFileNameFromPath(const char *path);
-int gmlbRequestFile(char *title, char *path, char *ext);
+int gmlbRequestFile(char *title, char *path, char *ext, int pathSize);
 
 void gmlbBasicError(const char *str);
 
