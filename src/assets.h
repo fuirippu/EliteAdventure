@@ -31,9 +31,10 @@ extern void *ass_midis[NUM_MIDIS];
 
 typedef enum {
     ass_fnt_one = 0,
-    ass_fnt_two = 1
+    ass_fnt_two = 1,
+	ass_fnt_fui = 2
 } ass_fnt;
-#define NUM_FONTS       (2)
+#define NUM_FONTS       (3)
 extern void *ass_fonts[NUM_FONTS];
 
 /////////////////////////////////////////////////////////////////////////////

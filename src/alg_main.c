@@ -379,6 +379,39 @@ static void draw_view_hud_and_lasers()
 {
     gfx_display_centre_text(32, view_title, 120, GFX_COL_WHITE);
 
+
+	//if (cmdr.speedo)
+	//{
+		int currentSpeed = ((flight_speed - 1) * 16) + ((((unsigned int)mcount >> 5) & 7) ^ 7);
+		if (currentSpeed < 4) currentSpeed += 4;
+		else if ((currentSpeed > 623) && (currentSpeed < 628)) currentSpeed += 4;
+
+		unsigned int flux = (((unsigned int)mcount >> 2) & 3);
+		if (flux == 3)
+			++currentSpeed;
+		else if (flux == 1)
+			--currentSpeed;
+
+		char strSpeed[8];
+		sprintf(strSpeed, "%03d", currentSpeed);
+
+		int colour = pColours[GFX_COL_RED];
+		if (currentSpeed < 130)
+			colour = pColours[GFX_COL_GREY_3];
+		else if (currentSpeed < 260)
+			colour = pColours[GFX_COL_GREY_2];
+		else if (currentSpeed < 390)
+			colour = pColours[GFX_COL_GREY_4];
+		else if (currentSpeed < 516)
+			colour = pColours[GFX_COL_AA_0 + 4];
+
+		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 512 - 36, 30 + (48 * 7), strSpeed, colour);
+									// x = (512 - 36), y = (10 + (32 * 11)) for ass_fnt_one
+		gmlbGraphicsHLine(512 - 40, 510, 26 + (48 * 7), pColours[GFX_COL_WHITE]);
+		gmlbGraphicsVLine(26 + (48 * 7), 383, 512 - 40, pColours[GFX_COL_WHITE]);
+	//}
+
+
     if (cmdr.obc)
         obc_display();
 
