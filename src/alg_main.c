@@ -956,8 +956,8 @@ static void handle_flight_joystick()
 
             if (pJoystick->fire5)               /// R bumper to refresh obc
                 gmlbKeyboard.kbd_o_pressed = 1;
-			if (pJoystick->fire8 && !(pJoystickPrev->fire8))	/// Click the L stick to
-				gmlbKeyboard.kbd_l_pressed = 1;					///  toggle duo compass
+            if (pJoystick->fire8 && !(pJoystickPrev->fire8))    /// Click the L stick to
+                gmlbKeyboard.kbd_l_pressed = 1;                 ///  toggle duo compass
         }
     }
 }
@@ -1239,17 +1239,18 @@ void load_commander_screen(void)
     gmlbUpdateScreen();
     
     
-    char path[255];
-    strcpy(path, "jameson.nkc");
-    int clickedOkay = gmlbRequestFile("Load Commander", path, "nkc", 255);
+    char buf[255];
+    strcpy(buf, "jameson.nkc");
+    int clickedOkay = gmlbRequestFile("Load Commander", buf, "nkc", 255);
     if (!clickedOkay)           /// clicked Cancel
         return;
 
-    int rv = load_commander_file(path);
-    if (rv)
+    int rv = load_commander_file(buf);
+    if (rv != 0)
     {
         saved_cmdr = cmdr;
-        gfx_display_centre_text(175, "Error Loading Commander!", 140, GFX_COL_GOLD);
+        sprintf(buf, "Error %d Loading Commander!", rv);
+        gfx_display_centre_text(175, buf, 140, GFX_COL_GOLD);
         gfx_display_centre_text(200, "Press any key to continue", 140, GFX_COL_GOLD);
         gmlbUpdateScreen();
         gmlbKeyboardReadKey();
@@ -1257,7 +1258,7 @@ void load_commander_screen(void)
     }
     
     restore_saved_commander();
-    set_commander_name(path);
+    set_commander_name(buf);
     saved_cmdr = cmdr;
     update_console();
 }
@@ -1517,7 +1518,7 @@ int elite_main()
 
             if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS) || (current_screen == SCR_QUIT)) && !docked) || game_paused )
             {
-				gfx_draw_scanner();
+                gfx_draw_scanner();
                 continue;
             }
                 

@@ -276,11 +276,13 @@ int load_commander_file(const char *path)
     if (fread(block, 256, 1, fp) != 1)
         return 1;
 
-#if defined(_DEBUG) && !defined(_DEVEL)
+#if !defined(_DEBUG) || !defined(_DEVEL)
     int chk = checksum(block);
     if ((block[0x4a] != (chk ^ 0xA9)) || (block[0x4b] != chk))
         return 1;
-#endif // _DEBUG && _DEVEL
+    if ((block[0x2f] != VERSION_MAJOR) || (block[0x30] != VERSION_MINOR))
+        return 2;
+#endif // not _DEBUG (RELEASE) || (_DEBUG &&) not DEVEL
 
     saved_cmdr.mission = block[0x00];
 

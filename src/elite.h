@@ -68,10 +68,20 @@
 #define FLG_SHOT            (16384)
 
 
-#define VERSION_STRING      "Version: beta-1"
+#pragma region Ship mod flags
+#define SHIP_MOD_AUDIO_SCANNER      (1)
+#define SHIP_MOD_VGA_SCANNER        (2)
+#define SHIP_MOD_OBC                (4)
+#define SHIP_MOD_SPEEDO             (8)
+#define SHIP_MOD_MILO               (16)
+#define SHIP_MOD_DUO_COMPASS        (32)
+#pragma endregion
+
+
+#define VERSION_STRING      "Version: beta-2"
 #define CREDIT_FUI          "further adventures from fuirippu 2016"
-#define VERSION_MAJOR       0x00
-#define VERSION_MINOR       0x00
+#define VERSION_MAJOR       (0x00)
+#define VERSION_MINOR       (0x01)
 
 /////////////////////////////////////////////////////////////////////////////
 // struct definitions
@@ -112,17 +122,8 @@ struct commander
     int market_rnd;
     int score;
     int saved;
-	int ship_mods;
+    int ship_mods;
 };
-
-#pragma region Ship mod flags
-#define SHIP_MOD_AUDIO_SCANNER		(1)
-#define SHIP_MOD_VGA_SCANNER		(2)
-#define SHIP_MOD_OBC				(4)
-#define SHIP_MOD_SPEEDO				(8)
-#define SHIP_MOD_MILO				(16)
-#define SHIP_MOD_DUO_COMPASS        (32)
-#pragma endregion
 
 struct player_ship
 {
@@ -185,7 +186,7 @@ extern int mcount;
 extern int detonate_bomb;
 extern int witchspace;
 extern int auto_pilot;
-extern int compass_target;		/// 0 == Planet, 1 == Sun/SS
+extern int compass_target;      /// 0 == Planet, 1 == Sun/SS
 
 
 /////////////////////////////////////////////////////////////////////////////
