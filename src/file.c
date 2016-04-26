@@ -276,10 +276,12 @@ int load_commander_file(const char *path)
     if (fread(block, 256, 1, fp) != 1)
         return 1;
 
+#if defined(_DEBUG) && !defined(_DEVEL)
     int chk = checksum(block);
     if ((block[0x4a] != (chk ^ 0xA9)) || (block[0x4b] != chk))
         return 1;
-    
+#endif // _DEBUG && _DEVEL
+
     saved_cmdr.mission = block[0x00];
 
     saved_cmdr.ship_x = block[0x01];
