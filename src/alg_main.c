@@ -1513,7 +1513,7 @@ int elite_main()
 
             handle_flight_keys();
 
-            if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS)) && !docked) || game_paused )
+            if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS) || (current_screen == SCR_QUIT)) && !docked) || game_paused )
             {
 				gfx_draw_scanner();
                 continue;
