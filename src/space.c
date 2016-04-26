@@ -12,9 +12,7 @@
  *
  */
 
-/*
- * space.c - handles the flight system and management of the space universe (?)
- */
+/// space.c - handles the flight system and management of the space universe (?)
 
 #include <stdio.h>
 #include <string.h>
@@ -664,7 +662,7 @@ void update_universe(void)
                 if ((type != SHIP_ASTEROID) && (type != SHIP_CARGO) &&
                     (type != SHIP_ALLOY) && (type != SHIP_ROCK) &&
                     (type != SHIP_BOULDER) && (type != SHIP_ESCAPE_CAPSULE) &&
-                    (type != SHIP_CORIOLIS) && (type != SHIP_DODEC) && (cmdr.audio_scanner))
+                    (type != SHIP_CORIOLIS) && (type != SHIP_DODEC) && (cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER))
                     gmlbSoundPlaySample(ass_smp_beep);
 
                 continue;
@@ -747,7 +745,7 @@ static void update_scanner(void)
             colour = GFX_COL_VIPER;
             break;
         }
-        if (cmdr.vga_scanner)
+        if (cmdr.ship_mods & SHIP_MOD_VGA_SCANNER)
         {
             switch (universe[i].type)
             {
@@ -965,6 +963,7 @@ static void display_fuel(void)
     }
 }
 
+
 static void display_missiles(void)
 {
     int nomiss;
@@ -998,7 +997,49 @@ static void display_missiles(void)
 void update_console(void)
 {
     gfx_draw_scanner();
-    
+
+	if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
+	{
+		char strSpeed[4] = "---";
+		int colour = pColours[GFX_COL_GREY_3];
+		if (!docked)
+		{
+			int currentSpeed = ((flight_speed - 1) * 16) + ((((unsigned int)mcount >> 5) & 7) ^ 7);
+			if (currentSpeed < 4) currentSpeed += 4;
+			else if ((currentSpeed > 623) && (currentSpeed < 628)) currentSpeed += 4;
+
+			unsigned int flux = (((unsigned int)mcount >> 2) & 3);
+			if (flux == 3) ++currentSpeed;
+			else if (flux == 1) --currentSpeed;
+			sprintf(strSpeed, "%03d", currentSpeed);
+
+			if (currentSpeed > 515)
+				colour = pColours[GFX_COL_RED];
+			else if (currentSpeed > 389)
+				colour = pColours[GFX_COL_AA_0 + 4];
+			else if (currentSpeed > 259)
+				colour = pColours[GFX_COL_GREY_4];
+			else if (currentSpeed > 129)
+				colour = pColours[GFX_COL_GREY_2];
+		}
+		gmlbGraphicsRectFill(484, 392, 502, 402, pColours[GFX_COL_BLACK]);
+		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 479, 389, strSpeed, colour);
+	}
+	if (cmdr.ship_mods & SHIP_MOD_MILO)
+	{
+		char strMiles[7] = "      ";
+		if (!docked)
+		{
+			int distance = universe[0].distance;
+			if (universe[1].type != SHIP_SUN)
+				distance = universe[1].distance;
+			else while (distance > 999999)
+				distance -= 999999;
+			sprintf(strMiles, "%06d", distance);
+		}
+		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 309, 387, strMiles, pColours[GFX_COL_PSMITH_03]);
+	}
+
     display_speed();
     display_flight_climb();
     display_flight_roll();

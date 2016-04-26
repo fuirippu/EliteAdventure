@@ -78,7 +78,7 @@ static const char *laser_name[5] = { "Pulse", "Beam", "Military", "Mining", "Cus
 
 #define EQUIP_START_Y   202
 #define EQUIP_START_X   50
-#define EQUIP_MAX_Y     306
+#define EQUIP_MAX_Y     314
 #define EQUIP_WIDTH     200
 #define Y_INC           16
 
@@ -164,10 +164,12 @@ static struct equip_item
 enum modifications {
     mod_scanner_audio   = 0,
     mod_scanner_vga     = 1,
-    mod_obc             = 2
+    mod_obc             = 2,
+	mod_speedo			= 3,
+	mod_lidar			= 4
 };
 
-#define NUM_MOD_ITEMS   (3)
+#define NUM_MOD_ITEMS   (5)
 static struct mod_item {
     int y_pos;
     int canbuy;
@@ -178,7 +180,9 @@ static struct mod_item {
 {
     { 0, 0, 8, 650000, "Audio Scanner"},            /// Tech level 10
     { 0, 0, 8, 750000, "VGA Scanner"},
-    { 0, 0,10, 750000, "On-board Computer"}         /// TL.12
+    { 0, 0,10, 750000, "On-board Computer"},        /// TL.12
+	{ 0, 0, 4, 450000, "Digital Speedo"},			/// TL.6
+	{ 0, 0, 6, 650000, "Compass LiDAR"}				/// TL.8
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -652,66 +656,49 @@ void display_commander_status(void)
         gfx_display_text(x, y, "Large Cargo Bay");
         y += Y_INC;
     }
-    
     if (cmdr.escape_pod)
     {
         gfx_display_text(x, y, "Escape Pod");
         y += Y_INC;
     }
-    
     if (cmdr.fuel_scoop)
     {
         gfx_display_text(x, y, "Fuel Scoops");
         y += Y_INC;
     }
-
     if (cmdr.ecm)
     {
         gfx_display_text(x, y, "E.C.M. System");
         y += Y_INC;
     }
-
     if (cmdr.energy_bomb)
     {
         gfx_display_text(x, y, "Energy Bomb");
         y += Y_INC;
     }
-
     if (cmdr.energy_unit)
     {
         gfx_display_text(x, y,
                   cmdr.energy_unit == 1 ? "Extra Energy Unit" :"Naval Energy Unit");
         y += Y_INC;
-        if (y > EQUIP_MAX_Y)
-        {
-            y = EQUIP_START_Y;
-            x += EQUIP_WIDTH;
-        }
     }
-
     if (cmdr.docking_computer)
     {
         gfx_display_text(x, y, "Docking Computers");
         y += Y_INC;
-        if (y > EQUIP_MAX_Y)
-        {
-            y = EQUIP_START_Y;
-            x += EQUIP_WIDTH;
-        }
-    }
+	}
 
     if (cmdr.galactic_hyperdrive)
     {
         gfx_display_text(x, y, "Galactic Hyperspace");
         y += Y_INC;
-        if (y > EQUIP_MAX_Y)
-        {
-            y = EQUIP_START_Y;
-            x += EQUIP_WIDTH;
-        }
-    }
-
-    if (cmdr.audio_scanner)
+		if (y > EQUIP_MAX_Y)
+		{
+			y = EQUIP_START_Y;
+			x += EQUIP_WIDTH;
+		}
+	}
+    if (cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER)
     {
         gfx_display_text(x, y, "Audio Scanner");
         y += Y_INC;
@@ -721,8 +708,7 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-
-    if (cmdr.vga_scanner)
+    if (cmdr.ship_mods & SHIP_MOD_VGA_SCANNER)
     {
         gfx_display_text(x, y, "VGA Scanner");
         y += Y_INC;
@@ -732,8 +718,7 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-
-    if (cmdr.obc)
+    if (cmdr.ship_mods & SHIP_MOD_OBC)
     {
         gfx_display_text(x, y, "On-board Computer");
         y += Y_INC;
@@ -743,7 +728,26 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-
+	if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
+	{
+		gfx_display_text(x, y, "Digital Speedometer");
+		y += Y_INC;
+		if (y > EQUIP_MAX_Y)
+		{
+			y = EQUIP_START_Y;
+			x += EQUIP_WIDTH;
+		}
+	}
+	if (cmdr.ship_mods & SHIP_MOD_MILO)
+	{
+		gfx_display_text(x, y, "Compass LiDAR");
+		y += Y_INC;
+		if (y > EQUIP_MAX_Y)
+		{
+			y = EQUIP_START_Y;
+			x += EQUIP_WIDTH;
+		}
+	}
     if (cmdr.front_laser)
     {
         sprintf(str, "Front %s Laser", laser_type(cmdr.front_laser));
@@ -755,7 +759,6 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-    
     if (cmdr.rear_laser)
     {
         sprintf(str, "Rear %s Laser", laser_type(cmdr.rear_laser));
@@ -767,7 +770,6 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-
     if (cmdr.left_laser)
     {
         sprintf(str, "Left %s Laser", laser_type(cmdr.left_laser));
@@ -779,7 +781,6 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-
     if (cmdr.right_laser)
     {
         sprintf(str, "Right %s Laser", laser_type(cmdr.right_laser));
@@ -1490,17 +1491,22 @@ void purchase_modification(void)
     switch (hilite_item)
     {
     case mod_scanner_audio:
-        cmdr.audio_scanner = 1;
+        cmdr.ship_mods |= SHIP_MOD_AUDIO_SCANNER;
         break;
-
     case mod_scanner_vga:
-        cmdr.vga_scanner = 1;
-        break;
-
+		cmdr.ship_mods |= SHIP_MOD_VGA_SCANNER;
+		break;
     case mod_obc:
-        cmdr.obc = 1;
+		cmdr.ship_mods |= SHIP_MOD_OBC;
         obc_clear();
         break;
+    case mod_speedo:
+		cmdr.ship_mods |= SHIP_MOD_SPEEDO;
+		update_console();
+		break;
+    case mod_lidar:
+		cmdr.ship_mods |= SHIP_MOD_MILO;
+		break;
     }
 
     cmdr.credits -= mods_inventory[hilite_item].price;
@@ -1536,13 +1542,17 @@ void modify_ship(void)
 
             if (cmdr.credits >= mods_inventory[i].price)
             {
-                if ((i == mod_scanner_audio) && (!cmdr.audio_scanner))
+                if ((i == mod_scanner_audio) && (!(cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER)))
                     mods_inventory[i].canbuy = 1;
-                else if ((i == mod_scanner_vga) && (!cmdr.vga_scanner))
+                else if ((i == mod_scanner_vga) && (!(cmdr.ship_mods & SHIP_MOD_VGA_SCANNER)))
                     mods_inventory[i].canbuy = 1;
-                else if ((i == mod_obc) && (!cmdr.obc))
+                else if ((i == mod_obc) && (!(cmdr.ship_mods & SHIP_MOD_OBC)))
                     mods_inventory[i].canbuy = 1;
-            }
+				else if ((i == mod_speedo) && (!(cmdr.ship_mods & SHIP_MOD_SPEEDO)))
+					mods_inventory[i].canbuy = 1;
+				else if ((i == mod_lidar) && (!(cmdr.ship_mods & SHIP_MOD_MILO)))
+					mods_inventory[i].canbuy = 1;
+			}
 
         }
     }

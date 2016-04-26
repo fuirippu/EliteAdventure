@@ -373,46 +373,14 @@ static void draw_lasers()
 }
 #pragma endregion
 
+
 /// requires view_title is a valid string, laser_type has been set or cleared
 /// Writes "Xxxx View" centre top, displays obc, draws laser (sights and shots as appropriate to player)
 static void draw_view_hud_and_lasers()
 {
     gfx_display_centre_text(32, view_title, 120, GFX_COL_WHITE);
 
-
-	//if (cmdr.speedo)
-	//{
-		int currentSpeed = ((flight_speed - 1) * 16) + ((((unsigned int)mcount >> 5) & 7) ^ 7);
-		if (currentSpeed < 4) currentSpeed += 4;
-		else if ((currentSpeed > 623) && (currentSpeed < 628)) currentSpeed += 4;
-
-		unsigned int flux = (((unsigned int)mcount >> 2) & 3);
-		if (flux == 3)
-			++currentSpeed;
-		else if (flux == 1)
-			--currentSpeed;
-
-		char strSpeed[8];
-		sprintf(strSpeed, "%03d", currentSpeed);
-
-		int colour = pColours[GFX_COL_RED];
-		if (currentSpeed < 130)
-			colour = pColours[GFX_COL_GREY_3];
-		else if (currentSpeed < 260)
-			colour = pColours[GFX_COL_GREY_2];
-		else if (currentSpeed < 390)
-			colour = pColours[GFX_COL_GREY_4];
-		else if (currentSpeed < 516)
-			colour = pColours[GFX_COL_AA_0 + 4];
-
-		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 512 - 36, 30 + (48 * 7), strSpeed, colour);
-									// x = (512 - 36), y = (10 + (32 * 11)) for ass_fnt_one
-		gmlbGraphicsHLine(512 - 40, 510, 26 + (48 * 7), pColours[GFX_COL_WHITE]);
-		gmlbGraphicsVLine(26 + (48 * 7), 383, 512 - 40, pColours[GFX_COL_WHITE]);
-	//}
-
-
-    if (cmdr.obc)
+    if (cmdr.ship_mods & SHIP_MOD_OBC)
         obc_display();
 
     if (laser_type != 0)
@@ -1547,9 +1515,7 @@ int elite_main()
 
             if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS)) && !docked) || game_paused )
             {
-                gmlbGraphicsSetClipRegion(0, 0, 512, 530);
-                gmlbGraphicsSprite(ass_bitmaps[ass_bmp_scanner], 0, 385);
-
+				gfx_draw_scanner();
                 continue;
             }
                 
@@ -1653,9 +1619,7 @@ int elite_main()
                 if ((mcount & 31) == 10)
                 {
                     if (energy < 50)
-                    {
                         info_message("ENERGY LOW", GFX_COL_SNES_249, 1);
-                    }
 
                     update_altitude();
                 }

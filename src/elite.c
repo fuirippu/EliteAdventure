@@ -102,9 +102,7 @@ struct commander saved_cmdr =
     0,                                          /* Fluctuation      */
     0,                                          /* Score            */
     0x80,                                       /* Saved            */
-    0,                                          /* Audio Scanner    */
-    0,                                          /* VGA Scanner      */
-    0                                           /* OBC              */
+    0                                           /* Ship mods        */
 };
 
 struct commander cmdr;

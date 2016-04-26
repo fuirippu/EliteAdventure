@@ -187,7 +187,7 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
             if (buf[0] != 0)
                 obc_message(buf, col);      /// Display new object message
 
-            if ((playSound) && (cmdr.audio_scanner))
+            if ((playSound) && (cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER))
                 gmlbSoundPlaySample(ass_smp_beep);
 
             return i;

@@ -252,11 +252,9 @@ int save_commander_file(const char *path)
     block[0x4a] = chk ^ 0xA9;
     block[0x4b] = chk;
     
-    block[0x4c] = cmdr.vga_scanner;
-    block[0x4d] = cmdr.obc;
-    block[0x4e] = cmdr.audio_scanner;
+    block[0x4c] = cmdr.ship_mods;
 
-    for (int i = 0x4f; i < 0x100; i++)
+    for (int i = 0x4d; i < 0x100; i++)
         block[i] = 0;
 
     if (fwrite(block, 256, 1, fp) != 1)
@@ -332,9 +330,7 @@ int load_commander_file(const char *path)
     saved_cmdr.score = block[0x47];
     saved_cmdr.score += block[0x48] << 8;
 
-    saved_cmdr.vga_scanner = block[0x4c];
-    saved_cmdr.obc = block[0x4d];
-    saved_cmdr.audio_scanner = block[0x4e];
+    saved_cmdr.ship_mods = block[0x4c];
 
     if (fclose(fp) == EOF)
         return 1;   
