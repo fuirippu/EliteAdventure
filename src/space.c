@@ -786,21 +786,19 @@ static void update_scanner(void)
 /// Update the compass which tracks the space station / planet
 static void update_compass(void)
 {
-    struct vector dest;
-    int compass_x;
-    int compass_y;
-    int un = 0;
+	if (witchspace)
+		return;
 
-    if (witchspace)
-        return;
-    
+    int un = 0;
     if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
         un = 1;
+	if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
+		un = compass_target;
     
-    dest = unit_vector(&universe[un].location);
+	struct vector dest = unit_vector(&universe[un].location);
     
-    compass_x = compass_centre_x + (int)(dest.x * 16);
-    compass_y = compass_centre_y + (int)(dest.y * -16);
+    int compass_x = compass_centre_x + (int)(dest.x * 16);
+    int compass_y = compass_centre_y + (int)(dest.y * -16);
     
     if (dest.z < 0)
         gfx_draw_sprite(ass_bmp_reddot, compass_x, compass_y);
@@ -1027,18 +1025,33 @@ void update_console(void)
 	}
 	if (cmdr.ship_mods & SHIP_MOD_MILO)
 	{
-		char strMiles[7] = "      ";
+		char strMiles[8] = "       ";
 		if (!docked)
 		{
 			int distance = universe[0].distance;
 			if (universe[1].type != SHIP_SUN)
 				distance = universe[1].distance;
-			else while (distance > 999999)
+            if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)      /// Whoah, MILO and DUO!
+            {
+                distance = universe[compass_target].distance;
+                strMiles[0] = (compass_target == 0) ? 'p' : 's';
+            }
+			while (distance > 999999)
 				distance -= 999999;
-			sprintf(strMiles, "%06d", distance);
+			sprintf(&strMiles[1], "%06d", distance);
 		}
-		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 309, 387, strMiles, pColours[GFX_COL_PSMITH_03]);
+        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 299, 387, strMiles, pColours[GFX_COL_PSMITH_03]);
 	}
+    else if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)     /// && not SHIP_MOD_MILO
+    {
+        char strTarget[2] = " ";
+        if (!docked)
+        {
+            strTarget[0] = 's';
+            if (compass_target == 0) strTarget[0] = 'p';
+        }
+        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 361, 387, strTarget, pColours[GFX_COL_PSMITH_03]);
+    }
 
     display_speed();
     display_flight_climb();
@@ -1112,6 +1125,7 @@ void decrease_flight_climb(void)
 static void add_planet(int x, int y, int z, Matrix rot)
 {
     add_new_ship(SHIP_PLANET, x, y, z, rot, 0, 0);
+
     char buf[32];
     name_planet(buf, docked_planet);
     capitalise_name(buf);
@@ -1286,6 +1300,7 @@ static void complete_hyperspace(void)
     }
 
     add_planet(px, py, pz, rotmat);
+    compass_target = 0;
 
     pz = -(((docked_planet.d & 7) | 1) << 16);
     px = ((docked_planet.f & 3) << 16) | ((docked_planet.f & 3) << 8);
@@ -1385,6 +1400,7 @@ void launch_player(void)
     set_init_matrix(rotmat);
 
     add_planet(0, 0, 65536, rotmat);
+    compass_target = 1;
 
     rotmat[2].x = -rotmat[2].x;
     rotmat[2].y = -rotmat[2].y;

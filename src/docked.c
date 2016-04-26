@@ -78,7 +78,7 @@ static const char *laser_name[5] = { "Pulse", "Beam", "Military", "Mining", "Cus
 
 #define EQUIP_START_Y   202
 #define EQUIP_START_X   50
-#define EQUIP_MAX_Y     314
+#define EQUIP_MAX_Y     330
 #define EQUIP_WIDTH     200
 #define Y_INC           16
 
@@ -166,10 +166,11 @@ enum modifications {
     mod_scanner_vga     = 1,
     mod_obc             = 2,
 	mod_speedo			= 3,
-	mod_lidar			= 4
+	mod_lidar			= 4,
+    mod_duo_compass     = 5
 };
 
-#define NUM_MOD_ITEMS   (5)
+#define NUM_MOD_ITEMS   (6)
 static struct mod_item {
     int y_pos;
     int canbuy;
@@ -182,7 +183,8 @@ static struct mod_item {
     { 0, 0, 8, 750000, "VGA Scanner"},
     { 0, 0,10, 750000, "On-board Computer"},        /// TL.12
 	{ 0, 0, 4, 450000, "Digital Speedo"},			/// TL.6
-	{ 0, 0, 6, 650000, "Compass LiDAR"}				/// TL.8
+	{ 0, 0, 6, 650000, "Compass LiDAR"},			/// TL.8
+    { 0, 0, 5, 750000, "Duo-Compass" }				/// TL.7
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -692,11 +694,6 @@ void display_commander_status(void)
     {
         gfx_display_text(x, y, "Galactic Hyperspace");
         y += Y_INC;
-		if (y > EQUIP_MAX_Y)
-		{
-			y = EQUIP_START_Y;
-			x += EQUIP_WIDTH;
-		}
 	}
     if (cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER)
     {
@@ -738,9 +735,9 @@ void display_commander_status(void)
 			x += EQUIP_WIDTH;
 		}
 	}
-	if (cmdr.ship_mods & SHIP_MOD_MILO)
+	if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
 	{
-		gfx_display_text(x, y, "Compass LiDAR");
+		gfx_display_text(x, y, "Duo-Compass (tm)");
 		y += Y_INC;
 		if (y > EQUIP_MAX_Y)
 		{
@@ -748,6 +745,16 @@ void display_commander_status(void)
 			x += EQUIP_WIDTH;
 		}
 	}
+    if (cmdr.ship_mods & SHIP_MOD_MILO)
+    {
+        gfx_display_text(x, y, "Compass LiDAR");
+        y += Y_INC;
+        if (y > EQUIP_MAX_Y)
+        {
+            y = EQUIP_START_Y;
+            x += EQUIP_WIDTH;
+        }
+    }
     if (cmdr.front_laser)
     {
         sprintf(str, "Front %s Laser", laser_type(cmdr.front_laser));
@@ -1507,6 +1514,9 @@ void purchase_modification(void)
     case mod_lidar:
 		cmdr.ship_mods |= SHIP_MOD_MILO;
 		break;
+    case mod_duo_compass:
+        cmdr.ship_mods |= SHIP_MOD_DUO_COMPASS;
+        break;
     }
 
     cmdr.credits -= mods_inventory[hilite_item].price;
@@ -1552,11 +1562,12 @@ void modify_ship(void)
 					mods_inventory[i].canbuy = 1;
 				else if ((i == mod_lidar) && (!(cmdr.ship_mods & SHIP_MOD_MILO)))
 					mods_inventory[i].canbuy = 1;
-			}
+                else if ((i == mod_duo_compass) && (!(cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)))
+                    mods_inventory[i].canbuy = 1;
+            }
 
         }
     }
-
     show_modifications();
 }
 #pragma endregion

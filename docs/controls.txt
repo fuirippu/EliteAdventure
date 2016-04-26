@@ -4,7 +4,7 @@
 --------------------------
 Keyboard/Joystick Controls (x360 controller recommended)
 --------------------------
-F1  - Launch when docked, Front View when in flight         } (R Click to Launch on x360)
+F1  - Launch when docked, Front View when in flight         } R Click to Launch on x360
 F2  - Rear View                                             }
 F3  - Left View, Mod Ship when docked                       } D-pad Change View on x360
 F4  - Right View when in flight, Equip Ship when docked     }
@@ -37,6 +37,7 @@ SPACE - Speed Up                    } Joystick buttons 1 and 2
  J  - Warp Jump                     } Y on x360
  C  - Docking Computer
  D  - De-activate Docking Computer
+ L  - Toggle Duo-Compass Target                         } L Click on x360
  H  - Hyperspace, hold CTRL for Galactic Hyperspace     } R Click on x360
 
  T  - Target Missile

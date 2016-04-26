@@ -956,6 +956,8 @@ static void handle_flight_joystick()
 
             if (pJoystick->fire5)               /// R bumper to refresh obc
                 gmlbKeyboard.kbd_o_pressed = 1;
+			if (pJoystick->fire8 && !(pJoystickPrev->fire8))	/// Click the L stick to
+				gmlbKeyboard.kbd_l_pressed = 1;					///  toggle duo compass
         }
     }
 }
@@ -1158,10 +1160,8 @@ static void handle_flight_keys(void)
         (instant_dock) ? engage_instant_dock() : engage_auto_pilot();
 
 
-    if ((current_screen != SCR_FRONT_VIEW) &&
-        (current_screen != SCR_REAR_VIEW) &&
-        (current_screen != SCR_LEFT_VIEW) &&
-        (current_screen != SCR_RIGHT_VIEW))
+    if ((current_screen != SCR_FRONT_VIEW) && (current_screen != SCR_REAR_VIEW) &&
+        (current_screen != SCR_LEFT_VIEW)  && (current_screen != SCR_RIGHT_VIEW))
         return;
     /// The following routines can assume the key is pressed on a flight screen...
 
@@ -1172,6 +1172,8 @@ static void handle_flight_keys(void)
     }
     if (gmlbKeyboard.kbd_o_pressed)
         obc_refresh();
+    if (gmlbKeyboard.kbd_l_pressed)
+        compass_target = 1 - compass_target;
 }
 
 

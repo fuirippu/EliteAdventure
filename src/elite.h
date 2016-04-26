@@ -121,6 +121,7 @@ struct commander
 #define SHIP_MOD_OBC				(4)
 #define SHIP_MOD_SPEEDO				(8)
 #define SHIP_MOD_MILO				(16)
+#define SHIP_MOD_DUO_COMPASS        (32)
 #pragma endregion
 
 struct player_ship
@@ -184,6 +185,7 @@ extern int mcount;
 extern int detonate_bomb;
 extern int witchspace;
 extern int auto_pilot;
+extern int compass_target;		/// 0 == Planet, 1 == Sun/SS
 
 
 /////////////////////////////////////////////////////////////////////////////

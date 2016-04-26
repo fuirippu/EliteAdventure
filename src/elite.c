@@ -48,6 +48,7 @@ int anti_alias_gfx = 0;
 int hoopy_casinos = 0;
 int speed_cap = 75;
 int instant_dock = 0;
+int compass_target = 1;
 
 const int scanner_cx = 253;
 const int scanner_cy = 448;

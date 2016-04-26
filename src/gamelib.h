@@ -33,6 +33,7 @@ typedef struct {
     int kbd_dock_pressed;
     int kbd_d_pressed;
     int kbd_o_pressed;
+	int kbd_l_pressed;
     int kbd_find_pressed;
     int kbd_fire_missile_pressed;
     int kbd_target_missile_pressed;
@@ -73,7 +74,8 @@ typedef struct {
     int fire4;
     int fire5;
     int fire7;
-    int fire9;
+	int fire8;
+	int fire9;
 } GmlbJoystick;
 
 GmlbJoystick *gmlbJoystickGetCurrent();

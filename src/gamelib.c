@@ -69,7 +69,8 @@ void gmlbKeyboardPoll()
     gmlbKeyboard.kbd_dock_pressed = key[KEY_C];
     gmlbKeyboard.kbd_d_pressed = key[KEY_D];
     gmlbKeyboard.kbd_o_pressed = key[KEY_O];
-    gmlbKeyboard.kbd_find_pressed = key[KEY_F];
+	gmlbKeyboard.kbd_l_pressed = key[KEY_L];
+	gmlbKeyboard.kbd_find_pressed = key[KEY_F];
 
     gmlbKeyboard.kbd_fire_missile_pressed = key[KEY_M];
     gmlbKeyboard.kbd_target_missile_pressed = key[KEY_T];
@@ -174,6 +175,8 @@ void gmlbJoystickPoll()
         pJoystick->fire5 = 1;
     if (joy[0].button[7].b)
         pJoystick->fire7 = 1;
+	if (joy[0].button[8].b)
+		pJoystick->fire8 = 1;
 #ifdef WINDOWS
     if (joy[0].button[9].b)
 #else // not WINDOWS
