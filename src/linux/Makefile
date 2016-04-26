@@ -9,7 +9,8 @@ PORT_AUDIO_DIR  := ../../../PortAudio/install
 CC := gcc
 INCDIRS_FLAGS := -I$(ALLEGRO_DIR)/build_common/include -I$(ALLEGRO_LNX_DIR)/include -I$(PORT_AUDIO_DIR)/include
 WARNING_FLAGS := -Wall -Wextra -Wno-unknown-pragmas -Werror
-CFLAGS := $(INCDIRS_FLAGS) -std=c99 -D_DEBUG -DUSE_ALSA $(WARNING_FLAGS) -O2
+#CFLAGS := $(INCDIRS_FLAGS) -std=c99 -D_DEBUG -DUSE_ALSA $(WARNING_FLAGS) -O2
+CFLAGS := $(INCDIRS_FLAGS) -std=c99 -D_DEBUG -DUSE_ALSA $(WARNING_FLAGS) -O2 -D_DEVEL
 
 LDFLAGS := -L$(ALLEGRO_LNX_DIR)/lib -L$(PORT_AUDIO_DIR)/lib -s
 LDLIBS := -lm -lalleg -lportaudio
