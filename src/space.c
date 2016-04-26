@@ -663,7 +663,7 @@ void update_universe(void)
                     (type != SHIP_ALLOY) && (type != SHIP_ROCK) &&
                     (type != SHIP_BOULDER) && (type != SHIP_ESCAPE_CAPSULE) &&
                     (type != SHIP_CORIOLIS) && (type != SHIP_DODEC) && (cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER))
-                    gmlbSoundPlaySample(ass_smp_beep);
+                    gmlbSoundPlaySample(ass_smp_boop);
 
                 continue;
             }
