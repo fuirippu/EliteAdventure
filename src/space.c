@@ -784,16 +784,16 @@ static void update_scanner(void)
 /// Update the compass which tracks the space station / planet / sun (duo compass)
 static void update_compass(void)
 {
-	if (witchspace)
-		return;
+    if (witchspace)
+        return;
 
     int un = 0;
     if (ship_count[SHIP_CORIOLIS] || ship_count[SHIP_DODEC])
         un = 1;
-	if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
-		un = compass_target;
+    if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
+        un = compass_target;
     
-	struct vector dest = unit_vector(&universe[un].location);
+    struct vector dest = unit_vector(&universe[un].location);
     
     int compass_x = compass_centre_x + (int)(dest.x * 16);
     int compass_y = compass_centre_y + (int)(dest.y * -16);
@@ -990,41 +990,41 @@ void update_console(void)
 {
     gfx_draw_scanner();
 
-	if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
-	{
-		char strSpeed[8] = "---";
-		int colour = pColours[GFX_COL_GREY_3];
-		if (!docked)
-		{
-			int currentSpeed = ((flight_speed - 1) * 16) + ((((unsigned int)mcount >> 5) & 7) ^ 7);
-			if (currentSpeed < 4) currentSpeed += 4;
-			else if ((currentSpeed > 623) && (currentSpeed < 628)) currentSpeed += 4;
+    if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
+    {
+        char strSpeed[8] = "---";
+        int colour = pColours[GFX_COL_GREY_3];
+        if (!docked)
+        {
+            int currentSpeed = ((flight_speed - 1) * 16) + ((((unsigned int)mcount >> 5) & 7) ^ 7);
+            if (currentSpeed < 4) currentSpeed += 4;
+            else if ((currentSpeed > 623) && (currentSpeed < 628)) currentSpeed += 4;
 
-			unsigned int flux = (((unsigned int)mcount >> 2) & 3);
-			if (flux == 3) ++currentSpeed;
-			else if (flux == 1) --currentSpeed;
-			sprintf(strSpeed, "%03d", currentSpeed);
+            unsigned int flux = (((unsigned int)mcount >> 2) & 3);
+            if (flux == 3) ++currentSpeed;
+            else if (flux == 1) --currentSpeed;
+            sprintf(strSpeed, "%03d", currentSpeed);
 
             if (currentSpeed > 515)
                 colour = pColours[GFX_COL_DUN_TAN];
-			else if (currentSpeed > 389)
-				colour = pColours[GFX_COL_AA_0 + 4];
-			else if (currentSpeed > 259)
-				colour = pColours[GFX_COL_GREY_4];
-			else if (currentSpeed > 129)
-				colour = pColours[GFX_COL_GREY_2];
-		}
-		gmlbGraphicsRectFill(484, 392, 502, 402, pColours[GFX_COL_BLACK]);
-		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 479, 389, strSpeed, colour);
-	}
+            else if (currentSpeed > 389)
+                colour = pColours[GFX_COL_AA_0 + 4];
+            else if (currentSpeed > 259)
+                colour = pColours[GFX_COL_GREY_4];
+            else if (currentSpeed > 129)
+                colour = pColours[GFX_COL_GREY_2];
+        }
+        gmlbGraphicsRectFill(484, 392, 502, 402, pColours[GFX_COL_BLACK]);
+        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 479, 389, strSpeed, colour);
+    }
     if (cmdr.ship_mods & SHIP_MOD_MILO)
-	{
-		char strMiles[8] = "       ";
-		if (!docked)
-		{
-			int distance = universe[0].distance;
-			if (universe[1].type != SHIP_SUN)
-				distance = universe[1].distance;
+    {
+        char strMiles[8] = "       ";
+        if (!docked)
+        {
+            int distance = universe[0].distance;
+            if (universe[1].type != SHIP_SUN)
+                distance = universe[1].distance;
             if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)      /// Whoah, MILO and DUO!
                 distance = universe[compass_target].distance;
 
@@ -1043,7 +1043,7 @@ void update_console(void)
                 sprintf(strMiles, " %03dk", distance);      /// MILO, no DUO
         }
         gmlbGraphicsText(ass_fonts[ass_fnt_fui], 321, 387, strMiles, pColours[GFX_COL_RED_3]);
-	}
+    }
     else if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)     /// && not SHIP_MOD_MILO
     {
         char strTarget[2] = " ";

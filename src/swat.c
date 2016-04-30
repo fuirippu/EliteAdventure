@@ -163,8 +163,8 @@ int add_new_ship(int ship_type, int x, int y, int z, struct vector *rotmat, int 
             {
                 sprintf(buf, "+[%s]", obc_ship_name(type));
                 col = GFX_COL_AA_0;
-				if ((type != SHIP_ALLOY) && (type != SHIP_CARGO))
-					playSound = 1;
+                if ((type != SHIP_ALLOY) && (type != SHIP_CARGO))
+                    playSound = 1;
             }
             else if ((type == SHIP_THARGOID) || (type == SHIP_THARGLET))
             {
