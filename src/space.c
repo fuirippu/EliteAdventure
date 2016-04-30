@@ -825,10 +825,10 @@ static void display_speed(void)
     int len = ((flight_speed * 64) / myship.max_speed) - 1;
     int colour = (flight_speed > (myship.max_speed * 2 / 3)) ? GFX_COL_DARK_RED : GFX_COL_GOLD;
 
-    if (cmdr.ship_mods & SHIP_MOD_MILO)
-        len = min(len, 61);
+    if ((cmdr.ship_mods & SHIP_MOD_MILO) && (len > 62))
+        len = 62;
 
-    int sx = 417;
+    int sx = 416;
     int sy = 384 + 9;
     for (int i = 0; i < 6; i++)
     {
