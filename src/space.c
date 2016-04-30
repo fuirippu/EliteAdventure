@@ -106,11 +106,6 @@ static void rotate_vec(struct vector *vec, double alpha, double beta)
 /// Update an objects location in the universe.
 static void move_univ_object(struct univ_object *obj)
 {
-    double speed;
-    
-    double alpha = flight_roll / 256.0;
-    double beta = flight_climb / 256.0;
-    
     double x = obj->location.x;
     double y = obj->location.y;
     double z = obj->location.z;
@@ -119,8 +114,7 @@ static void move_univ_object(struct univ_object *obj)
     { 
         if (obj->velocity != 0)
         {
-            speed = obj->velocity;
-            speed *= 1.5;   
+            double speed = obj->velocity * 1.5;
             x += obj->rotmat[2].x * speed; 
             y += obj->rotmat[2].y * speed; 
             z += obj->rotmat[2].z * speed; 
@@ -138,19 +132,23 @@ static void move_univ_object(struct univ_object *obj)
         }
     }
     
+    double alpha = flight_roll / 256.0;         /// ~ [-1/8 .. 1/8]
+    double beta = flight_climb / 256.0;         /// ~ [-1/32 .. 1/32]
+
     double k2 = y - alpha * x;
     z = z + beta * k2;
     y = k2 - z * beta;
     x = x + alpha * y;
-
+    //z = obj->location.z + (beta  * (obj->location.y - (alpha * obj->location.x)));        /// if (obj->velocity == obj->acceleration == 0)
+    //y = obj->location.y - (alpha * obj->location.x) - (beta * (obj->location.z + (beta  * (obj->location.y - (alpha * obj->location.x)))));
+    //x = x + alpha * y;
     z = z - flight_speed;
 
     obj->location.x = x;
     obj->location.y = y;
     obj->location.z = z;    
-
     obj->distance = (int)sqrt(x*x + y*y + z*z);
-    
+
     if (obj->type == SHIP_PLANET)
         beta = 0.0;
     
@@ -783,7 +781,7 @@ static void update_scanner(void)
     }
 }
 
-/// Update the compass which tracks the space station / planet
+/// Update the compass which tracks the space station / planet / sun (duo compass)
 static void update_compass(void)
 {
 	if (witchspace)
@@ -824,19 +822,15 @@ static void display_bar(int len, int x, int y, int colour_theme)
 
 static void display_speed(void)
 {
-    int sx, sy;
-    int i;
-    int len;
-    int colour;
+    int len = ((flight_speed * 64) / myship.max_speed) - 1;
+    int colour = (flight_speed > (myship.max_speed * 2 / 3)) ? GFX_COL_DARK_RED : GFX_COL_GOLD;
 
-    sx = 417;
-    sy = 384 + 9;
+    if (cmdr.ship_mods & SHIP_MOD_MILO)
+        len = min(len, 61);
 
-    len = ((flight_speed * 64) / myship.max_speed) - 1;
-
-    colour = (flight_speed > (myship.max_speed * 2 / 3)) ? GFX_COL_DARK_RED : GFX_COL_GOLD;
-
-    for (i = 0; i < 6; i++)
+    int sx = 417;
+    int sy = 384 + 9;
+    for (int i = 0; i < 6; i++)
     {
         gfx_draw_colour_line(sx, sy + i, sx + len, sy + i, colour);
     }
@@ -998,7 +992,7 @@ void update_console(void)
 
 	if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
 	{
-		char strSpeed[4] = "---";
+		char strSpeed[8] = "---";
 		int colour = pColours[GFX_COL_GREY_3];
 		if (!docked)
 		{
@@ -1011,8 +1005,8 @@ void update_console(void)
 			else if (flux == 1) --currentSpeed;
 			sprintf(strSpeed, "%03d", currentSpeed);
 
-			if (currentSpeed > 515)
-				colour = pColours[GFX_COL_RED];
+            if (currentSpeed > 515)
+                colour = pColours[GFX_COL_DUN_TAN];
 			else if (currentSpeed > 389)
 				colour = pColours[GFX_COL_AA_0 + 4];
 			else if (currentSpeed > 259)
@@ -1023,7 +1017,7 @@ void update_console(void)
 		gmlbGraphicsRectFill(484, 392, 502, 402, pColours[GFX_COL_BLACK]);
 		gmlbGraphicsText(ass_fonts[ass_fnt_fui], 479, 389, strSpeed, colour);
 	}
-	if (cmdr.ship_mods & SHIP_MOD_MILO)
+    if (cmdr.ship_mods & SHIP_MOD_MILO)
 	{
 		char strMiles[8] = "       ";
 		if (!docked)
@@ -1032,15 +1026,23 @@ void update_console(void)
 			if (universe[1].type != SHIP_SUN)
 				distance = universe[1].distance;
             if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)      /// Whoah, MILO and DUO!
-            {
                 distance = universe[compass_target].distance;
-                strMiles[0] = (compass_target == 0) ? 'p' : 's';
+
+            distance = distance / 500;
+            if (distance > 999)
+                distance = 999;
+
+            if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
+            {
+                if (compass_target == 0)
+                    sprintf(strMiles, "p%03dk", distance);  /// MILO and DUO
+                else
+                    sprintf(strMiles, "s%03dk", distance);
             }
-			while (distance > 999999)
-				distance -= 999999;
-			sprintf(&strMiles[1], "%06d", distance);
-		}
-        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 299, 387, strMiles, pColours[GFX_COL_PSMITH_03]);
+            else
+                sprintf(strMiles, " %03dk", distance);      /// MILO, no DUO
+        }
+        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 321, 387, strMiles, pColours[GFX_COL_RED_3]);
 	}
     else if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)     /// && not SHIP_MOD_MILO
     {
@@ -1050,7 +1052,7 @@ void update_console(void)
             strTarget[0] = 's';
             if (compass_target == 0) strTarget[0] = 'p';
         }
-        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 361, 387, strTarget, pColours[GFX_COL_PSMITH_03]);
+        gmlbGraphicsText(ass_fonts[ass_fnt_fui], 361, 387, strTarget, pColours[GFX_COL_RED_3]);
     }
 
     display_speed();
@@ -1347,7 +1349,7 @@ void jump_warp(void)
     if (min_d < INT_MAX)
     {
         if (min_d > 20000)
-            sprintf(buf, " .u[%d]", min_d);
+            sprintf(buf, " .u[%d]", min_d * 2);
         else
             strcpy(buf, " .u[---]");
         info_message(buf, GFX_COL_SNES_167, 2);
@@ -1356,13 +1358,13 @@ void jump_warp(void)
 
     if (universe[0].distance < 75001)
     {
-        sprintf(buf, ".mLock(plnt) %d", universe[0].distance);
+        sprintf(buf, ".mLock(plnt) %d", universe[0].distance * 2);
         info_message(buf, GFX_COL_SNES_167, 2);
         return;
     }
     if (universe[1].distance < 75001)
     {
-        sprintf(buf, ".mLock(star) %d", universe[1].distance);
+        sprintf(buf, ".mLock(star) %d", universe[1].distance * 2);
         info_message(buf, GFX_COL_SNES_167, 2);
         return;
     }
@@ -1400,7 +1402,6 @@ void launch_player(void)
     set_init_matrix(rotmat);
 
     add_planet(0, 0, 65536, rotmat);
-    compass_target = 1;
 
     rotmat[2].x = -rotmat[2].x;
     rotmat[2].y = -rotmat[2].y;

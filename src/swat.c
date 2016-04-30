@@ -203,6 +203,7 @@ void add_new_station(double sx, double sy, double sz, Matrix rotmat)
 
     station = (current_planet_data.techlevel >= 10) ? SHIP_DODEC : SHIP_CORIOLIS;
     universe[1].type = 0;
+    compass_target = 1;
     add_new_ship(station, (int)sx, (int)sy, (int)sz, rotmat, 0, -127);
 }
 

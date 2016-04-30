@@ -557,8 +557,8 @@ static void arrow_up(void)
         else
         {
             decrease_flight_climb();
+            climbing = 1;
         }
-        climbing = 1;
     }
 }
 
@@ -597,8 +597,8 @@ static void arrow_down(void)
         else
         {
             increase_flight_climb();
+            climbing = 1;
         }
-        climbing = 1;
     }
 }
 
@@ -1483,23 +1483,16 @@ int elite_main()
         //              sizeof(int), sizeof(long), sizeof(unsigned char));
         //dbg_out(buf);
 
+#if defined(_DEBUG) && defined(_DEVEL)
+        load_commander_screen();
+#else // !(_DEBUG && DEBUG)
         current_screen = SCR_FRONT_VIEW;
         run_first_intro_screen();
         run_second_intro_screen();
 
         old_cross_x = -1;
         old_cross_y = -1;
-
-#pragma region Laser testing
-        //saved_cmdr.front_laser = MILITARY_LASER;
-        //saved_cmdr.rear_laser = MINING_LASER;
-        //saved_cmdr.left_laser = PULSE_LASER;
-        //saved_cmdr.right_laser = BEAM_LASER;
-        //cmdr.front_laser = MILITARY_LASER;
-        //cmdr.rear_laser = MINING_LASER;
-        //cmdr.left_laser = PULSE_LASER;
-        //cmdr.right_laser = BEAM_LASER;
-#pragma endregion
+#endif // _DEBUG && _DEVEL
 
         dock_player();
         display_commander_status();
@@ -1519,6 +1512,11 @@ int elite_main()
             if ( (((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS) || (current_screen == SCR_QUIT)) && !docked) || game_paused )
             {
                 gfx_draw_scanner();
+                if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
+                {
+                    gmlbGraphicsRectFill(484, 392, 502, 402, pColours[GFX_COL_BLACK]);
+                    gmlbGraphicsText(ass_fonts[ass_fnt_fui], 479, 389, "---", pColours[GFX_COL_GREY_3]);
+                }
                 continue;
             }
                 

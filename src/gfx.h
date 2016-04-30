@@ -160,8 +160,9 @@
 #define GFX_COL_FRAC_1L     83
 
 #define GFX_COL_PINK_SHOCK  84
+#define GFX_COL_DUN_TAN     85
 
-#define GFX_COL_NEXT        85
+#define GFX_COL_NEXT        86
 ///        ^--- GFX_COL_NEXT must be (last colour + 1)
 #pragma endregion
 
