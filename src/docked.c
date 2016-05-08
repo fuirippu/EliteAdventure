@@ -165,8 +165,8 @@ enum modifications {
     mod_scanner_audio   = 0,
     mod_scanner_vga     = 1,
     mod_obc             = 2,
-	mod_speedo			= 3,
-	mod_lidar			= 4,
+    mod_speedo          = 3,
+    mod_lidar           = 4,
     mod_duo_compass     = 5
 };
 
@@ -182,9 +182,9 @@ static struct mod_item {
     { 0, 0, 8, 650000, "Audio Scanner"},            /// Tech level 10
     { 0, 0, 8, 750000, "VGA Scanner"},
     { 0, 0,10, 750000, "On-board Computer"},        /// TL.12
-	{ 0, 0, 4, 450000, "Digital Speedo"},			/// TL.6
-	{ 0, 0, 6, 650000, "Compass LiDAR"},			/// TL.8
-    { 0, 0, 5, 750000, "Duo-Compass" }				/// TL.7
+    { 0, 0, 4, 350000, "Digital Speedo"},           /// TL.6
+    { 0, 0, 6, 450000, "Compass LiDAR"},            /// TL.8
+    { 0, 0, 5, 750000, "Duo-Compass" }              /// TL.7
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -688,13 +688,13 @@ void display_commander_status(void)
     {
         gfx_display_text(x, y, "Docking Computers");
         y += Y_INC;
-	}
+    }
 
     if (cmdr.galactic_hyperdrive)
     {
         gfx_display_text(x, y, "Galactic Hyperspace");
         y += Y_INC;
-	}
+    }
     if (cmdr.ship_mods & SHIP_MOD_AUDIO_SCANNER)
     {
         gfx_display_text(x, y, "Audio Scanner");
@@ -725,26 +725,26 @@ void display_commander_status(void)
             x += EQUIP_WIDTH;
         }
     }
-	if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
-	{
-		gfx_display_text(x, y, "Digital Speedometer");
-		y += Y_INC;
-		if (y > EQUIP_MAX_Y)
-		{
-			y = EQUIP_START_Y;
-			x += EQUIP_WIDTH;
-		}
-	}
-	if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
-	{
-		gfx_display_text(x, y, "Duo-Compass (tm)");
-		y += Y_INC;
-		if (y > EQUIP_MAX_Y)
-		{
-			y = EQUIP_START_Y;
-			x += EQUIP_WIDTH;
-		}
-	}
+    if (cmdr.ship_mods & SHIP_MOD_SPEEDO)
+    {
+        gfx_display_text(x, y, "Digital Speedometer");
+        y += Y_INC;
+        if (y > EQUIP_MAX_Y)
+        {
+            y = EQUIP_START_Y;
+            x += EQUIP_WIDTH;
+        }
+    }
+    if (cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)
+    {
+        gfx_display_text(x, y, "Duo-Compass (tm)");
+        y += Y_INC;
+        if (y > EQUIP_MAX_Y)
+        {
+            y = EQUIP_START_Y;
+            x += EQUIP_WIDTH;
+        }
+    }
     if (cmdr.ship_mods & SHIP_MOD_MILO)
     {
         gfx_display_text(x, y, "Compass LiDAR");
@@ -1501,19 +1501,19 @@ void purchase_modification(void)
         cmdr.ship_mods |= SHIP_MOD_AUDIO_SCANNER;
         break;
     case mod_scanner_vga:
-		cmdr.ship_mods |= SHIP_MOD_VGA_SCANNER;
-		break;
+        cmdr.ship_mods |= SHIP_MOD_VGA_SCANNER;
+        break;
     case mod_obc:
-		cmdr.ship_mods |= SHIP_MOD_OBC;
+        cmdr.ship_mods |= SHIP_MOD_OBC;
         obc_clear();
         break;
     case mod_speedo:
-		cmdr.ship_mods |= SHIP_MOD_SPEEDO;
-		update_console();
-		break;
+        cmdr.ship_mods |= SHIP_MOD_SPEEDO;
+        update_console();
+        break;
     case mod_lidar:
-		cmdr.ship_mods |= SHIP_MOD_MILO;
-		break;
+        cmdr.ship_mods |= SHIP_MOD_MILO;
+        break;
     case mod_duo_compass:
         cmdr.ship_mods |= SHIP_MOD_DUO_COMPASS;
         break;
@@ -1558,10 +1558,10 @@ void modify_ship(void)
                     mods_inventory[i].canbuy = 1;
                 else if ((i == mod_obc) && (!(cmdr.ship_mods & SHIP_MOD_OBC)))
                     mods_inventory[i].canbuy = 1;
-				else if ((i == mod_speedo) && (!(cmdr.ship_mods & SHIP_MOD_SPEEDO)))
-					mods_inventory[i].canbuy = 1;
-				else if ((i == mod_lidar) && (!(cmdr.ship_mods & SHIP_MOD_MILO)))
-					mods_inventory[i].canbuy = 1;
+                else if ((i == mod_speedo) && (!(cmdr.ship_mods & SHIP_MOD_SPEEDO)))
+                    mods_inventory[i].canbuy = 1;
+                else if ((i == mod_lidar) && (!(cmdr.ship_mods & SHIP_MOD_MILO)))
+                    mods_inventory[i].canbuy = 1;
                 else if ((i == mod_duo_compass) && (!(cmdr.ship_mods & SHIP_MOD_DUO_COMPASS)))
                     mods_inventory[i].canbuy = 1;
             }

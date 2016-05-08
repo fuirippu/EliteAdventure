@@ -12,9 +12,11 @@
  *
  */
 
-/*
- * Options.c
- */
+/// Options (including Quit y/n?) and Settings menu screens
+
+/// High level interface, these functions are called from
+/// game loops in alg_main.c, which uses gamelib routines
+/// for keyboard handling.
 
 #include <stdlib.h>
 #include <string.h>

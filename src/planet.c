@@ -11,10 +11,7 @@
  *
  */
 
-/*
- *
- * Handle the generation of planet info...
- */
+/// Handle the generation of planet info
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -27,15 +24,11 @@
 #include "missions.h"
 
 
+/////////////////////////////////////////////////////////////////////////////
+
 extern struct galaxy_seed hyperspace_planet;
 
-struct random_seed
-{
-    int a;
-    int b;
-    int c;
-    int d;
-} rnd_seed;
+struct random_seed { int a; int b; int c; int d; } rnd_seed;
 
 static const char *digrams="ABOUSEITILETSTONLONUTHNOALLEXEGEZACEBISOUSESARMAINDIREA?ERATENBERALAVETIEDORQUANTEISRION";
 
@@ -50,9 +43,6 @@ static const char *inhabitant_desc4[] = {"Rodent", "Frog", "Lizard", "Lobster", 
 
 static char planet_description[300];
 static char *desc_ptr;
-
-
-
 
 static const char *desc_list[36][5] =
 {
@@ -94,13 +84,7 @@ static const char *desc_list[36][5] =
 /* 35   */  {"hockey", "cricket", "karate", "polo", "tennis"}
 };
 
-
-
-
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////
 /*
  * Generate a random number between 0 and 255.
  * This is the version used in the 6502 Elites.
@@ -123,7 +107,6 @@ static int gen_rnd_number(void)
     rnd_seed.d = x;
     return a;
 }
-
 
 /*
  * Generate a random number between 0 and 255.
@@ -195,8 +178,6 @@ void waggle_galaxy(struct galaxy_seed *glx_ptr)
 }
 
 
-
-
 struct galaxy_seed find_planet(int cx, int cy)
 {
     int min_dist = 10000;
@@ -261,7 +242,6 @@ int find_planet_number(struct galaxy_seed planet)
 
     return -1;
 }
-
 
 
 void name_planet(char *gname, struct galaxy_seed glx)

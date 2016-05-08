@@ -353,27 +353,30 @@ void damage_ship(int damage, int front)
 
 static void make_station_appear(void)
 {
-    double px,py,pz;
-    double sx,sy,sz;
+    double sx, sy, sz;
     Vector vec;
+
+    int distance = 80000;
+    while (distance > 54999)
+    {
+        double px = universe[0].location.x;
+        double py = universe[0].location.y;
+        double pz = universe[0].location.z;
+    
+        vec.x = (rand() & 32767) - 16384;
+        vec.y = (rand() & 32767) - 16384;
+        vec.z = rand() & 32767;
+
+        vec = unit_vector(&vec);
+
+        sx = px - vec.x * 65792;
+        sy = py - vec.y * 65792;
+        sz = pz - vec.z * 65792;
+
+        distance = (int)sqrt(sx*sx + sy*sy + sz*sz);
+    }
+
     Matrix rotmat;
-    
-    px = universe[0].location.x;
-    py = universe[0].location.y;
-    pz = universe[0].location.z;
-    
-    vec.x = (rand() & 32767) - 16384;   
-    vec.y = (rand() & 32767) - 16384;   
-    vec.z = rand() & 32767; 
-
-    vec = unit_vector(&vec);
-
-    sx = px - vec.x * 65792;
-    sy = py - vec.y * 65792;
-    sz = pz - vec.z * 65792;
-
-//  set_init_matrix(rotmat);
-    
     rotmat[0].x = 1.0;
     rotmat[0].y = 0.0;
     rotmat[0].z = 0.0;
@@ -646,7 +649,8 @@ void update_universe(void)
                 continue;
             }
 
-            if (universe[i].distance > 57344)
+            /// Space stations are kept around longer than some other ships
+            if (((universe[i].distance > 57344) && (type != SHIP_CORIOLIS) && (type != SHIP_DODEC)) || (universe[i].distance > 89999))
             {
                 char buf[64];
                 sprintf(buf, "-d[%s]", obc_ship_name(type));
@@ -1348,7 +1352,7 @@ void jump_warp(void)
     char buf[64];
     if (min_d < INT_MAX)
     {
-        if (min_d > 20000)
+        if (min_d > 19999)
             sprintf(buf, " .u[%d]", min_d * 2);
         else
             strcpy(buf, " .u[---]");

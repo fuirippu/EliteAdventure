@@ -12,10 +12,9 @@
  *
  */
 
-/*
- * alg_main.c - main game handler
- */
+/// Main game handler
 
+#undef _DEVEL
 
 #include <stdio.h>
 #include <string.h>
@@ -927,7 +926,7 @@ static void handle_flight_joystick()
     {
         if (pJoystick->fire7 && !(pJoystickPrev->fire7))    /// Start button - options menu/resume
         {
-            if (game_paused)
+            if (game_paused || (current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
                 gmlbKeyboard.kbd_resume_pressed = 1;
             else
                 gmlbKeyboard.kbd_F11_pressed = 1;
@@ -1080,7 +1079,14 @@ static void handle_flight_keys(void)
 
 
     if ((current_screen == SCR_OPTIONS) || (current_screen == SCR_SETTINGS))
+    {
+        if (!docked && gmlbKeyboard.kbd_resume_pressed)
+        {
+            current_screen = SCR_FRONT_VIEW;
+            flip_stars();
+        }
         return;
+    }
     /// The following on key routines can assume not paused...
 
     if (find_input)
@@ -1353,6 +1359,7 @@ static void run_second_intro_screen(void)
     snd_stop_midi();
 }
 #endif // !(_DEBUG) || !(_DEVEL)
+
 static void run_game_over_screen()
 {
     int i;
@@ -1393,7 +1400,6 @@ static void run_game_over_screen()
         gmlbUpdateScreen();
     }
 }
-
 
 void info_message(const char *message, int col, int beep)
 {
@@ -1554,36 +1560,36 @@ int elite_main()
                 view_title= NULL;
                 laser_type = 0;
 
-                if ((current_screen == SCR_FRONT_VIEW) || (current_screen == SCR_REAR_VIEW) ||
-                    (current_screen == SCR_LEFT_VIEW) || (current_screen == SCR_RIGHT_VIEW) ||
-                    (current_screen == SCR_INTRO_ONE) || (current_screen == SCR_INTRO_TWO) ||
-                    (current_screen == SCR_GAME_OVER))
+                switch (current_screen)
+                {
+                case SCR_FRONT_VIEW:
+                    view_title = "Front View";
+                    laser_type = cmdr.front_laser;
+                    break;
+
+                case SCR_REAR_VIEW:
+                    view_title = "Rear View";
+                    laser_type = cmdr.rear_laser;
+                    break;
+
+                case SCR_LEFT_VIEW:
+                    view_title = "Left View";
+                    laser_type = cmdr.left_laser;
+                    break;
+
+                case SCR_RIGHT_VIEW:
+                    view_title = "Right View";
+                    laser_type = cmdr.right_laser;
+                    break;
+                }
+
+                //if ((current_screen == SCR_FRONT_VIEW) || (current_screen == SCR_REAR_VIEW) ||
+                //    (current_screen == SCR_LEFT_VIEW) || (current_screen == SCR_RIGHT_VIEW) ||
+                if ((view_title != NULL) || (current_screen == SCR_GAME_OVER) ||
+                    (current_screen == SCR_INTRO_ONE) || (current_screen == SCR_INTRO_TWO))
                 {
                     gfx_clear_display();
                     update_starfield();
-
-                    switch (current_screen)
-                    {
-                    case SCR_FRONT_VIEW:
-                        view_title= "Front View";
-                        laser_type = cmdr.front_laser;
-                        break;
-
-                    case SCR_REAR_VIEW:
-                        view_title= "Rear View";
-                        laser_type = cmdr.rear_laser;
-                        break;
-
-                    case SCR_LEFT_VIEW:
-                        view_title= "Left View";
-                        laser_type = cmdr.left_laser;
-                        break;
-
-                    case SCR_RIGHT_VIEW:
-                        view_title= "Right View";
-                        laser_type = cmdr.right_laser;
-                        break;
-                    }
                 }
 
                 if (auto_pilot)

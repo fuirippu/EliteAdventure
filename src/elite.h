@@ -19,6 +19,12 @@
 #include "trade.h"
 
 
+/////////////////////////////////////////////////////////////////////////////
+#define VERSION_STRING      "Version: beta-2"
+#define CREDIT_FUI          "further adventures from fuirippu 2016"
+#define VERSION_MAJOR       (0x00)
+#define VERSION_MINOR       (0x01)
+
 #pragma region Screens (SCR_XXX_XXXX)
 #define SCR_INTRO_ONE       1
 #define SCR_INTRO_TWO       2
@@ -44,13 +50,14 @@
 #define SCR_MODIFY_SHIP     22
 #pragma endregion
 
-
+#pragma region Lasers (XXX_LASER)
 #define PULSE_LASER     0x0F
 #define BEAM_LASER      0x8F
 #define MILITARY_LASER  0x97
 #define MINING_LASER    0x32
+#pragma endregion
 
-
+#pragma region Universe Object Flags (FLG_XXX)
 #define FLG_DEAD            (1)
 #define FLG_REMOVE          (2)
 #define FLG_EXPLOSION       (4)
@@ -66,9 +73,9 @@
 #define FLG_BOLD            (4096)
 #define FLG_POLICE          (8192)
 #define FLG_SHOT            (16384)
+#pragma endregion
 
-
-#pragma region Ship mod flags
+#pragma region Ship Mod Flags (SHIP_MOD_XXX)
 #define SHIP_MOD_AUDIO_SCANNER      (1)
 #define SHIP_MOD_VGA_SCANNER        (2)
 #define SHIP_MOD_OBC                (4)
@@ -77,11 +84,6 @@
 #define SHIP_MOD_DUO_COMPASS        (32)
 #pragma endregion
 
-
-#define VERSION_STRING      "Version: beta-2"
-#define CREDIT_FUI          "further adventures from fuirippu 2016"
-#define VERSION_MAJOR       (0x00)
-#define VERSION_MINOR       (0x01)
 
 /////////////////////////////////////////////////////////////////////////////
 // struct definitions
