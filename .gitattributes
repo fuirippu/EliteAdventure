@@ -2,8 +2,8 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
-* text filter=tabspace
-Makefile filter=tabkeep
+#* text filter=tabspace
+#Makefile filter=tabkeep
 
 ###############################################################################
 # Set default behavior for command prompt diff.

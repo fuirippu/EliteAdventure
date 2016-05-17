@@ -42,7 +42,7 @@ static const char *bmp_files[NUM_BITMAPS] = {
 static const char *font_files[NUM_FONTS] = {
     "verd2",
     "verd4",
-	"font_01"
+    "font_01"
 };
 static const char *sample_files[NUM_SAMPLES] = {
     "launch",
@@ -104,15 +104,15 @@ static int ass_load_bitmaps()
 
 static int ass_load_fonts()
 {
-	int rv = 0;
+    int rv = 0;
     char buf[128];
     for (int i = 0; i < NUM_FONTS; ++i)
     {
         sprintf(buf, "%s%s%s", assetDir, font_files[i], font_extnsn);
-		if (i == 2)			/// ass_fnt_fui is a bmp
-	        sprintf(buf, "%s%s%s", assetDir, font_files[i], bmp_extnsn);
+        if (i == 2)         /// ass_fnt_fui is a bmp
+            sprintf(buf, "%s%s%s", assetDir, font_files[i], bmp_extnsn);
 
-		rv = gmlbGraphicsLoadFont(buf, &ass_fonts[i]);
+        rv = gmlbGraphicsLoadFont(buf, &ass_fonts[i]);
         if (rv != 0)
         {
             char msg[256];
