@@ -5,43 +5,25 @@
 < current release note, see ReleaseNotes.txt for archive >
 
 ################    --------                    +----------+
-# RELEASE NOTE #    v.beta-1 (0x0000)           | 24/04/16 |
+# RELEASE NOTE #    v.beta-2 (0x0001)           | 17/05/16 |
 ################    --------                    +----------+
 
 Changes:
 --------
-  git white space, tabs -> 4 spaces
-  BugFix: Set clip region before blitting scanner
+  Allow <start> button to resume game in options screen
+  Remove calls to deprecated (Allegro) functions
+  Add digital speedo, LiDAR (miles to go), and Duo-Compass (tm)
+    - left stick click (xb button on linux) toggles compass
 
-  Add planet data to dump unvierse (dbg)
-  BugFix: Release audio assets (Allegro) on exit
+  #define _DEVEL to bypass checksum and more!
 
-  Isolate common Allegro include files
-
-  Support for screen resolutions
-    4:3(800 x 600), 16:10(1280 x 800), 16:9(1280 x 720)
-  
-  BugFix: Validate cfg file
-  BugFix: Centralise display in screen/window
-  BugFix: Commander credits not saved properly
-  BugFix: Joystick button sensitivity on equip ship
-  New format dump universe (dbg)
-
-  Compile time option for Port Audio (ALSA) on linux
-    - define USE_ALG_AUDIO, USE_ALSA
-    - ALSA loads assets/*.raw, not WAVs
-    - Moved sample definitions [assets -> gmlb]
-
-  Added linux build (undef WINDOWS)
-    - project files (Makefile, run), mint-64 allegro
-
-  BugFix: Clear obc messages on purchase
-  Police obc messages in blue
-  Add screen for "Modify Ship" [F3 while docked]
-  Audio Scanner
-  Homogenise bitmap implementation (scanner.bmp)
+  BugFix: Don't add/remove SS in quick succession
+  BugFix: Boop when ship cleared scanner
+  BugFix: Scanner should not beep for cargo/alloy/esc caps
+  BugFix: Treat the Quit? Y/N screen as paused (don't update)
 
 Known Bugs/Limitations:
 -----------------------
   64-bit visual studio build does not link (allegro build is 32-bit)
   Audio assets (wav) are not mastered (DC offset, unbalanced gain)
+
